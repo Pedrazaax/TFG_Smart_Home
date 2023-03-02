@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd TFG_Smart_Home/MyHomeIQ/
+          cd ../MyHomeIQ/
           npm ci
 
       - name: Build application
