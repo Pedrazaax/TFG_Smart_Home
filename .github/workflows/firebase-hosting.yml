@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd ../MyHomeIQ/
+          cd MyHomeIQ
           npm ci
 
       - name: Build application
