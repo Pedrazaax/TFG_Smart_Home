@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "myhomeiq-web": {
+      "hosting": {
+        "MyHomeIQ": [
+          "myhomeiq-web"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "myhomeiq-web"
+  }
+}
