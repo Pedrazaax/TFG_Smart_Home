@@ -1,0 +1,21 @@
+<div class="card">
+    <div class="card-header">
+        <h2 class="text-center">Inicia Sesión</h2>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <label for="login" class="form-label">Usuario</label>
+                <input class="form-control" type="name" [(ngModel)]="name" placeholder="Nombre de usuario...">
+            </li>
+            <li class="list-group-item">
+                <label for="login" class="form-label">Contraseña</label>
+                <input class="form-control" type="password" [(ngModel)]="pwd" placeholder="Escribe tu contraseña...">
+            </li>
+            <li class="list-group-item">
+                <button class="btn btn-primary" (click)="login()">Iniciar Sesión</button>
+                <button class="btn btn-primary ms-5" (click)="register()">Registrate</button>      
+            </li>
+        </ul>
+    </div>
+</div>
