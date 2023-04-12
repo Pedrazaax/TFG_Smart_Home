@@ -23,12 +23,8 @@ export class LoginComponent implements OnInit {
       pwd1:this.pwd
     }
     this.accountService.login(info).subscribe(
-      (respuesta: { httpSessionId: string; }) => {
-        this.message="Hola, "+ this.name
-        console.log((respuesta.httpSessionId))
-        sessionStorage.setItem("httpSessionId", respuesta.httpSessionId!)
-        sessionStorage.setItem("player", this.name!)
-        this.router.navigate(['/match'])
+      respuesta => {
+        console.log(respuesta)
       },
       (error: any)=>{
         this.message="Ha habido un error"
