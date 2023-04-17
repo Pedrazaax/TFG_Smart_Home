@@ -3,18 +3,25 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TermostatoComponent } from './termostato/termostato.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ControlAdminComponent } from './control-admin/control-admin.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { FooterComponent } from './footer/footer.component';
+import { DispositivoComponent } from './dispositivo/dispositivo.component';
+import { AppConfig } from './app.config';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TermostatoComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ControlAdminComponent,
+    SidebarComponent,
+    FooterComponent,
+    DispositivoComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [AppConfig],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
