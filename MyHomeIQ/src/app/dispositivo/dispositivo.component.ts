@@ -21,23 +21,7 @@ export class DispositivoComponent {
     this.valor = (event.target as HTMLInputElement)?.checked;
     this.temperatureValue = (event.target as HTMLInputElement)?.value;
 
-    if (this.temperatureValue != "on"){
-      this.valor = this.temperatureValue;
-    }
-
-    // Actualiza el elemento output con el valor seleccionado
-    if (valorKey == "temp_set"){
-      let temperatureOutput = document.getElementById('temperatureValue');
-      if (temperatureOutput) {
-        temperatureOutput.textContent = `${this.temperatureValue} ºC`;
-      }
-    }
-    if (valorKey == "upper_temp"){
-      let temperatureOutput_upper = document.getElementById('temperatureValue_upper');
-      if (temperatureOutput_upper) {
-        temperatureOutput_upper.textContent = `${this.temperatureValue} ºC`;
-      }
-    }
+    this.control_value(valorKey);
 
     let device = new Device(
       "bfb14fa2967d0a5f67cql1",
@@ -59,6 +43,26 @@ export class DispositivoComponent {
     )
   }
 
+
+  private control_value(valorKey: string) {
+    if (this.temperatureValue != "on") {
+      this.valor = this.temperatureValue;
+    }
+
+    // Actualiza el elemento output con el valor seleccionado
+    if (valorKey == "temp_set") {
+      let temperatureOutput = document.getElementById('temperatureValue');
+      if (temperatureOutput) {
+        temperatureOutput.textContent = `${this.temperatureValue} ºC`;
+      }
+    }
+    if (valorKey == "upper_temp") {
+      let temperatureOutput_upper = document.getElementById('temperatureValue_upper');
+      if (temperatureOutput_upper) {
+        temperatureOutput_upper.textContent = `${this.temperatureValue} ºC`;
+      }
+    }
+  }
 }
 
 
