@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AccountService } from '../account.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-control-admin',
@@ -8,19 +9,27 @@ import { AccountService } from '../account.service';
 })
 export class ControlAdminComponent {
 
+  users!: User[];
+  selectedRow!: number;
+
   ngOnInit(): void {
+    this.ver()
   }
 
   constructor(private accountService: AccountService) { }
   
   ver() {
-    this.accountService.listarUsuarios().subscribe(respuesta => {
-      alert(respuesta)
-      console.log(respuesta)
-    },
-      (error: any) => {
-        alert("Error")
-      }
-    )
+    this.accountService.listarUsuarios().subscribe((respuesta: User[]) => {
+      this.users= respuesta;
+    })
+  }
+
+  selectRow(index: number) {
+    this.selectedRow = index;
+    console.log(this.selectedRow)
+  }
+
+  updateUser() {
+
   }
 }

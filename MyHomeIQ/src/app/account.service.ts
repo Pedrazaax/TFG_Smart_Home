@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppConfig } from './app.config';
+import { User } from './user';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,16 @@ export class AccountService {
     return this.httpClient.put<any>("http://localhost:8000/users/login",info)
   }
 
-  listarUsuarios() {
+  listarUsuarios():any {
     const url = `${this.config.apiUrl}/users`;
 
     return this.httpClient.get(url);
+  }
+
+  updateUser(user:User):any {
+    const url = `${this.config.apiUrl}/user/update`;
+
+    return this.httpClient.put(url, user);
   }
   
 }
