@@ -1,0 +1,7 @@
+.selected {
+    background-color: lightblue;
+}
+
+svg:hover {
+    cursor: pointer;
+}

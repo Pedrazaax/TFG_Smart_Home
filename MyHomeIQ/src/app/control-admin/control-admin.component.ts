@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AccountService } from '../account.service';
 import { User } from '../user';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-control-admin',
@@ -9,14 +10,26 @@ import { User } from '../user';
 })
 export class ControlAdminComponent {
 
+  formulario: FormGroup;
   users!: User[];
   selectedRow!: number;
+  state?: boolean;
+  stateUpdate?: boolean;
+  stateCreate?: boolean;
+  
 
   ngOnInit(): void {
     this.ver()
   }
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService) {
+    
+    this.formulario = new FormGroup({
+      username: new FormControl({disabled: this.state}),
+      email: new FormControl({disabled: this.state})
+    });
+    
+  }
   
   ver() {
     this.accountService.listarUsuarios().subscribe((respuesta: User[]) => {
@@ -26,10 +39,39 @@ export class ControlAdminComponent {
 
   selectRow(index: number) {
     this.selectedRow = index;
-    console.log(this.selectedRow)
   }
 
-  updateUser() {
+  updateUser(user:User) {
+    this.accountService.updateUser(user).subscribe((respuesta: any) => {
+      
+    })
+  }
 
+  update(){
+    this.state = false
+    this.stateUpdate = true
+    this.stateCreate = false
+  }
+
+  clear(){
+    this.formulario.reset();
+  }
+
+  createUser(user:User){
+    this.accountService.createUser(user).subscribe((respuesta: any) => {
+      this.ver()
+    })
+  }
+
+  create(){
+    this.stateUpdate = false;
+    this.state = true;
+    this.stateCreate = true;
+  }
+
+  delete(id:string){
+    this.accountService.delete(id).subscribe((respuesta: any) => {
+      this.ver()
+    })
   }
 }

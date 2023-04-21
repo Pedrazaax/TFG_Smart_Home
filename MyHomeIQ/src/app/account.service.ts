@@ -11,15 +11,10 @@ export class AccountService {
 
   constructor(private httpClient:HttpClient, private config: AppConfig) { }
 
-  register(info:any) {
-    this.httpClient.post("http://localhost:8000/users/register",info).subscribe(respuesta =>{
-      alert(respuesta)
-      console.log(respuesta)
-    })
-  }
-
   login(info:any):Observable<any>{
-    return this.httpClient.put<any>("http://localhost:8000/users/login",info)
+    const url = `${this.config.apiUrl}/login`;
+
+    return this.httpClient.put<any>(url,info)
   }
 
   listarUsuarios():any {
@@ -29,9 +24,21 @@ export class AccountService {
   }
 
   updateUser(user:User):any {
-    const url = `${this.config.apiUrl}/user/update`;
+    const url = `${this.config.apiUrl}/users/update`;
 
     return this.httpClient.put(url, user);
+  }
+
+  createUser(user:User):any {
+    const url = `${this.config.apiUrl}/users/register`;
+
+    return this.httpClient.post(url, user);
+  }
+
+  delete(id:string):any {
+    const url = `${this.config.apiUrl}/users/delete/${id}`;
+
+    return this.httpClient.delete(url);
   }
   
 }

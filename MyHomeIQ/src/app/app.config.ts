@@ -1,4 +1,6 @@
 export class AppConfig {
-    apiUrl = 'https://myhomeiq.onrender.com';
+    //http://localhost:8000
+    //https://myhomeiq.onrender.com
+    apiUrl = 'http://localhost:8000';
 }
   
