@@ -1,34 +1,141 @@
-<div class="card tamanio">
-    <div class="card-header">
-        <h3 class="card-title">Termostato inteligente</h3>
-    </div>
-    <div class="card-body">
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                (click)="updateDevice($event, 'switch')">
-            <label class="form-check-label" for="flexSwitchCheckDefault">Switch</label>
+<table>
+    <tr>
+      <td class="align-top">
+        <div class="card tamanio" *ngFor="let termostato of termostatos">
+            <div class="card-header">
+                <h3 class="card-title">{{termostato.type}}</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                        (click)="updateDevice($event, 'switch')">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Switch</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                        (click)="updateDevice($event, 'child_lock')">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Child lock</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                        (click)="updateDevice($event, 'eco')">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Eco</label>
+                </div>
+                <div class="form-group">
+                    <label for="temperatureRange">Temperatura:</label>
+                    <input type="range" class="form-control-range" id="temperatureRange" min="10" max="70" step="5"
+                        (click)="updateDevice($event, 'temp_set')">
+                    <output id="temperatureValue"></output>
+                </div>
+                <div class="form-group">
+                    <label for="valor">Upper temp:</label>
+                    <input type="range" class="form-control-range" id="temperatureRange" min="0" max="100" step="5"
+                        (click)="updateDevice($event, 'upper_temp')">
+                    <output id="temperatureValue_upper"></output>
+                </div>
+            </div>
         </div>
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                (click)="updateDevice($event, 'child_lock')">
-            <label class="form-check-label" for="flexSwitchCheckDefault">Child lock</label>
+      </td>
+      <td class="align-top">
+        <div class="card tamanio" *ngFor="let bombilla of bombillas">
+            <div class="card-header">
+                <h3 class="card-title">{{bombilla.type}}</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                        (click)="updateDevice($event, 'switch_led')">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Switch LED</label>
+                </div>
+                <div class="form-group">
+                    <label for="workMode">Modo de trabajo:</label>
+                    <select class="form-control" id="workMode" (change)="updateDevice($event, 'work_mode')">
+                        <option value="white">Blanco</option>
+                        <option value="colour">Color</option>
+                        <option value="scene">Escena</option>
+                        <option value="music">Música</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="brightnessRange">Brillo:</label>
+                    <input type="range" class="form-control-range" id="brightnessRange" min="0" max="100" step="1"
+                        (change)="updateDevice($event, 'bright_value_v2')">
+                    <output id="brightnessValue"></output>
+                </div>
+                <div class="form-group">
+                    <label for="temperatureRange">Temperatura:</label>
+                    <input type="range" class="form-control-range" id="temperatureRange" min="-100" max="100" step="1"
+                        (change)="updateDevice($event, 'temp_value_v2')">
+                    <output id="temperatureValue"></output>
+                </div>
+                <div class="form-group">
+                    <label for="countdown">Cuenta atrás:</label>
+                    <input type="number" class="form-control" id="countdown" min="0"
+                        (change)="updateDevice($event, 'countdown_1')">
+                </div>
+            </div>
         </div>
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                (click)="updateDevice($event, 'eco')">
-            <label class="form-check-label" for="flexSwitchCheckDefault">Eco</label>
+      </td>
+      <td class="align-top">
+        <div class="card tamanio" *ngFor="let enchufe of enchufes">
+            <div class="card-header">
+                <h3 class="card-title">{{ enchufe.type }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault{{ enchufe.id }}"
+                        (click)="updateDevice($event, 'switch_1')">
+                    <label class="form-check-label" for="flexSwitchCheckDefault{{ enchufe.id }}">Switch</label>
+                </div>
+                <div class="form-group">
+                    <label for="countdown{{ enchufe.id }}">Cuenta atrás:</label>
+                    <input type="number" class="form-control" id="countdown{{ enchufe.id }}" min="0" max="86400" step="1"
+                        (change)="updateDevice($event, 'countdown_1')">
+                </div>
+                <div class="form-group">
+                    <label for="relayStatus{{ enchufe.id }}">Estado del relé:</label>
+                    <select class="form-control" id="relayStatus{{ enchufe.id }}"
+                        (change)="updateDevice($event, 'relay_status')">
+                        <option value="power_off">Apagado</option>
+                        <option value="power_on">Encendido</option>
+                        <option value="last">Último</option>
+                    </select>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="overchargeSwitch{{ enchufe.id }}"
+                        (click)="updateDevice($event, 'overcharge_switch')">
+                    <label class="form-check-label" for="overchargeSwitch{{ enchufe.id }}">Protección contra sobrecarga</label>
+                </div>
+                <div class="form-group">
+                    <label for="lightMode{{ enchufe.id }}">Modo de luz:</label>
+                    <select class="form-control" id="lightMode{{ enchufe.id }}" (change)="updateDevice($event, 'light_mode')">
+                        <option value="relay">Relé</option>
+                        <option value="pos">Posición</option>
+                        <option value="none">Ninguno</option>
+                    </select>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="childLock{{ enchufe.id }}"
+                        (click)="updateDevice($event, 'child_lock')">
+                    <label class="form-check-label" for="childLock{{ enchufe.id }}">Bloqueo infantil</label>
+                </div>
+                <div class="form-group">
+                    <label for="cycleTime{{ enchufe.id }}">Tiempo de ciclo:</label>
+                    <input type="text" class="form-control" id="cycleTime{{ enchufe.id }}"
+                        (change)="updateDevice($event, 'cycle_time')">
+                </div>
+                <div class="form-group">
+                    <label for="randomTime{{ enchufe.id }}">Tiempo aleatorio:</label>
+                    <input type="text" class="form-control" id="randomTime{{ enchufe.id }}"
+                        (change)="updateDevice($event, 'random_time')">
+                </div>
+                <div class="form-group">
+                    <label for="switchInching{{ enchufe.id }}">Inching de interruptor:</label>
+                    <input type="text" class="form-control" id="switchInching{{ enchufe.id }}"
+                        (change)="updateDevice($event, 'switch_inching')">
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="temperatureRange">Temperatura:</label>
-            <input type="range" class="form-control-range" id="temperatureRange" min="10" max="70" step="5"
-                (click)="updateDevice($event, 'temp_set')">
-            <output id="temperatureValue"></output>
-        </div>
-        <div class="form-group">
-            <label for="valor">Upper temp:</label>
-            <input type="range" class="form-control-range" id="temperatureRange" min="0" max="100" step="5"
-                (click)="updateDevice($event, 'upper_temp')">
-            <output id="temperatureValue_upper"></output>
-        </div>
-    </div>
-</div>
+      </td>
+    </tr>
+</table>

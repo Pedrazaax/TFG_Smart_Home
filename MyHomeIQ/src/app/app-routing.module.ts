@@ -7,8 +7,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { DispositivoComponent } from './dispositivo/dispositivo.component';
 
 const routes: Routes = [
-  //{path : 'login',component:LoginComponent},
-  {path: '',redirectTo:'login',pathMatch:'full'},
+  {path : 'login',component:LoginComponent},
+  {path: '',redirectTo:'control-admin',pathMatch:'full'},
   {path : 'register',component:RegisterComponent},
   {path : 'control-admin',component:ControlAdminComponent},
   {path : 'sidebar',component:SidebarComponent},

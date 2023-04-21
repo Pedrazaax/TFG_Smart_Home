@@ -7,7 +7,23 @@ import { Device } from '../device';
   templateUrl: './dispositivo.component.html',
   styleUrls: ['./dispositivo.component.css']
 })
+
 export class DispositivoComponent {
+
+  termostatos = [
+    { id: 1, type: 'Termostato WiFi'},
+    { id: 2, type: 'Termostato Zigbee'}
+  ];
+
+  bombillas = [
+    { id: 1, type: 'Bombilla WiFi'},
+    { id: 2, type: 'Bombilla Zigbee'}
+  ];
+
+  enchufes = [
+    { id: 1, type: 'Enchufe WiFi'},
+    { id: 2, type: 'Enchufe Zigbee'}
+  ];
 
   valor:any
   temperatureValue:any = -1
@@ -17,7 +33,7 @@ export class DispositivoComponent {
 
   constructor(private dispositivoService: DispositivoService) { }
 
-  updateDevice(event: MouseEvent, valorKey:string) {
+  updateDevice(event: Event, valorKey:string) {
     this.valor = (event.target as HTMLInputElement)?.checked;
     this.temperatureValue = (event.target as HTMLInputElement)?.value;
 
