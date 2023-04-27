@@ -12,6 +12,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { DispositivoComponent } from './dispositivo/dispositivo.component';
 import { AppConfig } from './app.config';
+import { AddDeviceComponent } from './add-device/add-device.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { AppConfig } from './app.config';
     ControlAdminComponent,
     SidebarComponent,
     FooterComponent,
-    DispositivoComponent
+    DispositivoComponent,
+    AddDeviceComponent
   ],
   imports: [
     BrowserModule,

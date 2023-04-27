@@ -36,7 +36,9 @@
             </div>
         </div>
       </td>
-      <td class="align-top">
+      
+      <!--
+        <td class="align-top">
         <div class="card tamanio" *ngFor="let bombilla of bombillas">
             <div class="card-header">
                 <h3 class="card-title">{{bombilla.type}}</h3>
@@ -76,7 +78,7 @@
             </div>
         </div>
       </td>
-      <td class="align-top">
+        <td class="align-top">
         <div class="card tamanio" *ngFor="let enchufe of enchufes">
             <div class="card-header">
                 <h3 class="card-title">{{ enchufe.type }}</h3>
@@ -136,6 +138,11 @@
                 </div>
             </div>
         </div>
+      </td>
+      -->
+      
+      <td class="align-top">
+        <app-add-device></app-add-device>
       </td>
     </tr>
 </table>

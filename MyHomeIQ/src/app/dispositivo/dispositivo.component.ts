@@ -15,6 +15,7 @@ export class DispositivoComponent {
     { id: 2, type: 'Termostato Zigbee'}
   ];
 
+
   bombillas = [
     { id: 1, type: 'Bombilla WiFi'},
     { id: 2, type: 'Bombilla Zigbee'}

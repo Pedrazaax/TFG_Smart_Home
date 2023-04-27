@@ -15,4 +15,10 @@ export class DispositivoService {
     return this.httpClient.post(url, device);
   }
 
+  createDevice(info:any) {
+    const url = `${this.config.apiUrl}/devices/create`;
+
+    return this.httpClient.post(url, info)
+  }
+
 }

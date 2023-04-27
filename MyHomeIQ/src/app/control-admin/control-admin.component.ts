@@ -10,6 +10,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class ControlAdminComponent {
 
+  username?:string;
+  email?:string;
+
   formulario: FormGroup;
   users!: User[];
   selectedRow!: number;
@@ -57,8 +60,13 @@ export class ControlAdminComponent {
     this.formulario.reset();
   }
 
-  createUser(user:User){
-    this.accountService.createUser(user).subscribe((respuesta: any) => {
+  createUser(){
+    let info = {
+      username:this.username,
+      email:this.email
+    }
+
+    this.accountService.createUser(info).subscribe((respuesta: any) => {
       this.ver()
     })
   }

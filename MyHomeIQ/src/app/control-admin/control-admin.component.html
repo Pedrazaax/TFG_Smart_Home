@@ -46,12 +46,12 @@
     <div class="mb-3">
         <label class="form-label">Username</label>
         <input formControlName="username" type="username" class="form-control" id="username" name="username"
-            [(ngModel)]="users[selectedRow].username">
+            [(ngModel)]="users[selectedRow].username" [(ngModel)]="username">
     </div>
     <div class="mb-3">
         <label class="form-label">Email</label>
         <input formControlName="email" type="email" class="form-control" id="email" name="email"
-            [(ngModel)]="users[selectedRow].email">
+            [(ngModel)]="users[selectedRow].email" [(ngModel)]="email">
     </div>
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -61,5 +61,5 @@
         class="btn btn-warning">Limpiar</button>
     <button [disabled]="!stateUpdate" (click)="updateUser(users[selectedRow])" type="submit"
         class="btn btn-primary">Modificar</button>
-    <button [disabled]="!stateCreate" (click)="createUser(users[selectedRow])" type="submit" class="btn btn-success">Crear</button>
+    <button [disabled]="!stateCreate" (click)="createUser()" type="submit" class="btn btn-success">Crear</button>
 </form>
