@@ -1,4 +1,5 @@
-<button class="btn btn-primary" type="button"  data-bs-toggle="modal" data-bs-target="#addDevice">Añadir dispositivo</button>
+<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addDevice">Añadir
+    dispositivo</button>
 
 <div class="container text-center">
     <div class="modal fade" aria-hidden="true" id="addDevice" tabindex="-1">
@@ -11,14 +12,15 @@
                 <div class="modal-body">
                     <form class="form-label">
                         <div class="row">
-                            <label for="idDevice" class="form-label">ID Device</label>
-                            <input [(ngModel)]="idDevice" name="idDevice" type="idDevice" class="form-control" id="idDevice" required>
+                            <label for="idDevice" class="form-label text-start">ID Device</label>
+                            <input [(ngModel)]="idDevice" name="idDevice" type="idDevice" class="form-control"
+                                id="idDevice" required (ngModelChange)="onImputChange()">
                         </div>
                         <div class="row">
-                            <label for="tipoDevice" class="form-label">Tipo de dispositivo</label>
-                            <select [(ngModel)]="tipoDevice" name="tipoDevice" type="tipoDevice" class="form-select" id="tipoDevice"
-                                required>
-                                <option selected disabled value="">Selecciona...</option>
+                            <label for="tipoDevice" class="form-label text-start">Tipo de dispositivo</label>
+                            <select [(ngModel)]="tipoDevice" name="tipoDevice" type="tipoDevice" class="form-select"
+                                id="tipoDevice" required (ngModelChange)="onImputChange()">
+                                <option selected disabled value="" class="text-muted">Selecciona...</option>
                                 <option *ngFor="let opcion of opciones">{{opcion}}</option>
                             </select>
                             <div class="invalid-feedback">
@@ -29,10 +31,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-success" type="submit" (click)="addDevice()">Añadir</button>
+                    <button [disabled]="!state" class="btn btn-success" type="submit" (click)="addDevice()">Añadir</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

@@ -8,7 +8,7 @@ import { DispositivoService } from '../../_services/dispositivo.service';
 })
 export class AddDeviceComponent {
 
-  add: boolean = false
+  state: boolean = false
 
   idDevice?: string;
   tipoDevice?: string;
@@ -19,6 +19,14 @@ export class AddDeviceComponent {
   }
 
   constructor(private dispositivoService: DispositivoService) { }
+
+  onImputChange() {
+    if (this.idDevice && this.tipoDevice) {
+      this.state = true;
+    } else {
+      this.state = false;
+    }
+  }
 
   addDevice(){
 
