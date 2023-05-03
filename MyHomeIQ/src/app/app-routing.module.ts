@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { ControlAdminComponent } from './control-admin/control-admin.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { DispositivoComponent } from './dispositivo/dispositivo.component';
+import { LoginComponent } from './_components/login/login.component';
+import { RegisterComponent } from './_components/register/register.component';
+import { ControlAdminComponent } from './_components/control-admin/control-admin.component';
+import { SidebarComponent } from './_components/sidebar/sidebar.component';
+import { DispositivoComponent } from './_components/dispositivo/dispositivo.component';
 
 const routes: Routes = [
   {path : 'login',component:LoginComponent},

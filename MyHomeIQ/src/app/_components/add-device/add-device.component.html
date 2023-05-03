@@ -1,0 +1,38 @@
+<button class="btn btn-primary" type="button"  data-bs-toggle="modal" data-bs-target="#addDevice">Añadir dispositivo</button>
+
+<div class="container text-center">
+    <div class="modal fade" aria-hidden="true" id="addDevice" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Añadir dispositivo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-label">
+                        <div class="row">
+                            <label for="idDevice" class="form-label">ID Device</label>
+                            <input [(ngModel)]="idDevice" name="idDevice" type="idDevice" class="form-control" id="idDevice" required>
+                        </div>
+                        <div class="row">
+                            <label for="tipoDevice" class="form-label">Tipo de dispositivo</label>
+                            <select [(ngModel)]="tipoDevice" name="tipoDevice" type="tipoDevice" class="form-select" id="tipoDevice"
+                                required>
+                                <option selected disabled value="">Selecciona...</option>
+                                <option *ngFor="let opcion of opciones">{{opcion}}</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Selecciona una opción válida.
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-success" type="submit" (click)="addDevice()">Añadir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DispositivoService } from '../dispositivo.service';
+import { DispositivoService } from '../../_services/dispositivo.service';
 
 @Component({
   selector: 'app-add-device',
@@ -19,10 +19,6 @@ export class AddDeviceComponent {
   }
 
   constructor(private dispositivoService: DispositivoService) { }
-
-  addTrue(){
-    this.add = true;
-  }
 
   addDevice(){
 
