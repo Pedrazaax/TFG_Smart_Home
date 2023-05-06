@@ -52,18 +52,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form [formGroup]="formulario">
+                    <form [formGroup]="formularioCrear">
                         <div class="mb-3">
                             <label for="username" class="form-label text-start">Username</label>
                             <input formControlName="username" type="username" class="form-control" id="username"
-                                name="username" [(ngModel)]="username" (input)="onImputChange()">
+                                name="username" (input)="onImputChange()">
                             <div *ngIf="formulario.controls['username'].hasError('required') && (formulario.controls['username'].dirty || formulario.controls['username'].touched)"
                                 class="text-danger">Introduce el nombre de usuario</div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label text-start">Email</label>
                             <input formControlName="email" type="email" class="form-control" id="email" name="email"
-                                [(ngModel)]="email" (input)="onImputChange()">
+                                (input)="onImputChange()">
                             <div *ngIf="formulario.controls['email'].invalid && (formulario.controls['email'].dirty || formulario.controls['email'].touched)"
                                 class="text-danger">Email inválido</div>
                         </div>
@@ -75,15 +75,16 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button [disabled]="!stateCreate" (click)="createUser()" type="submit"
-                        class="btn btn-success"  data-bs-dismiss="modal">Crear</button>
+                    <button [disabled]="!stateCreate" (click)="createUser()" type="submit" class="btn btn-success"
+                        data-bs-dismiss="modal">Crear</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<form [formGroup]="formulario" *ngIf="(selectedRow !== undefined && stateUpdate || (selectedRow !== undefined && !stateDelete))">
+<form [formGroup]="formulario"
+    *ngIf="((selectedRow !== undefined && stateUpdate) || (selectedRow !== undefined && !stateDelete))">
     <div class="mb-3">
         <label class="form-label">Username</label>
         <input formControlName="username" type="username" class="form-control" id="username" name="username"
@@ -106,4 +107,3 @@
     <button [disabled]="!stateUpdate" (click)="updateUser(users[selectedRow])" type="submit"
         class="btn btn-primary">Modificar</button>
 </form>
-

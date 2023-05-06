@@ -17,6 +17,7 @@ export class ControlAdminComponent {
   email?:string;
 
   formulario: FormGroup;
+  formularioCrear: FormGroup;
   users!: User[];
   selectedRow!: number;
   stateUpdate: boolean = false;
@@ -30,6 +31,11 @@ export class ControlAdminComponent {
   constructor(private accountService: AccountService, private toastr: ToastrService) {
     
     this.formulario = new FormGroup({
+      username: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)])
+    });
+
+    this.formularioCrear = new FormGroup({
       username: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)])
     });
