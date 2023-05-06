@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { AccountService } from '../../_services/account.service';
 import { User } from '../../_models/user';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-control-admin',
@@ -16,20 +19,19 @@ export class ControlAdminComponent {
   formulario: FormGroup;
   users!: User[];
   selectedRow!: number;
-  state?: boolean;
-  stateUpdate?: boolean;
-  stateCreate?: boolean;
-  
+  stateUpdate: boolean = false;
+  stateCreate: boolean = false;
+  stateDelete: boolean = false;
 
   ngOnInit(): void {
     this.ver()
   }
 
-  constructor(private accountService: AccountService) {
+  constructor(private accountService: AccountService, private toastr: ToastrService) {
     
     this.formulario = new FormGroup({
-      username: new FormControl({disabled: this.state}),
-      email: new FormControl({disabled: this.state})
+      username: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)])
     });
     
   }
@@ -46,39 +48,50 @@ export class ControlAdminComponent {
 
   updateUser(user:User) {
     this.accountService.updateUser(user).subscribe((respuesta: any) => {
-      
+      this.toastr.success('Cuenta modificada', 'Éxito');
+      this.ver()
     })
   }
 
   update(){
-    this.state = false
     this.stateUpdate = true
-    this.stateCreate = false
   }
 
   clear(){
     this.formulario.reset();
   }
 
-  createUser(){
+  createUser() {
     let info = {
-      username:this.username,
-      email:this.email
-    }
+      username: this.username,
+      email: this.email,
+    };
 
     this.accountService.createUser(info).subscribe((respuesta: any) => {
-      this.ver()
-    })
+      
+      /*error: mensaje de error
+      info: mensaje informativo
+      warning: mensaje de advertencia
+      wait: mensaje de espera o carga
+      progress: mensaje de progreso*/
+      
+      this.toastr.success('Cuenta creada', 'Éxito');
+      this.ver();
+    });
   }
 
-  create(){
-    this.stateUpdate = false;
-    this.state = true;
-    this.stateCreate = true;
+  onImputChange() {
+    if (this.username && this.email) {
+      this.stateCreate = true;
+    } else {
+      this.stateCreate = false;
+    }
   }
 
   delete(id:string){
+    this.stateDelete = true;
     this.accountService.delete(id).subscribe((respuesta: any) => {
+      this.toastr.success('Cuenta eliminada', 'Éxito');
       this.ver()
     })
   }

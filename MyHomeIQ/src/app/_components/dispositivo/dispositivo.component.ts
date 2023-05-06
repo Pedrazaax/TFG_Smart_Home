@@ -10,7 +10,7 @@ import { Device } from '../../_models/device';
 
 export class DispositivoComponent {
 
-  termostatos = [
+  devices = [
     { id: 1, type: 'Termostato WiFi'},
     { id: 2, type: 'Termostato Zigbee'}
   ];
@@ -39,8 +39,8 @@ export class DispositivoComponent {
     this.temperatureValue = (event.target as HTMLInputElement)?.value;
 
     this.control_value(valorKey);
-
-    let device = new Device(
+    
+    let device /*= new Device(
       "bfb14fa2967d0a5f67cql1",
       valorKey,
       [
@@ -49,7 +49,7 @@ export class DispositivoComponent {
               value: this.valor
           }
       ]
-    );
+    );*/
 
     this.dispositivoService.updateDevice(device).subscribe(respuesta => {
       //console.log(respuesta)

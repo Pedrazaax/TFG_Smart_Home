@@ -1,0 +1,40 @@
+<table>
+  <tr>
+    <td class="align-top">
+      <div class="card tamanio" *ngFor="let termostato of termostatos">
+          <div class="card-header">
+              <h3 class="card-title">{{termostato.tipoDevice}}</h3>
+          </div>
+          <div class="card-body">
+              <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                      (click)="updateDevice($event, 'switch', termostato)">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Switch</label>
+              </div>
+              <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                      (click)="updateDevice($event, 'child_lock', termostato)">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Child lock</label>
+              </div>
+              <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                      (click)="updateDevice($event, 'eco', termostato)">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Eco</label>
+              </div>
+              <div class="form-group">
+                  <label for="temperatureRange">Temperatura:</label>
+                  <input type="range" class="form-control-range" id="temperatureRange" min="10" max="70" step="5"
+                      (click)="updateDevice($event, 'temp_set', termostato)">
+                  <output id="temperatureValue"></output>
+              </div>
+              <div class="form-group">
+                  <label for="valor">Upper temp:</label>
+                  <input type="range" class="form-control-range" id="temperatureRange" min="0" max="100" step="5"
+                      (click)="updateDevice($event, 'upper_temp', termostato)">
+                  <output id="temperatureValue_upper"></output>
+              </div>
+          </div>
+      </div>
+    </td>
+  </tr>
+</table>

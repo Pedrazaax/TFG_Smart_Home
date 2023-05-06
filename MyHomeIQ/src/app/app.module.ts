@@ -13,6 +13,10 @@ import { FooterComponent } from './_components/footer/footer.component';
 import { DispositivoComponent } from './_components/dispositivo/dispositivo.component';
 import { AppConfig } from './app.config';
 import { AddDeviceComponent } from './_components/add-device/add-device.component';
+import { ThermostatComponent } from './_components/thermostat/thermostat.component';
+import { SocketComponent } from './_components/socket/socket.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -23,14 +27,18 @@ import { AddDeviceComponent } from './_components/add-device/add-device.componen
     SidebarComponent,
     FooterComponent,
     DispositivoComponent,
-    AddDeviceComponent
+    AddDeviceComponent,
+    ThermostatComponent,
+    SocketComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [AppConfig],
   bootstrap: [AppComponent]
