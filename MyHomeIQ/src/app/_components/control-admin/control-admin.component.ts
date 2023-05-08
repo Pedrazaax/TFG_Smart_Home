@@ -13,14 +13,15 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ControlAdminComponent {
 
-  username?:string;
-  email?:string;
+  usernameCrear?:string;
+  emailCrear?:string;
 
   formulario: FormGroup;
   formularioCrear: FormGroup;
   users!: User[];
   selectedRow!: number;
   stateUpdate: boolean = false;
+  stateClear: boolean = false;
   stateCreate: boolean = false;
   stateDelete: boolean = false;
 
@@ -29,17 +30,17 @@ export class ControlAdminComponent {
   }
 
   constructor(private accountService: AccountService, private toastr: ToastrService) {
-    
+
+    this.formularioCrear = new FormGroup({
+      usernameCrear: new FormControl('', [Validators.required]),
+      emailCrear: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)])
+    });
+
     this.formulario = new FormGroup({
       username: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)])
     });
 
-    this.formularioCrear = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)])
-    });
-    
   }
   
   ver() {
@@ -60,18 +61,21 @@ export class ControlAdminComponent {
   }
 
   update(){
-    this.stateUpdate = true
+    this.stateClear = true
   }
 
   clear(){
     this.formulario.reset();
+    this.stateUpdate = false;
   }
 
   createUser() {
     let info = {
-      username: this.username,
-      email: this.email,
+      username: this.formularioCrear.get('usernameCrear')!.value,
+      email: this.formularioCrear.get('emailCrear')!.value,
     };
+
+    console.log(info)
 
     this.accountService.createUser(info).subscribe((respuesta: any) => {
       
@@ -87,11 +91,8 @@ export class ControlAdminComponent {
   }
 
   onImputChange() {
-    if (this.username && this.email) {
-      this.stateCreate = true;
-    } else {
-      this.stateCreate = false;
-    }
+    this.stateCreate = this.formularioCrear.valid;
+    this.stateUpdate = this.formulario.valid;
   }
 
   delete(id:string){

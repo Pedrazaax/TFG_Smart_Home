@@ -54,18 +54,18 @@
                 <div class="modal-body">
                     <form [formGroup]="formularioCrear">
                         <div class="mb-3">
-                            <label for="username" class="form-label text-start">Username</label>
-                            <input formControlName="username" type="username" class="form-control" id="username"
-                                name="username" (input)="onImputChange()">
-                            <div *ngIf="formulario.controls['username'].hasError('required') && (formulario.controls['username'].dirty || formulario.controls['username'].touched)"
-                                class="text-danger">Introduce el nombre de usuario</div>
+                            <label for="usernameCrear" class="form-label text-start">Username</label>
+                            <input formControlName="usernameCrear" type="usernameCrear" class="form-control" id="usernameCrear"
+                                name="usernameCrear" (input)="onImputChange()">
+                            <div *ngIf="formularioCrear.controls['usernameCrear'].hasError('required') && (formularioCrear.controls['usernameCrear'].dirty || formularioCrear.controls['usernameCrear'].touched)"
+                                class="alert alert-danger">Introduce el nombre de usuario</div>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label text-start">Email</label>
-                            <input formControlName="email" type="email" class="form-control" id="email" name="email"
+                            <label for="emailCrear" class="form-label text-start">Email</label>
+                            <input formControlName="emailCrear" type="emailCrear" class="form-control" id="emailCrear" name="emailCrear"
                                 (input)="onImputChange()">
-                            <div *ngIf="formulario.controls['email'].invalid && (formulario.controls['email'].dirty || formulario.controls['email'].touched)"
-                                class="text-danger">Email inválido</div>
+                            <div *ngIf="formularioCrear.controls['emailCrear'].invalid && (formularioCrear.controls['emailCrear'].dirty || formularioCrear.controls['emailCrear'].touched)"
+                                class="alert alert-danger">Email inválido</div>
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label text-start">Password</label>
@@ -88,22 +88,22 @@
     <div class="mb-3">
         <label class="form-label">Username</label>
         <input formControlName="username" type="username" class="form-control" id="username" name="username"
-            [(ngModel)]="users[selectedRow].username">
+            [(ngModel)]="users[selectedRow].username" (input)="onImputChange()">
         <div *ngIf="formulario.controls['username'].hasError('required') && (formulario.controls['username'].dirty || formulario.controls['username'].touched)"
-            class="text-danger">Introduce el nombre de usuario</div>
+            class="alert alert-danger">Introduce el nombre de usuario</div>
     </div>
     <div class="mb-3">
         <label class="form-label">Email</label>
         <input formControlName="email" type="email" class="form-control" id="email" name="email"
-            [(ngModel)]="users[selectedRow].email">
+            [(ngModel)]="users[selectedRow].email" (input)="onImputChange()">
         <div *ngIf="formulario.controls['email'].invalid && (formulario.controls['email'].dirty || formulario.controls['email'].touched)"
-            class="text-danger">Email inválido</div>
+            class="alert alert-danger">Email inválido</div>
     </div>
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Password</label>
         <input type="password" class="form-control" id="password">
     </div>
-    <button [disabled]="!stateUpdate" (click)="clear()" type="submit" class="btn btn-warning">Limpiar</button>
+    <button [disabled]="!stateClear" (click)="clear()" type="submit" class="btn btn-warning">Limpiar</button>
     <button [disabled]="!stateUpdate" (click)="updateUser(users[selectedRow])" type="submit"
         class="btn btn-primary">Modificar</button>
 </form>
