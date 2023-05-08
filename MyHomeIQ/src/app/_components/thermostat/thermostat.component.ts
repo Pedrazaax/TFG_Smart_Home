@@ -13,7 +13,7 @@ export class ThermostatComponent {
   valor: any
   temperatureValue: any = -1
 
-  constructor(private DeviceService: DispositivoService) {
+  constructor(private deviceService: DispositivoService) {
 
   }
 
@@ -22,11 +22,11 @@ export class ThermostatComponent {
   }
 
   listarDevices() {
-    this.DeviceService.listarDevices().subscribe(respuesta => {
+    this.deviceService.listarDevices().subscribe(respuesta => {
       this.termostatos = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Termostato');;
     },
       (error: any) => {
-        alert("Error" + error)
+        alert("Error" + error.error.message)
       }
     )
   }
@@ -45,8 +45,8 @@ export class ThermostatComponent {
       }
     ]
 
-    this.DeviceService.updateDevice(dispositivo).subscribe(respuesta => {
-      console.log(respuesta)
+    this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
+      //console.log(respuesta)
     },
       (error: any) => {
         alert("Error")

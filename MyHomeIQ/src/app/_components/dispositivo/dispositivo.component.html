@@ -1,43 +1,45 @@
+<!--
 <table>
     <tr>
       <td class="align-top">
         <div class="card tamanio" *ngFor="let device of devices">
             <div class="card-header">
-                <h3 class="card-title">{{device.type}}</h3>
+                <h3 class="card-title">{{device.name}}</h3>
+                <p>{{device.tipoDevice}}</p>
             </div>
             <div class="card-body">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                        (click)="updateDevice($event, 'switch')">
+                        (click)="updateDevice($event, 'switch', device)">
                     <label class="form-check-label" for="flexSwitchCheckDefault">Switch</label>
                 </div>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                        (click)="updateDevice($event, 'child_lock')">
+                        (click)="updateDevice($event, 'child_lock', device)">
                     <label class="form-check-label" for="flexSwitchCheckDefault">Child lock</label>
                 </div>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                        (click)="updateDevice($event, 'eco')">
+                        (click)="updateDevice($event, 'eco', device)">
                     <label class="form-check-label" for="flexSwitchCheckDefault">Eco</label>
                 </div>
                 <div class="form-group">
                     <label for="temperatureRange">Temperatura:</label>
                     <input type="range" class="form-control-range" id="temperatureRange" min="10" max="70" step="5"
-                        (click)="updateDevice($event, 'temp_set')">
+                        (click)="updateDevice($event, 'temp_set', device)">
                     <output id="temperatureValue"></output>
                 </div>
                 <div class="form-group">
                     <label for="valor">Upper temp:</label>
                     <input type="range" class="form-control-range" id="temperatureRange" min="0" max="100" step="5"
-                        (click)="updateDevice($event, 'upper_temp')">
+                        (click)="updateDevice($event, 'upper_temp', device)">
                     <output id="temperatureValue_upper"></output>
                 </div>
             </div>
         </div>
       </td>
       
-      <!--
+      
         <td class="align-top">
         <div class="card tamanio" *ngFor="let bombilla of bombillas">
             <div class="card-header">
@@ -139,10 +141,23 @@
             </div>
         </div>
       </td>
-      -->
-      
       <td class="align-top">
         <app-add-device></app-add-device>
       </td>
     </tr>
 </table>
+-->
+
+<app-add-device></app-add-device>
+
+<br>
+
+<div class="container">
+    <div class="row">
+        <app-thermostat></app-thermostat>
+    </div>
+    <br>
+    <div class="row">
+        <app-socket></app-socket>
+    </div>
+</div>

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { DispositivoService } from '../../_services/dispositivo.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-device',
@@ -10,35 +12,36 @@ export class AddDeviceComponent {
 
   state: boolean = false
 
-  idDevice?: string;
-  tipoDevice?: string;
-
+  formulario:FormGroup;
   opciones = ["Termostato", "Interruptor", "Bombilla", "Cámara", "Enchufe"]
 
   ngOnInit(): void {
   }
 
-  constructor(private dispositivoService: DispositivoService) { }
+  constructor(private dispositivoService: DispositivoService, private toastr: ToastrService) {
+    this.formulario = new FormGroup({
+      nameDevice: new FormControl('', [Validators.required]),
+      idDevice: new FormControl('', [Validators.required]),
+      tipoDevice: new FormControl('', Validators.required),
+    });
+  }
 
   onImputChange() {
-    if (this.idDevice && this.tipoDevice) {
-      this.state = true;
-    } else {
-      this.state = false;
-    }
+    this.state = this.formulario.valid;
   }
 
   addDevice(){
 
     let info = {
-      idDevice: this.idDevice,
-      tipoDevice: this.tipoDevice
-    }
-
-    console.log(info)
+      name: this.formulario.get('nameDevice')!.value,
+      idDevice: this.formulario.get('idDevice')!.value,
+      tipoDevice: this.formulario.get('tipoDevice')!.value,
+    };
 
     this.dispositivoService.createDevice(info).subscribe((respuesta: any) => {
-      console.log(respuesta);
+      this.toastr.success('Dispositivo añadido', 'Éxito');
+    },error =>{
+      this.toastr.error('Error', error.message);
     })
 
   }

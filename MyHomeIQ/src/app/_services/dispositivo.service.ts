@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DispositivoService {
+  
 
   constructor(private httpClient: HttpClient, private config: AppConfig) { }
 
@@ -33,6 +34,12 @@ export class DispositivoService {
     const url = `${this.config.apiUrl}/devices/state/${idDevice}`;
 
     return this.httpClient.get(url);
+  }
+
+  deleteDevice(idDevice: string) {
+    const url = `${this.config.apiUrl}/devices/delete/${idDevice}`;
+
+    return this.httpClient.delete(url);
   }
 
 }
