@@ -17,6 +17,9 @@ import { ThermostatComponent } from './_components/thermostat/thermostat.compone
 import { SocketComponent } from './_components/socket/socket.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BulbComponent } from './_components/bulb/bulb.component';
+import { InicioComponent } from './_components/inicio/inicio.component';
+import { IntroComponent } from './_components/intro/intro.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     DispositivoComponent,
     AddDeviceComponent,
     ThermostatComponent,
-    SocketComponent
+    SocketComponent,
+    BulbComponent,
+    InicioComponent,
+    IntroComponent
   ],
   imports: [
     BrowserModule,

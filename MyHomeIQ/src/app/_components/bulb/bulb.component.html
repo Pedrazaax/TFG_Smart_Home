@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-2">
+        <button class="btn btn-primary">Actualizar estado</button>
+    </div>
+    <div class="col-10">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Bombillas</h3>
+                    <div class="row">
+                        <div class="col" *ngFor="let bombilla of bombillas">
+                            <div class="card tamanio">
+                                <div class="card-header">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-10 text-start">
+                                                <h5 class="card-title">{{bombilla.name}}</h5>
+                                            </div>
+                                            <div class="col text-end">
+                                                <svg (click)="delete(bombilla.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                    height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                                    <path
+                                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                                            (click)="updateDevice($event, 'switch_led', bombilla)">
+                                        <label class="form-check-label" for="flexSwitchCheckDefault">Switch LED</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="workMode">Modo de trabajo:</label>
+                                        <select class="form-control" id="workMode" (change)="updateDevice($event, 'work_mode', bombilla)">
+                                            <option value="white">Blanco</option>
+                                            <option value="colour">Color</option>
+                                            <option value="scene">Escena</option>
+                                            <option value="music">Música</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="brightnessRange">Brillo:</label>
+                                        <input type="range" class="form-control-range" id="brightnessRange" min="0" max="100" step="1"
+                                            (change)="updateDevice($event, 'bright_value_v2', bombilla)">
+                                        <output id="brightnessValue"></output>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="temperatureRange">Temperatura:</label>
+                                        <input type="range" class="form-control-range" id="temperatureRange" min="-100" max="100" step="1"
+                                            (change)="updateDevice($event, 'temp_value_v2', bombilla)">
+                                        <output id="temperatureValue"></output>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="countdown">Cuenta atrás:</label>
+                                        <input type="number" class="form-control" id="countdown" min="0"
+                                            (change)="updateDevice($event, 'countdown_1', bombilla)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>

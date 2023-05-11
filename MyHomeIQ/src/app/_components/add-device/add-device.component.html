@@ -1,4 +1,4 @@
-<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addDevice">Añadir
+<button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addDevice">Añadir
     dispositivo</button>
 
 <div class="container text-center">
@@ -28,7 +28,7 @@
                         <div class="row">
                             <label for="tipoDevice" class="form-label text-start">Tipo de dispositivo</label>
                             <select formControlName="tipoDevice" name="tipoDevice" type="tipoDevice" class="form-select"
-                                id="tipoDevice" required (input)="onImputChange()">
+                                id="tipoDevice" required (change)="onImputChange()">
                                 <option selected disabled value="" class="text-muted">Selecciona...</option>
                                 <option *ngFor="let opcion of opciones">{{opcion}}</option>
                             </select>

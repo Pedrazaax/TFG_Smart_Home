@@ -1,49 +1,82 @@
-<div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-person-add" viewBox="0 0 16 16" type="button" data-bs-toggle="modal"
-                        data-bs-target="#addUser">
-                        <path
-                            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-                        <path
-                            d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z" />
-                    </svg>
-                </th>
-                <th scope="col">Username</th>
-                <th scope="col">Email</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of users; let i = index" (click)="selectRow(i)"
-                [ngClass]="{'selected': selectedRow === i}">
-                <td>{{user.username}}</td>
-                <td>{{user.email}}</td>
-                <td>
-                    <svg (click)="update()" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                        fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                        <path
-                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                        <path fill-rule="evenodd"
-                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                    </svg>
-                    <svg (click)="delete(user.id!)" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                        fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                        <path
-                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                        <path
-                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                    </svg>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div class="container mt-5">
 
-<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="table-responsive-md">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-person-add" viewBox="0 0 16 16" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#addUser">
+                                    <path
+                                        d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                                    <path
+                                        d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z" />
+                                </svg>
+                            </th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Email</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users; let i = index" (click)="selectRow(i)"
+                            [ngClass]="{'selected': selectedRow === i}">
+                            <td></td>
+                            <td>{{user.username}}</td>
+                            <td>{{user.email}}</td>
+                            <td>
+                                <svg (click)="update()" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path
+                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path fill-rule="evenodd"
+                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                </svg>
+                                <svg (click)="delete(user.id!)" xmlns="http://www.w3.org/2000/svg" width="16"
+                                    height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path
+                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                    <path
+                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                </svg>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <form [formGroup]="formulario"
+                *ngIf="((selectedRow !== undefined && stateUpdate) || (selectedRow !== undefined && !stateDelete))">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input formControlName="username" type="username" class="form-control" id="username" name="username"
+                        [(ngModel)]="users[selectedRow].username" (input)="onImputChange()">
+                    <div *ngIf="formulario.controls['username'].hasError('required') && (formulario.controls['username'].dirty || formulario.controls['username'].touched)"
+                        class="alert alert-danger">Introduce el nombre de usuario</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input formControlName="email" type="email" class="form-control" id="email" name="email"
+                        [(ngModel)]="users[selectedRow].email" (input)="onImputChange()">
+                    <div *ngIf="formulario.controls['email'].invalid && (formulario.controls['email'].dirty || formulario.controls['email'].touched)"
+                        class="alert alert-danger">Email inválido</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <button [disabled]="!stateClear" (click)="clear()" type="submit"
+                    class="btn btn-warning">Limpiar</button>
+                <button [disabled]="!stateUpdate" (click)="updateUser(users[selectedRow])" type="submit"
+                    class="btn btn-primary">Modificar</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal fade" aria-hidden="true" id="addUser" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -55,15 +88,15 @@
                     <form [formGroup]="formularioCrear">
                         <div class="mb-3">
                             <label for="usernameCrear" class="form-label text-start">Username</label>
-                            <input formControlName="usernameCrear" type="usernameCrear" class="form-control" id="usernameCrear"
-                                name="usernameCrear" (input)="onImputChange()">
+                            <input formControlName="usernameCrear" type="usernameCrear" class="form-control"
+                                id="usernameCrear" name="usernameCrear" (input)="onImputChange()">
                             <div *ngIf="formularioCrear.controls['usernameCrear'].hasError('required') && (formularioCrear.controls['usernameCrear'].dirty || formularioCrear.controls['usernameCrear'].touched)"
                                 class="alert alert-danger">Introduce el nombre de usuario</div>
                         </div>
                         <div class="mb-3">
                             <label for="emailCrear" class="form-label text-start">Email</label>
-                            <input formControlName="emailCrear" type="emailCrear" class="form-control" id="emailCrear" name="emailCrear"
-                                (input)="onImputChange()">
+                            <input formControlName="emailCrear" type="emailCrear" class="form-control" id="emailCrear"
+                                name="emailCrear" (input)="onImputChange()">
                             <div *ngIf="formularioCrear.controls['emailCrear'].invalid && (formularioCrear.controls['emailCrear'].dirty || formularioCrear.controls['emailCrear'].touched)"
                                 class="alert alert-danger">Email inválido</div>
                         </div>
@@ -82,28 +115,3 @@
         </div>
     </div>
 </div>
-
-<form [formGroup]="formulario"
-    *ngIf="((selectedRow !== undefined && stateUpdate) || (selectedRow !== undefined && !stateDelete))">
-    <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input formControlName="username" type="username" class="form-control" id="username" name="username"
-            [(ngModel)]="users[selectedRow].username" (input)="onImputChange()">
-        <div *ngIf="formulario.controls['username'].hasError('required') && (formulario.controls['username'].dirty || formulario.controls['username'].touched)"
-            class="alert alert-danger">Introduce el nombre de usuario</div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input formControlName="email" type="email" class="form-control" id="email" name="email"
-            [(ngModel)]="users[selectedRow].email" (input)="onImputChange()">
-        <div *ngIf="formulario.controls['email'].invalid && (formulario.controls['email'].dirty || formulario.controls['email'].touched)"
-            class="alert alert-danger">Email inválido</div>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password">
-    </div>
-    <button [disabled]="!stateClear" (click)="clear()" type="submit" class="btn btn-warning">Limpiar</button>
-    <button [disabled]="!stateUpdate" (click)="updateUser(users[selectedRow])" type="submit"
-        class="btn btn-primary">Modificar</button>
-</form>

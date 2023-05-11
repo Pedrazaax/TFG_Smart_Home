@@ -50,7 +50,10 @@ export class ControlAdminComponent {
   }
 
   selectRow(index: number) {
+    this.stateUpdate = false;
+    this.stateClear = true;
     this.selectedRow = index;
+    this.ver()
   }
 
   updateUser(user:User) {

@@ -7,16 +7,22 @@ import { SidebarComponent } from './_components/sidebar/sidebar.component';
 import { DispositivoComponent } from './_components/dispositivo/dispositivo.component';
 import { ThermostatComponent } from './_components/thermostat/thermostat.component';
 import { SocketComponent } from './_components/socket/socket.component';
+import { InicioComponent } from './_components/inicio/inicio.component';
+import { BulbComponent } from './_components/bulb/bulb.component';
+import { IntroComponent } from './_components/intro/intro.component';
 
 const routes: Routes = [
   {path : 'login',component:LoginComponent},
-  {path: '',redirectTo:'control-admin',pathMatch:'full'},
+  {path: '',redirectTo:'intro',pathMatch:'full'},
   {path : 'register',component:RegisterComponent},
   {path : 'control-admin',component:ControlAdminComponent},
   {path : 'sidebar',component:SidebarComponent},
   {path : 'dispositivo',component:DispositivoComponent},
   {path : 'thermostat',component:ThermostatComponent},
-  {path : 'socket',component:SocketComponent}
+  {path : 'socket',component:SocketComponent},
+  {path : 'bulb',component:BulbComponent},
+  {path : 'inicio',component:InicioComponent},
+  {path : 'intro',component:IntroComponent}
 ];
 
 @NgModule({

@@ -4,15 +4,14 @@ import { Device } from 'src/app/_models/device';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
 
 @Component({
-  selector: 'app-thermostat',
-  templateUrl: './thermostat.component.html',
-  styleUrls: ['./thermostat.component.css']
+  selector: 'app-bulb',
+  templateUrl: './bulb.component.html',
+  styleUrls: ['./bulb.component.css']
 })
-export class ThermostatComponent {
+export class BulbComponent {
 
-  termostatos?: Device[];
-  valor: any
-  temperatureValue: any = -1
+  bombillas?: Device[];
+  valor:any
 
   constructor(private deviceService: DispositivoService, private toastr: ToastrService) {
 
@@ -24,7 +23,7 @@ export class ThermostatComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.termostatos = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Termostato');;
+      this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Bombilla');;
     },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error")
@@ -34,9 +33,6 @@ export class ThermostatComponent {
 
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {
     this.valor = (event.target as HTMLInputElement)?.checked;
-    this.temperatureValue = (event.target as HTMLInputElement)?.value;
-
-    this.control_value(valorKey);
 
     dispositivo.key = valorKey
     dispositivo.commands = [
@@ -63,25 +59,4 @@ export class ThermostatComponent {
       this.toastr.error(error.error.detail, "Error")
     })
   }
-
-  private control_value(valorKey: string) {
-    if (this.temperatureValue != "on") {
-      this.valor = this.temperatureValue;
-    }
-
-    // Actualiza el elemento output con el valor seleccionado
-    if (valorKey == "temp_set") {
-      let temperatureOutput = document.getElementById('temperatureValue');
-      if (temperatureOutput) {
-        temperatureOutput.textContent = `${this.temperatureValue} ºC`;
-      }
-    }
-    if (valorKey == "upper_temp") {
-      let temperatureOutput_upper = document.getElementById('temperatureValue_upper');
-      if (temperatureOutput_upper) {
-        temperatureOutput_upper.textContent = `${this.temperatureValue} ºC`;
-      }
-    }
-  }
-
 }
