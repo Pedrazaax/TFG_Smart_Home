@@ -2,17 +2,28 @@
     <div class="card">
         <div class="card-body">
             <h3 class="card-title">Termostatos</h3>
+            
             <div class="text-end text">
-                <button class="btn btn-primary">Actualizar estado</button>
+                <button class="btn btn-primary" (click)="updateStates()">Actualizar dispositivos</button>
             </div>
+            
             <div class="row">
                 <div class="col" *ngFor="let termostato of termostatos">
                     <div class="card tamanio">
                         <div class="card-header">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-10 text-start">
+                                    <div class="col-8 text-start">
                                         <h5 class="card-title">{{termostato.name}}</h5>
+                                    </div>
+                                    <div class="col text-end">
+                                        <svg (click)="updateState(termostato.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                                            <path
+                                                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                                        </svg>
                                     </div>
                                     <div class="col text-end">
                                         <svg (click)="delete(termostato.idDevice)" xmlns="http://www.w3.org/2000/svg"
@@ -30,30 +41,29 @@
                         <div class="card-body">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
-                                    id="flexSwitchCheckDefault" (click)="updateDevice($event, 'switch', termostato)"
-                                    [checked]="true">
+                                    id="flexSwitchCheckDefault" [(ngModel)]="switch[termostato.idDevice]" (click)="updateDevice($event, 'switch', termostato)">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Switch</label>
                             </div>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
-                                    id="flexSwitchCheckDefault"
+                                    id="flexSwitchCheckDefault" [(ngModel)]="child[termostato.idDevice]"
                                     (click)="updateDevice($event, 'child_lock', termostato)">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Child lock</label>
                             </div>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch"
+                                <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="eco[termostato.idDevice]"
                                     id="flexSwitchCheckDefault" (click)="updateDevice($event, 'eco', termostato)">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Eco</label>
                             </div>
                             <div class="form-group">
                                 <label for="temperatureRange">Temperatura:</label>
-                                <input type="range" class="form-control-range" id="temperatureRange" min="10" max="70"
+                                <input type="range" class="form-control-range" id="temperatureRange" min="10" max="70" [(ngModel)]="temp_set[termostato.idDevice]"
                                     step="5" (click)="updateDevice($event, 'temp_set', termostato)">
                                 <output id="temperatureValue"></output>
                             </div>
                             <div class="form-group">
                                 <label for="valor">Upper temp:</label>
-                                <input type="range" class="form-control-range" id="temperatureRange" min="0" max="100"
+                                <input type="range" class="form-control-range" id="temperatureRange" min="0" max="100" [(ngModel)]="upper_temp[termostato.idDevice]"
                                     step="5" (click)="updateDevice($event, 'upper_temp', termostato)">
                                 <output id="temperatureValue_upper"></output>
                             </div>

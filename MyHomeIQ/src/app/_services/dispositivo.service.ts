@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../app.config';
 import { Device } from '../_models/device';
@@ -30,8 +30,20 @@ export class DispositivoService {
     return this.httpClient.get<Device[]>(url);
   }
 
-  stateDevice(idDevice:string){
-    const url = `${this.config.apiUrl}/devices/state/${idDevice}`;
+  statusDevice(idDevice:string){
+    const url = `${this.config.apiUrl}/devices/status/${idDevice}`;
+
+    return this.httpClient.get<Device["commands"]>(url);
+  }
+
+  statusDevices(idDevices: string[]):Observable<any> {
+    const url = `${this.config.apiUrl}/devices/statusDevices/?idDevices=${idDevices}`;
+  
+    return this.httpClient.get(url);
+  }
+
+  videoStream(idDevice:string){
+    const url = `${this.config.apiUrl}/devices/video/${idDevice}`;
 
     return this.httpClient.get(url);
   }

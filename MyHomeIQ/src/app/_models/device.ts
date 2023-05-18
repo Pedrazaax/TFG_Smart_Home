@@ -4,9 +4,9 @@ export class Device {
     idDevice: string;
     tipoDevice: string;
     key: string;
-    commands: { code: string; value: boolean | number }[];
+    commands: { code: string; value: any }[];
 
-    constructor(id:string, name:string, idDevice: string, tipoDevice: string, key: string, commands: { code: string; value: boolean | number }[]) {
+    constructor(id:string, name:string, idDevice: string, tipoDevice: string, key: string, commands: { code: string; value: any }[]) {
         this.id = id;
         this.name = name;
         this.idDevice = idDevice;

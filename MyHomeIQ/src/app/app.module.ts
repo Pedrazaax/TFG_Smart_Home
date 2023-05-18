@@ -20,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BulbComponent } from './_components/bulb/bulb.component';
 import { InicioComponent } from './_components/inicio/inicio.component';
 import { IntroComponent } from './_components/intro/intro.component';
+import { VideoCamaraComponent } from './_components/video-camara/video-camara.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { IntroComponent } from './_components/intro/intro.component';
     SocketComponent,
     BulbComponent,
     InicioComponent,
-    IntroComponent
+    IntroComponent,
+    VideoCamaraComponent
   ],
   imports: [
     BrowserModule,
