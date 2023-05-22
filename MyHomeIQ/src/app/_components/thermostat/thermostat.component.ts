@@ -55,6 +55,7 @@ export class ThermostatComponent {
   }
 
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {
+    console.log('id: ', dispositivo.idDevice, ' valorKey: ', valorKey)
     this.valor = (event.target as HTMLInputElement)?.checked;
     this.temperatureValue = (event.target as HTMLInputElement)?.value;
 
@@ -79,8 +80,10 @@ export class ThermostatComponent {
 
   updateState(idDevice: string) {
     this.deviceService.statusDevice(idDevice).subscribe(respuesta => {
-      let estados : Device["commands"] = respuesta
-      
+      let estados: Device["commands"] = respuesta
+
+      console.log('Estado de id: ', idDevice, ' Estado: ', respuesta)
+
       estados.forEach(element => {
         element.value = this.lowerLetters(element.value)
       });
@@ -160,6 +163,7 @@ export class ThermostatComponent {
   delete(idDevice: string) {
     this.deviceService.deleteDevice(idDevice).subscribe(respuesta => {
       this.toastr.success("Dispositivo eliminado", "Éxito")
+      this.listarDevices()
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
@@ -168,20 +172,6 @@ export class ThermostatComponent {
   private control_value(valorKey: string) {
     if (this.temperatureValue != "on") {
       this.valor = this.temperatureValue;
-    }
-
-    // Actualiza el elemento output con el valor seleccionado
-    if (valorKey == "temp_set") {
-      let temperatureOutput = document.getElementById('temperatureValue');
-      if (temperatureOutput) {
-        temperatureOutput.textContent = `${this.temperatureValue} ºC`;
-      }
-    }
-    if (valorKey == "upper_temp") {
-      let temperatureOutput_upper = document.getElementById('temperatureValue_upper');
-      if (temperatureOutput_upper) {
-        temperatureOutput_upper.textContent = `${this.temperatureValue} ºC`;
-      }
     }
   }
 
@@ -197,7 +187,22 @@ export class ThermostatComponent {
 
   }
 
+  // En tu componente de Angular
+
+  showTermostatos: boolean = false;
+  showTermostato: boolean = false;
+
+  toggleTermostatos() {
+    this.showTermostatos = !this.showTermostatos;
+  }
+
+  toggleTermostato() {
+    this.showTermostato = !this.showTermostato;
+  }
+
 }
+
+
 
 
 
