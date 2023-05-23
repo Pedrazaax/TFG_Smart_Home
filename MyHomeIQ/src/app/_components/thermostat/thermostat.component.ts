@@ -35,6 +35,8 @@ export class ThermostatComponent {
   temp_set: jso = {};
   upper_temp: jso = {};
 
+  showTermostatos: boolean = false;
+
   constructor(private deviceService: DispositivoService, private toastr: ToastrService) {
 
   }
@@ -187,19 +189,10 @@ export class ThermostatComponent {
 
   }
 
-  // En tu componente de Angular
-
-  showTermostatos: boolean = false;
-  showTermostato: boolean = false;
-
   toggleTermostatos() {
     this.showTermostatos = !this.showTermostatos;
   }
-
-  toggleTermostato() {
-    this.showTermostato = !this.showTermostato;
-  }
-
+  
 }
 
 
