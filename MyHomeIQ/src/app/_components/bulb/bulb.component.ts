@@ -15,7 +15,7 @@ export class BulbComponent {
   bombillas?: Device[];
   valor: any
   numValue: any = -1;
-  color?:string
+  color?: string
 
   switch_led: Jso = {};
   work_mode: Jso = {};
@@ -55,66 +55,56 @@ export class BulbComponent {
     )
   }
 
-  updateColor(color: any, idDevice: string) {
-    // Extraer los valores de color seleccionados
-    const hexValue = color.replace('#', '');
-    const r = parseInt(hexValue.substring(0, 2), 16);
-    const g = parseInt(hexValue.substring(2, 4), 16);
-    const b = parseInt(hexValue.substring(4, 6), 16);
+  updateColor(color: any, valorKey: string, dispositivo: Device) {
 
-    const h = this.calculateHue(r, g, b);
-    const s = this.calculateSaturation(r, g, b);
-    const v = this.calculateBrightness(r, g, b);
+    console.log('rgb:', color)
 
-    // Realizar cualquier otra acción necesaria con los valores de color seleccionados
-    // ...
+    const match = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  
+    const r = parseInt(match[1]);
+    const g = parseInt(match[2]);
+    const b = parseInt(match[3]);
 
-    console.log(`ID del dispositivo: ${idDevice}`);
-    console.log(`Valores de color - H: ${h}, S: ${s}, V: ${v}`);
+    console.log('r: ', r, 'g', g, 'b', b)
+
+    let hsv = this.rgb2hsv(r, g, b);
+
+    this.valor = {
+      "h": hsv[0],
+      "s": hsv[1],
+      "v": hsv[2]
+    }
+
+    console.log('valor: ', this.valor);
+
+    dispositivo.key = valorKey
+    dispositivo.commands = [
+      {
+        code: valorKey,
+        value: {
+          "h": hsv[0],
+          "s": hsv[1],
+          "v": hsv[2]
+        }
+      }
+    ]
+
+    this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
+      console.log(respuesta)
+      this.toastr.success('Dispositivo modificado', 'Éxito')
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    )
+
   }
 
-  calculateHue(r: number, g: number, b: number): number {
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h = 0;
-  
-    if (max === min) {
-      return h;
-    }
-  
-    const delta = max - min;
-  
-    if (max === r) {
-      h = ((g - b) / delta) % 6;
-    } else if (max === g) {
-      h = (b - r) / delta + 2;
-    } else {
-      h = (r - g) / delta + 4;
-    }
-  
-    h *= 60;
-    if (h < 0) {
-      h += 360;
-    }
-  
-    return h;
-  }
-  
-  calculateSaturation(r: number, g: number, b: number): number {
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-  
-    if (max === 0) {
-      return 0;
-    }
-  
-    return (max - min) / max * 1000;
-  }
-  
-  calculateBrightness(r: number, g: number, b: number): number {
-    const max = Math.max(r, g, b);
-  
-    return max / 255 * 1000;
+  // input: r,g,b in [0,1], out: h in [0,360) and s,v in [0,1]
+  rgb2hsv(r: number, g: number, b: number): any {
+    let v = Math.max(r, g, b), c = v - Math.min(r, g, b);
+    let h = c && ((v == r) ? (g - b) / c : ((v == g) ? 2 + (b - r) / c : 4 + (r - g) / c));
+    return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
   }
 
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {

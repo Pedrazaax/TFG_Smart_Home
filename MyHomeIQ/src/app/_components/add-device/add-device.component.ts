@@ -13,7 +13,7 @@ export class AddDeviceComponent {
   state: boolean = false
 
   formulario:FormGroup;
-  opciones = ["Termostato", "Sensor", "Bombilla", "Camara", "Enchufe"]
+  opciones = ["Termostato", "Sensor", "Bombilla", "Camara", "Enchufe", "Alarma"]
 
   ngOnInit(): void {
   }

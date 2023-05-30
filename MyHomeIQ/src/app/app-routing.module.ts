@@ -11,6 +11,7 @@ import { InicioComponent } from './_components/inicio/inicio.component';
 import { BulbComponent } from './_components/bulb/bulb.component';
 import { IntroComponent } from './_components/intro/intro.component';
 import { VideoCamaraComponent } from './_components/video-camara/video-camara.component';
+import { AlarmComponent } from './_components/alarm/alarm.component';
 
 const routes: Routes = [
   {path : 'login',component:LoginComponent},
@@ -24,7 +25,8 @@ const routes: Routes = [
   {path : 'bulb',component:BulbComponent},
   {path : 'inicio',component:InicioComponent},
   {path : 'video',component:VideoCamaraComponent},
-  {path : 'intro',component:IntroComponent}
+  {path : 'intro',component:IntroComponent},
+  {path : 'alarm',component:AlarmComponent}
 ];
 
 @NgModule({
