@@ -21,6 +21,7 @@ import { BulbComponent } from './_components/bulb/bulb.component';
 import { InicioComponent } from './_components/inicio/inicio.component';
 import { IntroComponent } from './_components/intro/intro.component';
 import { VideoCamaraComponent } from './_components/video-camara/video-camara.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { VideoCamaraComponent } from './_components/video-camara/video-camara.co
     HttpClientModule,
     ReactiveFormsModule,
     ToastrModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ColorPickerModule
   ],
   providers: [AppConfig],
   bootstrap: [AppComponent]

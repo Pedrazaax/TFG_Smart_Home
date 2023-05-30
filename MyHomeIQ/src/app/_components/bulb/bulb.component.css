@@ -1,3 +1,26 @@
-.tamanio{
+.tamanio {
     width: 350px;
+}
+
+svg:hover {
+    cursor: pointer;
+}
+
+.bombilla-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.show {
+    display: block;
+}
+
+.cursor{
+    cursor: pointer;
+} 
+
+.card-max {
+    max-width: 330px;
 }

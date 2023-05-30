@@ -6,24 +6,7 @@ svg:hover {
     cursor: pointer;
 }
 
-.termostato-container {
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    padding: 10px;
-    cursor: pointer;
-}
-
-.termostato-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.termostato-content {
-    margin-top: 10px;
-}
-
-.termostato-image {
+.enchufe-image {
     width: 100%;
     max-width: 300px;
     height: auto;

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
+import { Estados } from 'src/app/_models/estados';
+import { Jso } from 'src/app/_models/jso';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
 
-
+/*
 interface jso {
   [key: string]: any;
 }
@@ -16,7 +18,7 @@ interface Estados {
   success: boolean;
   t: number;
   tid: string;
-}
+}*/
 
 @Component({
   selector: 'app-thermostat',
@@ -29,11 +31,11 @@ export class ThermostatComponent {
   valor: any;
   temperatureValue: any = -1;
 
-  switch: jso = {};
-  child: jso = {};
-  eco: jso = {};
-  temp_set: jso = {};
-  upper_temp: jso = {};
+  switch: Jso = {};
+  child: Jso = {};
+  eco: Jso = {};
+  temp_set: Jso = {};
+  upper_temp: Jso = {};
 
   showTermostatos: boolean = false;
 

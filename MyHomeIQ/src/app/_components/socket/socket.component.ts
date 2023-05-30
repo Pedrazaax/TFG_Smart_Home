@@ -1,21 +1,9 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
+import { Estados } from 'src/app/_models/estados';
+import { Jso } from 'src/app/_models/jso';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
-
-interface jso {
-  [key: string]: any;
-}
-
-interface Estados {
-  result: [{
-    id: string,
-    status: Device["commands"]
-  }];
-  success: boolean;
-  t: number;
-  tid: string;
-}
 
 @Component({
   selector: 'app-socket',
@@ -26,15 +14,15 @@ export class SocketComponent {
   sockets?: Device[];
   valor?:any
 
-  switch_1: jso = {};
-  countdown_1: jso = {};
-  add_ele: jso = {};
-  cur_current: jso = {};
-  cur_power: jso = {};
-  cur_voltage: jso = {};
-  relay_status: jso = {};
-  light_mode: jso = {};
-  child_lock: jso = {};
+  switch_1: Jso = {};
+  countdown_1: Jso = {};
+  add_ele: Jso = {};
+  cur_current: Jso = {};
+  cur_power: Jso = {};
+  cur_voltage: Jso = {};
+  relay_status: Jso = {};
+  light_mode: Jso = {};
+  child_lock: Jso = {};
 
   showEnchufes: boolean = false;
 
