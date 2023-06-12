@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
 import { Estados } from 'src/app/_models/estados';
 import { Jso } from 'src/app/_models/jso';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
+
 
 @Component({
   selector: 'app-bulb',
@@ -11,6 +12,7 @@ import { DispositivoService } from 'src/app/_services/dispositivo.service';
   styleUrls: ['./bulb.component.css']
 })
 export class BulbComponent {
+  @ViewChildren('circle') circleRefs!: QueryList<ElementRef<SVGElement>>;
 
   bombillas?: Device[];
   valor: any
@@ -22,6 +24,7 @@ export class BulbComponent {
   bright_value_v2: Jso = {};
   temp_value_v2: Jso = {};
   colour_data_v2: Jso = {};
+  rgb: Jso = {};
   scene_data_v2: Jso = {};
   countdown_1: Jso = {};
   music_data: Jso = {};
@@ -36,8 +39,9 @@ export class BulbComponent {
 
   showBombillas: boolean = false;
 
+  hsv: any;
+  
   constructor(private deviceService: DispositivoService, private toastr: ToastrService) {
-
   }
 
   ngOnInit(): void {
@@ -47,6 +51,7 @@ export class BulbComponent {
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
       this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Bombilla');;
+      
       this.updateStates()
     },
       (error: any) => {
@@ -56,63 +61,27 @@ export class BulbComponent {
   }
 
   updateColor(color: any, valorKey: string, dispositivo: Device) {
-
-    console.log('rgb:', color)
-
-    const match = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+    let match = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
   
-    const r = parseInt(match[1]);
-    const g = parseInt(match[2]);
-    const b = parseInt(match[3]);
+    let r = parseInt(match[1]);
+    let g = parseInt(match[2]);
+    let b = parseInt(match[3]);
 
-    console.log('r: ', r, 'g', g, 'b', b)
-
-    let hsv = this.rgb2hsv(r, g, b);
-
-    this.valor = {
-      "h": hsv[0],
-      "s": hsv[1],
-      "v": hsv[2]
+    let circleId = 'circle-' + dispositivo.idDevice;
+    let circleRef = this.circleRefs.find(ref => ref.nativeElement.id === circleId);
+    if (circleRef) {
+      let circle = circleRef.nativeElement;
+      circle.setAttribute('fill', color);
     }
 
-    console.log('valor: ', this.valor);
+    this.hsv = this.rgbToHsv(r,g,b)
+    this.valor ={
+      "h": this.hsv[0],
+      "s": this.hsv[1],
+      "v": this.hsv[2]
+    }
 
-    dispositivo.key = valorKey
-    dispositivo.commands = [
-      {
-        code: valorKey,
-        value: {
-          "h": hsv[0],
-          "s": hsv[1],
-          "v": hsv[2]
-        }
-      }
-    ]
-
-    this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
-      console.log(respuesta)
-      this.toastr.success('Dispositivo modificado', 'Éxito')
-    },
-      (error: any) => {
-        this.toastr.error(error.error.detail, "Error")
-      }
-    )
-
-  }
-
-  // input: r,g,b in [0,1], out: h in [0,360) and s,v in [0,1]
-  rgb2hsv(r: number, g: number, b: number): any {
-    let v = Math.max(r, g, b), c = v - Math.min(r, g, b);
-    let h = c && ((v == r) ? (g - b) / c : ((v == g) ? 2 + (b - r) / c : 4 + (r - g) / c));
-    return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
-  }
-
-  updateDevice(event: Event, valorKey: string, dispositivo: Device) {
-    console.log('id: ', dispositivo.idDevice, ' valorKey: ', valorKey, ' evento: ', event)
-    this.valor = (event.target as HTMLInputElement)?.checked;
-    this.numValue = (event.target as HTMLInputElement)?.value;
-
-    this.control_value(valorKey);
+    this.valor = JSON.stringify(this.valor)
 
     dispositivo.key = valorKey
     dispositivo.commands = [
@@ -123,8 +92,123 @@ export class BulbComponent {
     ]
 
     this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
-      console.log(respuesta)
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    )
+    
+  }
+
+  rgbToHsv(r: number, g: number, b: number): [number, number, number] {
+    let max = Math.max(r, g, b), min = Math.min(r, g, b),
+        d = max - min,
+        h = 0,
+        s = (max === 0 ? 0 : d / max),
+        v = max / 255;
+
+    switch (max) {
+        case min: h = 0; break;
+        case r: h = (g - b) + d * (g < b ? 6: 0); h /= 6 * d; break;
+        case g: h = (b - r) + d * 2; h /= 6 * d; break;
+        case b: h = (r - g) + d * 4; h /= 6 * d; break;
+    }
+
+    return [Math.round(h * 360), Math.round(s * 1000), Math.round(v * 1000)];
+  }
+
+  hsvToRgb(h: number, s: number, v: number, bombilla: Device): [number, number, number] {
+    h /= 360;
+    s /= 1000;
+    v /= 1000;
+  
+    let r = 0, g = 0, b = 0;
+    if (s === 0) {
+      r = v;
+      g = v;
+      b = v;
+    } else {
+      const i = Math.floor(h * 6);
+      const f = h * 6 - i;
+      const p = v * (1 - s);
+      const q = v * (1 - f * s);
+      const t = v * (1 - (1 - f) * s);
+  
+      switch (i % 6) {
+        case 0:
+          r = v;
+          g = t;
+          b = p;
+          break;
+        case 1:
+          r = q;
+          g = v;
+          b = p;
+          break;
+        case 2:
+          r = p;
+          g = v;
+          b = t;
+          break;
+        case 3:
+          r = p;
+          g = q;
+          b = v;
+          break;
+        case 4:
+          r = t;
+          g = p;
+          b = v;
+          break;
+        case 5:
+          r = v;
+          g = p;
+          b = q;
+          break;
+      }
+    }
+    
+    let rgbNUM = [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
+
+    this.rgb[bombilla.idDevice] = 'rgb('+rgbNUM[0]+','+rgbNUM[1]+','+rgbNUM[2]+')'
+
+    this.updateColor(this.rgb[bombilla.idDevice], 'color_value_v2', bombilla)
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+
+  updateDevice(event: Event, valorKey: string, dispositivo: Device) {
+    this.valor = (event.target as HTMLInputElement)?.checked;
+    this.numValue = (event.target as HTMLInputElement)?.value;
+
+    this.control_value();
+
+    dispositivo.key = valorKey
+    dispositivo.commands = [
+      {
+        code: valorKey,
+        value: this.valor
+      }
+    ]
+
+    
+
+    this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
       this.toastr.success('Dispositivo modificado', 'Éxito')
+
+      if (valorKey == 'switch_led'){
+        let circleId = 'circle-' + dispositivo.idDevice;
+        let circleRef = this.circleRefs.find(ref => ref.nativeElement.id === circleId);
+        if (circleRef) {
+          let circle = circleRef.nativeElement;
+          circle.setAttribute('fill', 'rgb(255,255,255)');
+        }
+      }
+      
+      setTimeout(() => {
+        this.updateState(dispositivo.idDevice);
+      }, 2500);
+      
     },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error")
@@ -132,7 +216,7 @@ export class BulbComponent {
     )
   }
 
-  private control_value(valorKey: string) {
+  private control_value() {
     if (this.numValue != "on") {
       this.valor = this.numValue;
     }
@@ -141,8 +225,6 @@ export class BulbComponent {
   updateState(idDevice: string) {
     this.deviceService.statusDevice(idDevice).subscribe(respuesta => {
       let estados: Device["commands"] = respuesta
-
-      console.log('Estado de id: ', idDevice, ' Estado: ', respuesta)
 
       estados.forEach(element => {
         element.value = this.lowerLetters(element.value)
@@ -162,7 +244,6 @@ export class BulbComponent {
       respuesta.result.forEach(element => {
         idDevices.forEach(idDevice => {
           if (element.id == idDevice) {
-            console.log('Estado de id: ', idDevice, ' Estado: ', element.status)
             this.updateValues(idDevice, element.status)
           }
         });
@@ -211,16 +292,19 @@ export class BulbComponent {
     if (colourDataItem[0]) {
       let colourData = colourDataItem[0].value;
       this.colour_data_v2[idDevice] = colourData;
+      this.hsv = JSON.parse(this.colour_data_v2[idDevice])
+      let bulb = this.bombillas!.find(device => device.idDevice === idDevice);
+      this.hsvToRgb(this.hsv["h"],this.hsv["s"],this.hsv["v"], bulb!)
     }
 
-    //Code scene_data_v2
+    //Code scene_data_v2 -- NO IMPLEMENTADO
     let sceneDataItem = respuesta.filter(item => item.code === 'scene_data_v2');
     if (sceneDataItem[0]) {
       let sceneData = sceneDataItem[0].value;
       this.scene_data_v2[idDevice] = sceneData;
     }
 
-    //Code count down
+    //Code count down -- NO IMPLEMENTADO
     let countDownItem = respuesta.filter(item => item.code === 'countdown_1');
 
     if (countDownItem[0]) {
@@ -228,63 +312,63 @@ export class BulbComponent {
       this.countdown_1[idDevice] = countDownValue;
     }
 
-    //Code music_data
+    //Code music_data -- NO IMPLEMENTADO
     let musicDataItem = respuesta.filter(item => item.code === 'music_data');
     if (musicDataItem[0]) {
       let musicData = musicDataItem[0].value;
       this.music_data[idDevice] = musicData;
     }
 
-    //Code control_data
+    //Code control_data -- NO IMPLEMENTADO
     let controlDataItem = respuesta.filter(item => item.code === 'control_data');
     if (controlDataItem[0]) {
       let controlData = controlDataItem[0].value;
       this.control_data[idDevice] = controlData;
     }
 
-    //Code rhythm_mode
+    //Code rhythm_mode -- NO IMPLEMENTADO
     let rhythmModeItem = respuesta.filter(item => item.code === 'rhythm_mode');
     if (rhythmModeItem[0]) {
       let rhythmMode = rhythmModeItem[0].value;
       this.rhythm_mode[idDevice] = rhythmMode;
     }
 
-    //Code sleep_mode
+    //Code sleep_mode -- NO IMPLEMENTADO
     let sleepModeItem = respuesta.filter(item => item.code === 'sleep_mode');
     if (sleepModeItem[0]) {
       let sleepMode = sleepModeItem[0].value;
       this.sleep_mode[idDevice] = sleepMode;
     }
 
-    //Code wakeup_mode
+    //Code wakeup_mode -- NO IMPLEMENTADO
     let wakeupModeItem = respuesta.filter(item => item.code === 'wakeup_mode');
     if (wakeupModeItem[0]) {
       let wakeupMode = wakeupModeItem[0].value;
       this.wakeup_mode[idDevice] = wakeupMode;
     }
 
-    //Code power_memory
+    //Code power_memory -- NO IMPLEMENTADO
     let powerMemoryItem = respuesta.filter(item => item.code === 'power_memory');
     if (powerMemoryItem[0]) {
       let powerMemory = powerMemoryItem[0].value;
       this.power_memory[idDevice] = powerMemory;
     }
 
-    //Code do_not_disturb
+    //Code do_not_disturb -- NO IMPLEMENTADO
     let doNotDisturbItem = respuesta.filter(item => item.code === 'do_not_disturb');
     if (doNotDisturbItem[0]) {
       let doNotDisturb = doNotDisturbItem[0].value;
       this.do_not_disturb[idDevice] = doNotDisturb;
     }
 
-    //Code cycle_timing
+    //Code cycle_timing -- NO IMPLEMENTADO
     let cycleTimingItem = respuesta.filter(item => item.code === 'cycle_timing');
     if (cycleTimingItem[0]) {
       let cycleTiming = cycleTimingItem[0].value;
       this.cycle_timing[idDevice] = cycleTiming;
     }
 
-    //Code random_timing
+    //Code random_timing -- NO IMPLEMENTADO
     let randomTimingItem = respuesta.filter(item => item.code === 'random_timing');
     if (randomTimingItem[0]) {
       let randomTiming = randomTimingItem[0].value;
@@ -296,7 +380,6 @@ export class BulbComponent {
 
   delete(idDevice: string) {
     this.deviceService.deleteDevice(idDevice).subscribe(respuesta => {
-      console.log(respuesta)
       this.toastr.success("Dispositivo eliminado", "Éxito")
     }, error => {
       this.toastr.error(error.error.detail, "Error")
@@ -318,7 +401,5 @@ export class BulbComponent {
   toggleBombillas() {
     this.showBombillas = !this.showBombillas;
   }
-
-
 
 }

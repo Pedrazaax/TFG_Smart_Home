@@ -14,6 +14,7 @@ export class VideoCamaraComponent {
   camaras?: Device[];
   valor: any
   videoUrl: any
+  numValue: any = -1;
 
   constructor(private deviceService: DispositivoService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
 
@@ -25,8 +26,8 @@ export class VideoCamaraComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      console.log(respuesta)
       this.camaras = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Camara');
+      this.updateStates();
     },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error")
@@ -58,10 +59,11 @@ export class VideoCamaraComponent {
     this.deviceService.videoStream(idDevice).subscribe(
       respuesta => {
 
-        this.videoUrl = respuesta
-        console.log(this.videoUrl.url)
-        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.videoUrl.url);
+        let dangerousvideoUrl : any = respuesta
+        console.log(dangerousvideoUrl.url)
+        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousvideoUrl.url);
         console.log(this.videoUrl)
+
       },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error");
@@ -75,7 +77,7 @@ export class VideoCamaraComponent {
 
   updateState(idDevice:string){
     this.deviceService.statusDevice(idDevice).subscribe(respuesta => {
-      console.log("Estado: ", respuesta)
+      //console.log("Estado: ", respuesta)
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
@@ -85,7 +87,7 @@ export class VideoCamaraComponent {
     let idDevices = this.camaras!.map(device => device.idDevice);
 
     this.deviceService.statusDevices(idDevices).subscribe(respuesta => {
-      console.log("Estados: ", respuesta)
+      //console.log("Estados: ", respuesta)
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
@@ -94,7 +96,7 @@ export class VideoCamaraComponent {
 
   delete(idDevice:string){
     this.deviceService.deleteDevice(idDevice).subscribe(respuesta =>{
-      console.log(respuesta)
+      //console.log(respuesta)
       this.toastr.success("Dispositivo eliminado", "Éxito")
     }, error =>{
       this.toastr.error(error.error.detail, "Error")

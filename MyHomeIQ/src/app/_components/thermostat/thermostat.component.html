@@ -7,9 +7,13 @@
           <table class="table">
             <tbody>
               <tr>
-                <td colspan="2">
-                  <img src="../../../assets/img/termostato.png" alt="Termostato"
-                    class="cursor card-img-top termostato-image" (click)="toggleTermostatos()">
+                <td colspan="2" *ngIf="switch[termostato.idDevice]">
+                  <img src="../../../assets/img/TermostatoON.png" alt="Termostato"
+                       class="cursor card-img-top termostato-image" (click)="toggleTermostatos()">
+                </td>
+                <td colspan="2" *ngIf="!switch[termostato.idDevice]">
+                  <img src="../../../assets/img/TermostatoOFF.png" alt="Termostato"
+                       class="cursor card-img-top termostato-image" (click)="toggleTermostatos()">
                 </td>
               </tr>
               <tr>

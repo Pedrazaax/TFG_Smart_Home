@@ -5,21 +5,6 @@ import { Estados } from 'src/app/_models/estados';
 import { Jso } from 'src/app/_models/jso';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
 
-/*
-interface jso {
-  [key: string]: any;
-}
-
-interface Estados {
-  result: [{
-    id: string,
-    status: Device["commands"]
-  }];
-  success: boolean;
-  t: number;
-  tid: string;
-}*/
-
 @Component({
   selector: 'app-thermostat',
   templateUrl: './thermostat.component.html',
@@ -38,6 +23,7 @@ export class ThermostatComponent {
   upper_temp: Jso = {};
 
   showTermostatos: boolean = false;
+  switchON: boolean = false;
 
   constructor(private deviceService: DispositivoService, private toastr: ToastrService) {
 
@@ -59,7 +45,6 @@ export class ThermostatComponent {
   }
 
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {
-    console.log('id: ', dispositivo.idDevice, ' valorKey: ', valorKey)
     this.valor = (event.target as HTMLInputElement)?.checked;
     this.temperatureValue = (event.target as HTMLInputElement)?.value;
 

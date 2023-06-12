@@ -17,9 +17,9 @@ svg:hover {
     display: block;
 }
 
-.cursor{
+.cursor {
     cursor: pointer;
-} 
+}
 
 .card-max {
     max-width: 330px;

@@ -7,8 +7,12 @@
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td colspan="2">
-                                    <img src="../../../assets/img/enchufe.jpg" alt="Enchufe"
+                                <td colspan="2" *ngIf="switch_1[socket.idDevice]">
+                                    <img src="../../../assets/img/EnchufeON.png" alt="Enchufe"
+                                        class="cursor card-img-top enchufe-image" (click)="toggleEnchufes()">
+                                </td>
+                                <td colspan="2" *ngIf="!switch_1[socket.idDevice]">
+                                    <img src="../../../assets/img/EnchufeOFF.png" alt="Enchufe"
                                         class="cursor card-img-top enchufe-image" (click)="toggleEnchufes()">
                                 </td>
                             </tr>
@@ -92,6 +96,7 @@
                                 <p>cur_current (mA): {{cur_current[socket.idDevice]}}</p>
                                 <p>cur_power (W): {{cur_power[socket.idDevice]}}</p>
                                 <p>cur_voltage (V): {{cur_voltage[socket.idDevice]}}</p>
+                                <p>Consumo (W): {{cur_current[socket.idDevice] * cur_voltage[socket.idDevice]}}</p>
                             </div>
                         </div>
                     </div>

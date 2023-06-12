@@ -11,16 +11,43 @@ svg:hover {
     max-width: 300px;
     height: auto;
     margin-bottom: 10px;
+    display: block;
+    position: relative;
+    z-index: 1;
 }
 
 .show {
     display: block;
 }
 
-.cursor{
+.cursor {
     cursor: pointer;
-} 
+}
 
 .card-max {
     max-width: 330px;
+}
+
+.container {
+    position: relative;
+    display: inline-block;
+}
+
+.circle-container {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.circle {
+    stroke: none;
+    filter: url(#blur);
+}
+
+.circle2 {
+    stroke: none;
+    filter: url(#blur);
+    fill: black;
 }
