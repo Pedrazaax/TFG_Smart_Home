@@ -1,22 +1,27 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
-import { DomSanitizer } from '@angular/platform-browser';
-
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import Hls from 'hls.js'
 
 @Component({
   selector: 'app-video-camara',
   templateUrl: './video-camara.component.html',
   styleUrls: ['./video-camara.component.css']
 })
+
 export class VideoCamaraComponent {
+  @ViewChild('video') video!: ElementRef<HTMLVideoElement>;
+
   camaras?: Device[];
   valor: any
-  videoUrl: any
+  videoUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   numValue: any = -1;
+  dangerousvideoUrl: any;
+  hls: Hls = new Hls;
 
-  constructor(private deviceService: DispositivoService, private toastr: ToastrService, private sanitizer: DomSanitizer) {
+  constructor(private deviceService: DispositivoService, private toastr: ToastrService, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
 
   }
 
@@ -58,11 +63,18 @@ export class VideoCamaraComponent {
   getURL(idDevice: string) {
     this.deviceService.videoStream(idDevice).subscribe(
       respuesta => {
+        this.dangerousvideoUrl = respuesta;
 
-        let dangerousvideoUrl : any = respuesta
-        console.log(dangerousvideoUrl.url)
-        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousvideoUrl.url);
-        console.log(this.videoUrl)
+        if (Hls.isSupported()) {
+          this.hls = new Hls();
+          this.hls.loadSource(this.dangerousvideoUrl.url);
+          this.hls.attachMedia(this.video.nativeElement);
+        } else if (this.video.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
+          this.video.nativeElement.src = this.dangerousvideoUrl.url;
+        }
+
+        let boton = <HTMLButtonElement>document.getElementById(`boton${idDevice}`);
+        boton.setAttribute('hidden', 'true');
 
       },
       (error: any) => {
@@ -71,11 +83,11 @@ export class VideoCamaraComponent {
     );
   }
 
-  verVideo(idDevice:string){
+  verVideo(idDevice: string) {
     this.getURL(idDevice);
   }
 
-  updateState(idDevice:string){
+  updateState(idDevice: string) {
     this.deviceService.statusDevice(idDevice).subscribe(respuesta => {
       //console.log("Estado: ", respuesta)
     }, error => {
@@ -83,7 +95,7 @@ export class VideoCamaraComponent {
     })
   }
 
-  updateStates(){
+  updateStates() {
     let idDevices = this.camaras!.map(device => device.idDevice);
 
     this.deviceService.statusDevices(idDevices).subscribe(respuesta => {
@@ -91,17 +103,17 @@ export class VideoCamaraComponent {
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
-    
+
   }
 
-  delete(idDevice:string){
-    this.deviceService.deleteDevice(idDevice).subscribe(respuesta =>{
+  delete(idDevice: string) {
+    this.deviceService.deleteDevice(idDevice).subscribe(respuesta => {
       //console.log(respuesta)
       this.toastr.success("Dispositivo eliminado", "Éxito")
-    }, error =>{
+    }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
   }
-  
+
 
 }
