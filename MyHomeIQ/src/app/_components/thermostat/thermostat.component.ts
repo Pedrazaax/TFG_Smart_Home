@@ -25,6 +25,9 @@ export class ThermostatComponent {
   showTermostatos: boolean = false;
   switchON: boolean = false;
 
+  activeContent = 'ajustes';
+  activeCamera = '';
+  
   constructor(private deviceService: DispositivoService, private toastr: ToastrService) {
 
   }

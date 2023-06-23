@@ -20,6 +20,9 @@ export class VideoCamaraComponent {
   numValue: any = -1;
   dangerousvideoUrl: any;
   hls: Hls = new Hls;
+  showVideo: boolean = false;
+  activeContent = 'ajustes';
+  activeCamera = '';
 
   constructor(private deviceService: DispositivoService, private toastr: ToastrService, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
 
@@ -113,6 +116,10 @@ export class VideoCamaraComponent {
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
+  }
+
+  toggleVideo() {
+    this.showVideo = !this.showVideo;
   }
 
 

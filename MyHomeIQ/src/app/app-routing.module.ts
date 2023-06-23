@@ -19,7 +19,7 @@ const routes: Routes = [
   {path : 'register',component:RegisterComponent},
   {path : 'control-admin',component:ControlAdminComponent},
   {path : 'sidebar',component:SidebarComponent},
-  {path : 'dispositivo',component:DispositivoComponent},
+  {path : 'panel',component:DispositivoComponent},
   {path : 'thermostat',component:ThermostatComponent},
   {path : 'socket',component:SocketComponent},
   {path : 'bulb',component:BulbComponent},

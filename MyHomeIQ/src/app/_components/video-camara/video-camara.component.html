@@ -1,6 +1,6 @@
-<div class="bg-white h-screen flex flex-wrap justify-evenly items-center">
-    <section class="bg-white border border-black w-96 rounded-md mt-3 shadow-2xl" *ngFor="let camara of camaras">
-        <header class="bg-slate-100 rounded-t-md">
+<div class="h-screen flex flex-wrap justify-evenly items-start">
+    <section class="border w-96 rounded-md mt-3 shadow-2xl animate-fade" *ngFor="let camara of camaras">
+        <header class="bg-slate-100 rounded-t-md" (click)="toggleVideo()">
             <div class="flex items-center justify-between">
                 <div class="flex-grow ml-2">
                     <p>{{camara.name}}</p>
@@ -24,22 +24,40 @@
                 </div>
             </div>
         </header>
-        <div class="relative rounded-t-md flex items-center justify-center w-full h-full">
+        <div (click)="toggleVideo()" class="relative rounded-t-md flex items-center justify-center w-full h-full">
             <div class="absolute z-10">
                 <button id="boton{{camara.idDevice}}" type="button"
                     class="bg-blue-600 rounded-md hover:bg-blue-700 text-white text-center"
-                    (click)="verVideo(camara.idDevice)">
+                    (click)="verVideo(camara.idDevice); toggleVideo()">
                     <p class="mx-1">
                         Ver video
                     </p>
                 </button>
             </div>
             <div class="mx-2 my-2">
-                <video #video class="object-contain rounded-md" autoplay></video>
+                <video id="video{{camara.idDevice}}" #video class="object-contain rounded-md" autoplay></video>
             </div>
         </div>
         <footer class="bg-slate-100 text-center w-full rounded-b-md">
-            <p>Controles</p>
+            <nav>
+                <ul
+                    class="flex items-center justify-around [&>li>a]:border [&>li>a]:hover:cursor-pointer [&>li>a]:bg-blue-400 [&>li>a]:rounded-md [&>li>a]:inline-block [&>li>a]:px-2">
+                    <li><a class="hover:animate-pulse" (click)="activeContent = 'ajustes'; showVideo = true; activeCamera = camara.idDevice">Ajustes</a></li>
+                    <li><a class="hover:animate-pulse" (click)="activeContent = 'info'; showVideo = true; activeCamera = camara.idDevice">Info</a></li>
+                    <li><a class="hover:animate-pulse" (click)="activeContent = 'seguridad'; showVideo = true; activeCamera = camara.idDevice">Seguridad</a></li>
+                </ul>
+            </nav>
+            <section *ngIf="showVideo && activeCamera === camara.idDevice">
+                <div *ngIf="activeContent === 'ajustes'" id="ajustes{{camara.idDevice}}">
+                    <p>Ajustes</p>
+                </div>
+                <div *ngIf="activeContent === 'info'" id="info{{camara.idDevice}}">
+                    <p>Info</p>
+                </div>
+                <div *ngIf="activeContent === 'seguridad'" id="seguridad{{camara.idDevice}}">
+                    Seguridad
+                </div>
+            </section>
         </footer>
     </section>
 </div>

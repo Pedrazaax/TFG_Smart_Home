@@ -1,6 +1,13 @@
+<body class="flex flex-col min-h-screen">
+    <header>
+        <app-sidebar></app-sidebar>
+    </header>
 
-<app-sidebar></app-sidebar>
+    <section class="flex-grow">
+        <router-outlet></router-outlet>
+    </section>
 
-<router-outlet></router-outlet>
-
-<app-footer></app-footer>
+    <footer>
+        <app-footer></app-footer>
+    </footer>   
+</body>
