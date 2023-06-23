@@ -1,4 +1,3 @@
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
 
 @Component({
@@ -10,16 +9,15 @@ export class SidebarComponent {
   dropdown: boolean = false;
   menu: boolean = false;
 
-  constructor(private breakpointObserver: BreakpointObserver) {
-    this.breakpointObserver
-      .observe([Breakpoints.Large])
-      .subscribe((state) => {
-        if (state.matches) {
-          this.menu = false;
-        }
-      });
+  constructor() {
+    const largeMediaQuery = window.matchMedia('(min-width: 1024px)');
+    largeMediaQuery.addEventListener('change', (event) => {
+      if (event.matches) {
+        this.menu = false;
+      }
+    });
   }
-
+  
   toggleDropdown() {
     this.dropdown = !this.dropdown;
   }
