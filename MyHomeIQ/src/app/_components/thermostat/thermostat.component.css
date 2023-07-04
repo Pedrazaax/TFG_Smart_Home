@@ -24,3 +24,7 @@ svg:hover {
 .card-max {
     max-width: 330px;
 }
+
+.hiddenSection {
+    display: none;
+}

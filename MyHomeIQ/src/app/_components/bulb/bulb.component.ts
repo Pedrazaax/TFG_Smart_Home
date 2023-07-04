@@ -50,7 +50,7 @@ export class BulbComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Bombilla');;
+      this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');;
       
       this.updateStates()
     },

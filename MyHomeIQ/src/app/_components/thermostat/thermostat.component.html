@@ -6,8 +6,13 @@
   <section class="border rounded-md mt-3 shadow-2xl animate-fad block ml-8" *ngFor="let termostato of termostatos">
     <header class="bg-slate-100 rounded-t-md">
       <div class="flex items-center justify-between">
-        <div class="flex-grow ml-2">
-          <p>{{termostato.name}}</p>
+        <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md" (dblclick)="editName = true" title="Doble click para editar">
+          <input  (focusout)="editName = false" class="hover:animate-pulse cursor-text" *ngIf="editName" type="text" [(ngModel)]="termostato.name"
+            (keyup.enter)="editName = false; updateInfo(termostato)">
+          <span *ngIf="!editName">{{termostato.name}}</span>
+        </div>        
+        <div>
+          <p *ngIf="termostato.online" class="text-green-500 mr-2">Online</p>
         </div>
         <div class="hover:cursor-pointer">
           <svg (click)="updateState(termostato.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -28,121 +33,180 @@
         </div>
       </div>
     </header>
-    <div class="flex justify-center">
-      <img *ngIf="switch[termostato.idDevice]" src="../../../assets/img/TermostatoON.png" alt="Termostato"
-        class="w-72"
-        (click)="toggleTermostatos()">
-      <img *ngIf="!switch[termostato.idDevice]" src="../../../assets/img/TermostatoOFF.png" alt="Termostato"
-        class="w-72"
-        (click)="toggleTermostatos()">
+    <div class="flex justify-center hover:cursor-pointer">
+      <div class="relative">
+        <img *ngIf="switch[termostato.idDevice]" src="../../../assets/img/TermostatoON.png" alt="Termostato"
+          class="w-72" [class.opacity-30]="!termostato.online" (click)="toggleTermostatos()">
+        <img *ngIf="!switch[termostato.idDevice]" src="../../../assets/img/TermostatoOFF.png" alt="Termostato"
+          class="w-72" [class.opacity-30]="!termostato.online" (click)="toggleTermostatos()">
+        <p *ngIf="!termostato.online" class="text-red-600 text-4xl font-bold absolute top-4 left-14">OFFLINE</p>
+        <p class="absolute bottom-8 right-7 text-3xl">{{temp_set[termostato.idDevice]}}ºC</p>
+      </div>
     </div>
-    <footer class="bg-slate-100 text-center w-full rounded-b-md">
+    <footer class="w-full rounded-b-md">
       <nav>
-          <ul class="flex items-center justify-around [&>li>a]:border-b [&>li>a]:hover:cursor-pointer [&>li>a]:bg-blue-400 [&>li>a]:rounded-md [&>li>a]:inline-block [&>li>a]:px-2">
-              <li class="-mb-px mr-1">
-                <a class="inline-block border-b-2 border-r-2 border-l-2" (click)="activeContent = 'ajustes'; activeCamera = termostato.idDevice">Ajustes</a>
-              </li>
-              <li class="mr-1">
-                <a class="inline-block border-t-2 border-r-2 border-l-2" (click)="activeContent = 'info'; activeCamera = termostato.idDevice">Info</a>
-              </li>
-              <li class="mr-1">
-                <a class="inline-block border-l-2 border-t-2 border-r-2" (click)="activeContent = 'seguridad'; activeCamera = termostato.idDevice">Seguridad</a>
-              </li>
-          </ul>
+        <ul class="flex items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+          <li class="-mb-px mr-1 hover:bg-gray-300">
+            <a class="inline-block" (click)="ajustes(termostato.idDevice)">AJUSTES</a>
+          </li>
+          <li class="mr-1 hover:bg-gray-300">
+            <a class="inline-block" (click)="info(termostato.idDevice)">INFO</a>
+          </li>
+          <li class="mr-1 hover:bg-gray-300">
+            <a class="inline-block" (click)="seguridad(termostato)">SEGURIDAD</a>
+          </li>
+        </ul>
       </nav>
-      <section *ngIf="activeCamera === termostato.idDevice">
-          <div *ngIf="activeContent === 'ajustes'" id="ajustes{{termostato.idDevice}}">
-              <p>Ajustes</p>
+      <section id="seccion{{termostato.idDevice}}" *ngIf="activeTermostato === termostato.idDevice"
+        [class.hiddenSection]="activeTermostato !== termostato.idDevice">
+        <div id="ajustes{{termostato.idDevice}}" *ngIf="activeContent === 'ajustes' && termostato.online"
+          class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+          <div class="flex items-center mb-1">
+            <input
+              class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+              type="checkbox" role="switch" id="onoff{{termostato.idDevice}}" [(ngModel)]="switch[termostato.idDevice]"
+              (click)="updateDevice($event, 'switch', termostato)" [class.bg-green-500]="switch[termostato.idDevice]">
+            <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+              for="onoff{{termostato.idDevice}}">ON/OFF</label>
           </div>
-          <div *ngIf="activeContent === 'info'" id="info{{termostato.idDevice}}">
-              <p>Info</p>
+          <div>
+            <input
+              class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+              type="checkbox" role="switch" id="child{{termostato.idDevice}}" [(ngModel)]="child[termostato.idDevice]"
+              (click)="updateDevice($event, 'child_lock', termostato)" [disabled]="!switch[termostato.idDevice]">
+            <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="child{{termostato.idDevice}}">
+              Child lock
+            </label>
           </div>
-          <div *ngIf="activeContent === 'seguridad'" id="seguridad{{termostato.idDevice}}">
-              Seguridad
+
+          <div>
+            <input
+              class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+              type="checkbox" role="switch" id="eco{{termostato.idDevice}}"
+              (click)="updateDevice($event, 'eco', termostato)" [disabled]="!switch[termostato.idDevice]">
+            <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="eco{{termostato.idDevice}}">
+              Eco
+            </label>
           </div>
-      </section>
-  </footer>
-  </section>
-</div>
 
+          <div>
+            <label class="text-gray-700" for="temperatureRange">Temperatura:</label>
+            <input type="range" class="form-range w-28 ml-3" id="temperatureRange" min="10" max="70" showTickMarks
+              discrete [(ngModel)]="temp_set[termostato.idDevice]" step="5"
+              (click)="updateDevice($event, 'temp_set', termostato)" [disabled]="!switch[termostato.idDevice]">
+            <output class="text-gray-700">{{temp_set[termostato.idDevice]}} ºC</output>
+          </div>
 
-<!--
-<div class="container-sm mt-5">
-  <div class="row align-items-center justify-content-center">
-    <div class="col card-max" *ngFor="let termostato of termostatos">
-      <div class="card border-dark card-tamanio">
+          <div>
+            <label class="text-gray-700" for="upperTempRange">Upper temp:</label>
+            <input type="range" class="form-range w-28 ml-3" id="upperTempRange" min="0" max="100" showTickMarks
+              discrete [(ngModel)]="upper_temp[termostato.idDevice]" step="5"
+              (click)="updateDevice($event, 'upper_temp', termostato)" [disabled]="!switch[termostato.idDevice]">
+            <output class="text-gray-700">{{upper_temp[termostato.idDevice]}} ºC</output>
+          </div>
+        </div>
 
-        <div class="container-sm">
-          <table class="table">
-            <tbody>
-              <tr>
-                <td colspan="2" *ngIf="switch[termostato.idDevice]">
-                  <img src="../../../assets/img/TermostatoON.png" alt="Termostato"
-                    class="cursor card-img-top termostato-image" (click)="toggleTermostatos()">
-                </td>
-                <td colspan="2" *ngIf="!switch[termostato.idDevice]">
-                  <img src="../../../assets/img/TermostatoOFF.png" alt="Termostato"
-                    class="cursor card-img-top termostato-image" (click)="toggleTermostatos()">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h5 class="cursor" (click)="toggleTermostatos()">{{termostato.name}}</h5>
-                </td>
-                <td>
-                  <svg (click)="updateState(termostato.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16"
-                    height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
-                    <path
-                      d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
-                  </svg>
-                  <svg (click)="delete(termostato.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                    fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                    <path
-                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                    <path
-                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                  </svg>
-                </td>
-              </tr>
-            </tbody>
+        <div *ngIf="activeContent === 'info'" class="ml-2" id="info{{termostato.idDevice}}">
+          <table class="w-full text-left">
+            <tr>
+              <td class="font-bold">Categoría:</td>
+              <td class="text-sm">{{termostato.tipoDevice}}</td>
+            </tr>
+            <tr>
+              <td class="font-bold">Modelo:</td>
+              <td class="text-sm cursor-pointer hover:bg-gray-300 inline-block rounded-md" (dblclick)="editModel = true"
+                title="Doble click para editar">
+                <input class="border hover:animate-pulse hover:text-blue-700 cursor-text" *ngIf="editModel"
+                  type="text" [(ngModel)]="termostato.model" (keyup.enter)="editModel = false; updateInfo(termostato)"
+                  (focusout)="editModel = false">
+                <span class="hover:text-blue-700" *ngIf="!editModel">{{termostato.model}}</span>
+                <span class="italic text-red-500" *ngIf="!editModel && !termostato.model">Añadir modelo</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-bold">ID Device:</td>
+              <td class="text-sm">{{termostato.idDevice}}</td>
+            </tr>
+            <tr>
+              <td class="font-bold">IP:</td>
+              <td class="text-sm">{{termostato.ip}}</td>
+            </tr>
+            <tr>
+              <td class="font-bold">Online:</td>
+              <td class="text-sm">{{termostato.online}}</td>
+            </tr>
           </table>
         </div>
 
-        <div class="card-body" *ngIf="showTermostatos">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="switchDefault"
-              [(ngModel)]="switch[termostato.idDevice]" (click)="updateDevice($event, 'switch', termostato)">
-            <label class="form-check-label" for="switchDefault">Switch</label>
-          </div>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="childLockDefault"
-              [(ngModel)]="child[termostato.idDevice]" (click)="updateDevice($event, 'child_lock', termostato)">
-            <label class="form-check-label" for="childLockDefault">Child lock</label>
-          </div>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="eco[termostato.idDevice]"
-              id="ecoDefault" (click)="updateDevice($event, 'eco', termostato)">
-            <label class="form-check-label" for="ecoDefault">Eco</label>
-          </div>
-          <div class="form-group">
-            <label for="temperatureRange">Temperatura:</label>
-            <input type="range" class="form-control-range" id="temperatureRange" min="10" max="70" showTickMarks
-              discrete [(ngModel)]="temp_set[termostato.idDevice]" step="5"
-              (click)="updateDevice($event, 'temp_set', termostato)">
-            <output>{{temp_set[termostato.idDevice]}} ºC</output>
-          </div>
-          <div class="form-group">
-            <label for="upperTempRange">Upper temp:</label>
-            <input type="range" class="form-control-range" id="upperTempRange" min="0" max="100" showTickMarks discrete
-              [(ngModel)]="upper_temp[termostato.idDevice]" step="5"
-              (click)="updateDevice($event, 'upper_temp', termostato)">
-            <output>{{upper_temp[termostato.idDevice]}} ºC</output>
-          </div>
+        <div *ngIf="activeContent === 'seguridad'" id="seguridad{{termostato.idDevice}}">
+
+          <ng-container *ngIf="!vulnerabilities; else vulnerabilitiesLoaded">
+            <div class="animate-pulse mx-2 my-2 cursor-wait">
+              <div class="flex">
+                <p class="h-4 bg-gray-300 rounded w-4/5"></p>
+                <p class="h-4 bg-gray-300 rounded w-3 ml-2"></p>
+              </div>
+              <div class="flex [&>div]:rounded-full [&>div]:h-16 [&>div]:w-32 [&>div]:mt-2">
+                <div class="bg-red-100"></div>
+                <div class="bg-orange-100"></div>
+                <div class="bg-yellow-100"></div>
+                <div class="bg-slate-300"></div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #vulnerabilitiesLoaded>
+            <div class="flex flex-wrap">
+              <p class="ml-2 font-bold">Total de vulnerabilidades: {{ responseNVD.totalResults }}</p>
+              <p class="ml-2" *ngIf="responseNVD.totalResults == 0">Este dispositivo no tiene vulnerabilidades
+                registradas</p>
+            </div>
+            <div class="flex flex-wrap justify-center">
+              <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
+                <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
+                  [ngClass]="{
+                    'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
+                    'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
+                    'bg-red-500': vulnerability.baseSeverity === 'HIGH',
+                    'bg-black': vulnerability.baseSeverity === 'CRITICAL'
+                  }" [style.width]="getCircleSize(vulnerability.count)"
+                  [style.height]="getCircleSize(vulnerability.count)"></div>
+
+                <div
+                  class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
+                  <span class="text-xs">{{ vulnerability.count }}</span>
+                </div>
+
+                <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
+                  class="group-hover:block absolute top-full left-1/2 transform -translate-x-1/2 p-2 rounded-md bg-gray-300 shadow-xl w-40 hidden z-10 h-auto">
+
+                  <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
+                    <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
+                    <div *ngFor="let cve of vulnerability.cves">
+                      <p class="text-center hover:bg-white hover:cursor-pointer" (mouseenter)="selectCve(cve)"
+                        (mouseleave)="deselectCve()">
+                        {{ cve.cve.id }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Tooltip con la descripción del objeto CVE seleccionado -->
+                  <ng-container *ngIf="selectedCve">
+                    <div
+                      class="text-xs absolute top-0 left-full transform translate-x-2 p-2 rounded-md bg-gray-300 shadow-xl w-96 z-20">
+                      <p>{{ getDescription(selectedCve) }}</p>
+                    </div>
+                  </ng-container>
+
+                </div>
+
+              </div>
+            </div>
+          </ng-template>
+
         </div>
 
-      </div>
-    </div>
-  </div>
-</div>  
--->
+      </section>
+    </footer>
+  </section>
+</div>
