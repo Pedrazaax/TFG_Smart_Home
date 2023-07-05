@@ -25,7 +25,7 @@ export class ThermostatComponent {
 
   switchON: boolean = false;
 
-  activeContent = 'ajustes';
+  activeContent = '';
   activeTermostato = '';
 
   responseNVD: any;

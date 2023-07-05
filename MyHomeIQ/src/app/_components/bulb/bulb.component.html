@@ -1,139 +1,233 @@
-<div class="container-sm mt-5">
-    <div class="row align-items-center justify-content-center">
-        <div class="col card-max" *ngFor="let bombilla of bombillas">
-            <div class="card border-dark card-tamanio">
-                <div class="container-sm">
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <td colspan="2" *ngIf="switch_led[bombilla.idDevice]">
-                                    <div class="container">
-                                        <img src="../../../assets/img/BombillaON.png"
-                                            alt="bombilla{{ bombilla.idDevice }}"
-                                            class="cursor card-img-top bombilla-image" (click)="toggleBombillas()">
-                                        <svg #circle [attr.id]="'circle-' + bombilla.idDevice" height="20vh"
-                                            width="20vh" class="circle-container" (click)="toggleBombillas()">
-                                            <defs>
-                                                <filter id="blur">
-                                                    <feGaussianBlur class="blur" in="SourceGraphic" stdDeviation="5" />
-                                                </filter>
-                                            </defs>
-                                            <circle cx="50%" cy="50%" r="25%" class="circle"></circle>
-                                        </svg>
-                                    </div>
-                                </td>
-                                <td colspan="2" *ngIf="!switch_led[bombilla.idDevice]">
-                                    <div class="container">
-                                        <img src="../../../assets/img/BombillaOFF.png"
-                                            alt="bombilla{{ bombilla.idDevice }}"
-                                            class="cursor card-img-top bombilla-image" (click)="toggleBombillas()">
-                                        <svg height="100" width="100" class="circle-container"
-                                            (click)="toggleBombillas()">
-                                            <defs>
-                                                <filter id="blur">
-                                                    <feGaussianBlur class="blur" in="SourceGraphic" stdDeviation="5" />
-                                                </filter>
-                                            </defs>
-                                            <circle cx="50" cy="50" r="40" class="circle2"></circle>
-                                        </svg>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h5 class="cursor" (click)="toggleBombillas()">{{bombilla.name}}</h5>
-                                </td>
-                                <td>
-                                    <svg (click)="updateState(bombilla.idDevice)" xmlns="http://www.w3.org/2000/svg"
-                                        width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise"
-                                        viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
-                                        <path
-                                            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
-                                    </svg>
-                                    <svg (click)="delete(bombilla.idDevice)" xmlns="http://www.w3.org/2000/svg"
-                                        width="16" height="16" fill="currentColor" class="bi bi-trash"
-                                        viewBox="0 0 16 16">
-                                        <path
-                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                        <path
-                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                    </svg>
-                                </td>
-                            </tr>
-                        </tbody>
+<p class="mt-2 ml-4 text-lg font-bold underline font-mono">
+    Bombillas:
+</p>
+
+<div class="grid grid-cols-custom gap-2">
+    <section class="border rounded-md mt-3 shadow-2xl animate-fad block ml-8" *ngFor="let bombilla of bombillas">
+        <header class="bg-slate-100 rounded-t-md">
+            <div class="flex items-center justify-between">
+                <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md"
+                    (dblclick)="editName = true" title="Doble click para editar">
+                    <input (focusout)="editName = false" class="hover:animate-pulse cursor-text" *ngIf="editName"
+                        type="text" [(ngModel)]="bombilla.name" (keyup.enter)="editName = false; updateInfo(bombilla)">
+                    <span *ngIf="!editName">{{bombilla.name}}</span>
+                </div>
+                <div>
+                    <p *ngIf="bombilla.online" class="text-green-500 mr-2">Online</p>
+                </div>
+                <div class="hover:cursor-pointer">
+                    <svg (click)="updateState(bombilla.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                        <path
+                            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                    </svg>
+                </div>
+                <div class="mr-2 hover:cursor-pointer">
+                    <svg (click)="delete(bombilla.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                        <path
+                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                    </svg>
+                </div>
+            </div>
+        </header>
+        <div class="flex justify-center hover:cursor-pointer">
+            <div class="relative">
+                <img *ngIf="switch_led[bombilla.idDevice]" src="../../../assets/img/BombillaON.png" alt="Termostato"
+                    class="w-72" [class.opacity-30]="!bombilla.online" (click)="toggleBombillas()">
+                <img *ngIf="!switch_led[bombilla.idDevice]" src="../../../assets/img/BombillaOFF.png" alt="Termostato"
+                    class="w-72" [class.opacity-30]="!bombilla.online" (click)="toggleBombillas()">
+                <svg *ngIf="switch_led[bombilla.idDevice]" #circle [attr.id]="'circle-' + bombilla.idDevice" height="25vh" width="25vh"
+                    class="circle-container" (click)="toggleBombillas()">
+                    <defs>
+                        <filter id="blur">
+                            <feGaussianBlur class="blur" in="SourceGraphic" stdDeviation="5" />
+                        </filter>
+                    </defs>
+                    <circle cx="50%" cy="50%" r="25%" class="circle"></circle>
+                </svg>
+                <p *ngIf="!bombilla.online" class="text-red-600 text-4xl font-bold absolute top-4 left-14">OFFLINE</p>
+            </div>
+        </div>
+        <footer class="w-full rounded-b-md">
+            <nav>
+                <ul
+                    class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+                    <li class="-mb-px mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="ajustes(bombilla.idDevice)">AJUSTES</a>
+                    </li>
+                    <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="colores(bombilla.idDevice)">COLOR</a>
+                    </li>
+                    <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="info(bombilla.idDevice)">INFO</a>
+                    </li>
+                    <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="seguridad(bombilla)">SEGURIDAD</a>
+                    </li>
+                </ul>
+            </nav>
+            <section id="seccion{{bombilla.idDevice}}" *ngIf="activeBulb === bombilla.idDevice"
+                [class.hiddenSection]="activeBulb !== bombilla.idDevice">
+                <div id="ajustes{{bombilla.idDevice}}" *ngIf="activeContent === 'ajustes' && bombilla.online"
+                    class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+                    <div class="flex items-center mb-1">
+                        <input
+                            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                            type="checkbox" role="switch" id="onoff{{bombilla.idDevice}}"
+                            [(ngModel)]="switch_led[bombilla.idDevice]"
+                            (click)="updateDevice($event, 'switch_led', bombilla)"
+                            [class.bg-green-500]="switch_led[bombilla.idDevice]">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="onoff{{bombilla.idDevice}}">ON/OFF</label>
+                    </div>
+                    <div>
+                        <select id="work_mode{{ bombilla.idDevice }}" class="form-control mr-2" id="workMode"
+                            [(ngModel)]="work_mode[bombilla.idDevice]"
+                            (change)="updateDevice($event, 'work_mode', bombilla)"
+                            [disabled]="!switch_led[bombilla.idDevice]">
+                            <option value="white">Blanco</option>
+                            <option value="colour">Color</option>
+                            <option value="scene">Escena</option>
+                            <option value="music">Música</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-gray-700" for="temperatureRange">Brillo:</label>
+                        <input type="range" class="form-range w-28 ml-3" id="temperatureRange" min="10" max="1000"
+                            showTickMarks discrete [(ngModel)]="bright_value_v2[bombilla.idDevice]" step="5"
+                            (click)="updateDevice($event, 'bright_value_v2', bombilla)"
+                            [disabled]="!switch_led[bombilla.idDevice]">
+                        <output class="text-gray-700">{{bright_value_v2[bombilla.idDevice]}}</output>
+                    </div>
+
+                    <div>
+                        <label class="text-gray-700" for="upperTempRange">Temperatura:</label>
+                        <input type="range" class="form-range w-28 ml-3" id="upperTempRange" min="0" max="1000"
+                            showTickMarks discrete [(ngModel)]="temp_value_v2[bombilla.idDevice]" step="5"
+                            (click)="updateDevice($event, 'temp_value_v2', bombilla)"
+                            [disabled]="!switch_led[bombilla.idDevice]">
+                        <output class="text-gray-700">{{temp_value_v2[bombilla.idDevice]}}</output>
+                    </div>
+                </div>
+
+                <div *ngIf="activeContent === 'info'" class="ml-2" id="info{{bombilla.idDevice}}">
+                    <table class="w-full text-left">
+                        <tr>
+                            <td class="font-bold">Categoría:</td>
+                            <td class="text-sm">{{bombilla.tipoDevice}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Modelo:</td>
+                            <td class="text-sm cursor-pointer hover:bg-gray-300 inline-block rounded-md"
+                                (dblclick)="editModel = true" title="Doble click para editar">
+                                <input class="border hover:animate-pulse hover:text-blue-700 cursor-text"
+                                    *ngIf="editModel" type="text" [(ngModel)]="bombilla.model"
+                                    (keyup.enter)="editModel = false; updateInfo(bombilla)"
+                                    (focusout)="editModel = false">
+                                <span class="hover:text-blue-700" *ngIf="!editModel">{{bombilla.model}}</span>
+                                <span class="italic text-red-500" *ngIf="!editModel && !bombilla.model">Añadir
+                                    modelo</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">ID Device:</td>
+                            <td class="text-sm">{{bombilla.idDevice}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">IP:</td>
+                            <td class="text-sm">{{bombilla.ip}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Online:</td>
+                            <td class="text-sm">{{bombilla.online}}</td>
+                        </tr>
                     </table>
                 </div>
 
-                <div class="card-body" *ngIf="showBombillas">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab"
-                                href="#ajustes{{bombilla.idDevice}}">Ajustes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#info{{bombilla.idDevice}}">Color</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-
-                        <div id="ajustes{{ bombilla.idDevice }}" class=" tab-pane active"><br>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch"
-                                    id="switch{{ bombilla.idDevice }}" [(ngModel)]="switch_led[bombilla.idDevice]"
-                                    (click)="updateDevice($event, 'switch_led', bombilla)">
-                                <label class="form-check-label" for="switchDefault">Switch</label>
-                            </div>
-                            <div class="form-group">
-                                <label for="workMode">Modo de trabajo:</label>
-                                <select id="work_mode{{ bombilla.idDevice }}" class="form-control" id="workMode"
-                                    [(ngModel)]="work_mode[bombilla.idDevice]"
-                                    (change)="updateDevice($event, 'work_mode', bombilla)">
-                                    <option value="white">Blanco</option>
-                                    <option value="colour">Color</option>
-                                    <option value="scene">Escena</option>
-                                    <option value="music">Música</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="brightnessRange">Brillo:</label>
-                                <input type="range" class="form-control-range" id="brightnessRange" min="10" max="1000"
-                                    step="1" showTickMarks discrete [(ngModel)]="bright_value_v2[bombilla.idDevice]"
-                                    (change)="updateDevice($event, 'bright_value_v2', bombilla)">
-                                <output></output>
-                            </div>
-                            <div class="form-group">
-                                <label for="temperatureRange">Temperatura:</label>
-                                <input type="range" class="form-control-range" id="temperatureRange" min="0" max="1000"
-                                    step="1" showTickMarks discrete [(ngModel)]="temp_value_v2[bombilla.idDevice]"
-                                    (change)="updateDevice($event, 'temp_value_v2', bombilla)">
-                                <output></output>
-                            </div>
-                            <div class="form-group">
-                                <label for="countdown{{ bombilla.idDevice }}">Cuenta atrás (segundos):</label>
-                                <input type="number" class="form-control" id="countdown{{ bombilla.idDevice }}" min="0"
-                                    [(ngModel)]="countdown_1[bombilla.idDevice]" max="86400" step="1"
-                                    (change)="updateDevice($event, 'countdown_1', bombilla)">
-                            </div>
-                        </div>
-
-                        <div id="info{{ bombilla.idDevice }}" class=" tab-pane fade"><br>
-                            <div>
-
-                                <span [style.background]="rgb[bombilla.idDevice]" [cpToggle]="true"
-                                    [cpDialogDisplay]="'inline'" [cpOutputFormat]="'rgba'"
-                                    [cpPresetColors]="['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']"
-                                    [(colorPicker)]="rgb[bombilla.idDevice]"
-                                    (colorPickerChange)="updateColor($event,'colour_data_v2',bombilla)">
-                                </span>
-
-                            </div>
-                        </div>
-
-                    </div>
+                <div *ngIf="activeContent === 'color' && switch_led[bombilla.idDevice]" class="ml-4 my-2">
+                    <span [style.background]="rgb[bombilla.idDevice]" [cpToggle]="true" [cpDialogDisplay]="'inline'"
+                        [cpOutputFormat]="'rgba'"
+                        [cpPresetColors]="['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']"
+                        [(colorPicker)]="rgb[bombilla.idDevice]"
+                        (colorPickerChange)="updateColor($event,'colour_data_v2',bombilla)">
+                    </span>
                 </div>
-            </div>
-        </div>
-    </div>
+
+                <div *ngIf="activeContent === 'seguridad'" id="seguridad{{bombilla.idDevice}}">
+
+                    <ng-container *ngIf="!vulnerabilities; else vulnerabilitiesLoaded">
+                        <div class="animate-pulse mx-2 my-2 cursor-wait">
+                            <div class="flex">
+                                <p class="h-4 bg-gray-300 rounded w-4/5"></p>
+                                <p class="h-4 bg-gray-300 rounded w-3 ml-2"></p>
+                            </div>
+                            <div class="flex [&>div]:rounded-full [&>div]:h-16 [&>div]:w-32 [&>div]:mt-2">
+                                <div class="bg-red-100"></div>
+                                <div class="bg-orange-100"></div>
+                                <div class="bg-yellow-100"></div>
+                                <div class="bg-slate-300"></div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #vulnerabilitiesLoaded>
+                        <div class="flex flex-wrap">
+                            <p class="ml-2 font-bold">Total de vulnerabilidades: {{ responseNVD.totalResults }}</p>
+                            <p class="ml-2" *ngIf="responseNVD.totalResults == 0">Este dispositivo no tiene
+                                vulnerabilidades
+                                registradas</p>
+                        </div>
+                        <div class="flex flex-wrap justify-center">
+                            <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
+                                <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
+                                    [ngClass]="{
+                      'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
+                      'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
+                      'bg-red-500': vulnerability.baseSeverity === 'HIGH',
+                      'bg-black': vulnerability.baseSeverity === 'CRITICAL'
+                    }" [style.width]="getCircleSize(vulnerability.count)"
+                                    [style.height]="getCircleSize(vulnerability.count)"></div>
+
+                                <div
+                                    class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
+                                    <span class="text-xs">{{ vulnerability.count }}</span>
+                                </div>
+
+                                <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
+                                    class="group-hover:block absolute top-full left-1/2 transform -translate-x-1/2 p-2 rounded-md bg-gray-300 shadow-xl w-40 hidden z-10 h-auto">
+
+                                    <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
+                                        <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
+                                        <div *ngFor="let cve of vulnerability.cves">
+                                            <p class="text-center hover:bg-white hover:cursor-pointer"
+                                                (mouseenter)="selectCve(cve)" (mouseleave)="deselectCve()">
+                                                {{ cve.cve.id }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tooltip con la descripción del objeto CVE seleccionado -->
+                                    <ng-container *ngIf="selectedCve">
+                                        <div
+                                            class="text-xs absolute top-0 left-full transform translate-x-2 p-2 rounded-md bg-gray-300 shadow-xl w-96 z-20">
+                                            <p>{{ getDescription(selectedCve) }}</p>
+                                        </div>
+                                    </ng-container>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </ng-template>
+
+                </div>
+
+            </section>
+        </footer>
+    </section>
 </div>

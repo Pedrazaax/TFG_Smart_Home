@@ -4,6 +4,7 @@ import { Device } from 'src/app/_models/device';
 import { Estados } from 'src/app/_models/estados';
 import { Jso } from 'src/app/_models/jso';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
+import { NvdapiService } from 'src/app/_services/nvdapi.service';
 
 
 @Component({
@@ -37,11 +38,18 @@ export class BulbComponent {
   cycle_timing: Jso = {};
   random_timing: Jso = {};
 
-  showBombillas: boolean = false;
-
   hsv: any;
+
+  editName: boolean = false;
+  editModel: boolean = false;
+  activeContent: string = '';
+  activeBulb: string = '';
+  vulnerabilities: any = '';
+
+  selectedCve: any;
+  responseNVD: any;
   
-  constructor(private deviceService: DispositivoService, private toastr: ToastrService) {
+  constructor(private deviceService: DispositivoService, private toastr: ToastrService, private nvdService: NvdapiService) {
   }
 
   ngOnInit(): void {
@@ -51,13 +59,16 @@ export class BulbComponent {
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
       this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');;
-      
       this.updateStates()
     },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error")
       }
     )
+  }
+
+  updateInfo(termostato: Device){
+    console.log(termostato)
   }
 
   updateColor(color: any, valorKey: string, dispositivo: Device) {
@@ -399,7 +410,123 @@ export class BulbComponent {
   }
 
   toggleBombillas() {
-    this.showBombillas = !this.showBombillas;
+    this.activeBulb = '';
+  }
+
+  ajustes(idDevice: string) {
+
+    if (this.activeContent == 'ajustes' && this.activeBulb == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'ajustes';
+      this.activeBulb = idDevice;
+    }
+
+  }
+
+  colores(idDevice: string) {
+    if (this.activeContent == 'color' && this.activeBulb == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'color';
+      this.activeBulb = idDevice;
+    }
+  }
+
+  info(idDevice: string) {
+    if (this.activeContent == 'info' && this.activeBulb == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'info';
+      this.activeBulb = idDevice;
+    }
+
+  }
+
+  seguridad(device: Device) {
+    if (this.activeContent == 'seguridad' && this.activeBulb == device.idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'seguridad';
+      this.activeBulb = device.idDevice;
+      this.nvd(device);
+    }
+  }
+
+  nvd(device: Device) {
+    let keyword = device.tipoDevice + device.model;
+
+    if (this.vulnerabilities == '') {
+      this.nvdService.searchVulnerabilities(keyword).subscribe(
+        (respuesta) => {
+          console.log(respuesta);
+          this.responseNVD = respuesta;
+          this.vulnerabilities = this.responseNVD.vulnerabilities;
+
+          const vulns = this.vulnerabilities;
+
+          // Agrupar vulnerabilidades por nivel de severidad
+          const groupedVulns = vulns.reduce((acc: any, vuln: any) => {
+            let severity;
+            if (vuln.cve.metrics.cvssMetricV2) {
+              severity = vuln.cve.metrics.cvssMetricV2[0].baseSeverity;
+            } else if (vuln.cve.metrics.cvssMetricV31) {
+              severity = vuln.cve.metrics.cvssMetricV31[0].cvssData.baseSeverity;
+            }
+            if (!acc[severity]) {
+              acc[severity] = [];
+            }
+            acc[severity].push(vuln);
+            return acc;
+          }, {});
+
+          // Crear array de vulnerabilidades con el formato adecuado
+          this.vulnerabilities = Object.keys(groupedVulns).map((key) => ({
+            baseSeverity: key,
+            count: groupedVulns[key].length,
+            cves: groupedVulns[key],
+          }));
+
+          console.log(this.vulnerabilities)
+
+        },
+        (error: any) => {
+          this.toastr.error(error.error.detail, 'Error');
+        }
+      );
+    }
+  }
+
+  getCircleSize(count: number) {
+    // Establecer tamaño mínimo y máximo
+    const minSize = 50;
+    const maxSize = 150;
+
+    // Calcular tamaño del círculo
+    let size = count * 10;
+    if (size < minSize) {
+      size = minSize;
+    } else if (size > maxSize) {
+      size = maxSize;
+    }
+
+    return size + 'px';
+  }
+
+  getDescription(cve: any) {
+    let description = cve.cve.descriptions.find((desc: any) => desc.lang === 'es');
+    if (!description) {
+      description = cve.cve.descriptions.find((desc: any) => desc.lang === 'en');
+    }
+    return description ? description.value : '';
+  }
+  
+  selectCve(cve: any) {
+    this.selectedCve = cve;
+  }
+
+  deselectCve() {
+    this.selectedCve = null;
   }
 
 }

@@ -36,7 +36,7 @@ export class SocketComponent {
 
   listarDevices(){
     this.DeviceService.listarDevices().subscribe(respuesta => {
-      this.sockets = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Enchufe');;
+      this.sockets = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Socket');;
       this.updateStates();
     },
       (error: any) => {
