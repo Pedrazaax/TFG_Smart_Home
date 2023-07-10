@@ -107,8 +107,14 @@ export class ThermostatComponent {
     )
   }
 
-  updateInfo(termostato: Device){
-    console.log(termostato)
+  updateInfo(device: Device) {
+    this.deviceService.updateNameModel(device).subscribe(respuesta => {
+      this.toastr.success('Dispositivo modificado', 'Éxito')
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    )
   }
 
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {
@@ -252,7 +258,7 @@ export class ThermostatComponent {
 
   ajustes(idDevice: string) {
 
-    if (this.activeContent == 'ajustes' && this.activeTermostato == idDevice){
+    if (this.activeContent == 'ajustes' && this.activeTermostato == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'ajustes';
@@ -262,7 +268,7 @@ export class ThermostatComponent {
   }
 
   info(idDevice: string) {
-    if (this.activeContent == 'info' && this.activeTermostato == idDevice){
+    if (this.activeContent == 'info' && this.activeTermostato == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'info';
@@ -273,7 +279,7 @@ export class ThermostatComponent {
   }
 
   seguridad(device: Device) {
-    if (this.activeContent == 'seguridad' && this.activeTermostato == device.idDevice){
+    if (this.activeContent == 'seguridad' && this.activeTermostato == device.idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'seguridad';

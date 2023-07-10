@@ -4,6 +4,7 @@ import { Device } from 'src/app/_models/device';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Hls from 'hls.js'
+import { NvdapiService } from 'src/app/_services/nvdapi.service';
 
 @Component({
   selector: 'app-video-camara',
@@ -20,11 +21,18 @@ export class VideoCamaraComponent {
   numValue: any = -1;
   dangerousvideoUrl: any;
   hls: Hls = new Hls;
-  showVideo: boolean = false;
-  activeContent = 'ajustes';
-  activeCamera = '';
 
-  constructor(private deviceService: DispositivoService, private toastr: ToastrService, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
+  activeCamara: string = '';
+
+  editName: boolean = false;
+  editModel: boolean = false;
+  activeContent: string = '';
+  vulnerabilities: any = '';
+
+  selectedCve: any;
+  responseNVD: any;
+
+  constructor(private deviceService: DispositivoService, private nvdService:NvdapiService ,private toastr: ToastrService, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
 
   }
 
@@ -34,7 +42,7 @@ export class VideoCamaraComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.camaras = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Camara');
+      this.camaras = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Smart Camera');
       this.updateStates();
     },
       (error: any) => {
@@ -119,7 +127,124 @@ export class VideoCamaraComponent {
   }
 
   toggleVideo() {
-    this.showVideo = !this.showVideo;
+    this.activeCamara = '';
+  }
+
+  ajustes(idDevice: string) {
+
+    if (this.activeContent == 'ajustes' && this.activeCamara == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'ajustes';
+      this.activeCamara = idDevice;
+    }
+
+  }
+
+  info(idDevice: string) {
+    if (this.activeContent == 'info' && this.activeCamara == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'info';
+      this.activeCamara = idDevice;
+    }
+
+  }
+
+  seguridad(device: Device) {
+    if (this.activeContent == 'seguridad' && this.activeCamara == device.idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'seguridad';
+      this.activeCamara = device.idDevice;
+      this.nvd(device);
+    }
+  }
+
+  nvd(device: Device) {
+    let keyword = device.tipoDevice + device.model;
+
+    if (this.vulnerabilities == '') {
+      this.nvdService.searchVulnerabilities(keyword).subscribe(
+        (respuesta) => {
+          console.log(respuesta);
+          this.responseNVD = respuesta;
+          this.vulnerabilities = this.responseNVD.vulnerabilities;
+
+          const vulns = this.vulnerabilities;
+
+          // Agrupar vulnerabilidades por nivel de severidad
+          const groupedVulns = vulns.reduce((acc: any, vuln: any) => {
+            let severity;
+            if (vuln.cve.metrics.cvssMetricV2) {
+              severity = vuln.cve.metrics.cvssMetricV2[0].baseSeverity;
+            } else if (vuln.cve.metrics.cvssMetricV31) {
+              severity = vuln.cve.metrics.cvssMetricV31[0].cvssData.baseSeverity;
+            }
+            if (!acc[severity]) {
+              acc[severity] = [];
+            }
+            acc[severity].push(vuln);
+            return acc;
+          }, {});
+
+          // Crear array de vulnerabilidades con el formato adecuado
+          this.vulnerabilities = Object.keys(groupedVulns).map((key) => ({
+            baseSeverity: key,
+            count: groupedVulns[key].length,
+            cves: groupedVulns[key],
+          }));
+
+          console.log(this.vulnerabilities)
+
+        },
+        (error: any) => {
+          this.toastr.error(error.error.detail, 'Error');
+        }
+      );
+    }
+  }
+
+  getCircleSize(count: number) {
+    // Establecer tamaño mínimo y máximo
+    const minSize = 50;
+    const maxSize = 150;
+
+    // Calcular tamaño del círculo
+    let size = count * 10;
+    if (size < minSize) {
+      size = minSize;
+    } else if (size > maxSize) {
+      size = maxSize;
+    }
+
+    return size + 'px';
+  }
+
+  getDescription(cve: any) {
+    let description = cve.cve.descriptions.find((desc: any) => desc.lang === 'es');
+    if (!description) {
+      description = cve.cve.descriptions.find((desc: any) => desc.lang === 'en');
+    }
+    return description ? description.value : '';
+  }
+  
+  selectCve(cve: any) {
+    this.selectedCve = cve;
+  }
+
+  deselectCve() {
+    this.selectedCve = null;
+  }
+
+  updateInfo(device: Device) {
+    this.deviceService.updateNameModel(device).subscribe(respuesta => {
+      this.toastr.success('Dispositivo modificado', 'Éxito')
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    )
   }
 
 

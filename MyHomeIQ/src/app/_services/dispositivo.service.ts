@@ -9,8 +9,6 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DispositivoService {
-  
-
   constructor(private httpClient: HttpClient, private config: AppConfig) { }
 
   updateDevice(device:any) {
@@ -55,6 +53,12 @@ export class DispositivoService {
     const url = `${this.config.apiUrl}/devices/delete/${idDevice}`;
 
     return this.httpClient.delete(url);
+  }
+
+  updateNameModel(device: Device) {
+    const url = `${this.config.apiUrl}/devices/updateDevice/`;
+
+    return this.httpClient.put(url,device);
   }
 
 }

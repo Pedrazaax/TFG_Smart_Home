@@ -58,8 +58,9 @@ export class BulbComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');;
-      this.updateStates()
+      this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');
+      console.log(this.bombillas);
+      this.updateStates();
     },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error")
@@ -67,8 +68,14 @@ export class BulbComponent {
     )
   }
 
-  updateInfo(termostato: Device){
-    console.log(termostato)
+  updateInfo(device: Device) {
+    this.deviceService.updateNameModel(device).subscribe(respuesta => {
+      this.toastr.success('Dispositivo modificado', 'Éxito')
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    )
   }
 
   updateColor(color: any, valorKey: string, dispositivo: Device) {

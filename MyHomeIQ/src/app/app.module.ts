@@ -22,6 +22,7 @@ import { InicioComponent } from './_components/inicio/inicio.component';
 import { IntroComponent } from './_components/intro/intro.component';
 import { VideoCamaraComponent } from './_components/video-camara/video-camara.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ConsumoComponent } from './_components/consumo/consumo.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
     BulbComponent,
     InicioComponent,
     IntroComponent,
-    VideoCamaraComponent
+    VideoCamaraComponent,
+    ConsumoComponent
   ],
   imports: [
     BrowserModule,

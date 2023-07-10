@@ -1,9 +1,19 @@
-<div class="h-screen flex flex-wrap justify-evenly items-start">
-    <section class="border w-96 rounded-md mt-3 shadow-2xl animate-fade" *ngFor="let camara of camaras">
-        <header class="bg-slate-100 rounded-t-md" (click)="toggleVideo()">
+<p class="mt-2 ml-4 text-lg font-bold underline font-mono">
+    Cámaras:
+</p>
+
+<div class="grid grid-cols-custom gap-2">
+    <section class="border rounded-md mt-3 shadow-2xl animate-fad block ml-8" *ngFor="let camara of camaras">
+        <header class="bg-slate-100 rounded-t-md">
             <div class="flex items-center justify-between">
-                <div class="flex-grow ml-2">
-                    <p>{{camara.name}}</p>
+                <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md"
+                    (dblclick)="editName = true" title="Doble click para editar">
+                    <input (focusout)="editName = false" class="hover:animate-pulse cursor-text" *ngIf="editName"
+                        type="text" [(ngModel)]="camara.name" (keyup.enter)="editName = false; updateInfo(camara)">
+                    <span *ngIf="!editName">{{camara.name}}</span>
+                </div>
+                <div>
+                    <p *ngIf="camara.online" class="text-green-500 mr-2">Online</p>
                 </div>
                 <div class="hover:cursor-pointer">
                     <svg (click)="updateState(camara.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16"
@@ -24,39 +34,150 @@
                 </div>
             </div>
         </header>
-        <div (click)="toggleVideo()" class="relative rounded-t-md flex items-center justify-center w-full h-full">
-            <div class="absolute z-10">
-                <button id="boton{{camara.idDevice}}" type="button"
-                    class="bg-blue-600 rounded-md hover:bg-blue-700 text-white text-center"
-                    (click)="verVideo(camara.idDevice); toggleVideo()">
-                    <p class="mx-1">
-                        Ver video
-                    </p>
-                </button>
-            </div>
-            <div class="mx-2 my-2">
-                <video id="video{{camara.idDevice}}" #video class="object-contain rounded-md" autoplay></video>
+
+        <div class="flex justify-center hover:cursor-pointer">
+            <div (click)="toggleVideo()" class="relative rounded-t-md flex items-center justify-center w-full h-full">
+                <div class="absolute z-10">
+                    <button id="boton{{camara.idDevice}}" type="button"
+                        class="bg-blue-600 rounded-md hover:bg-blue-700 text-white text-center"
+                        (click)="verVideo(camara.idDevice); toggleVideo()">
+                        <p class="mx-1">
+                            Ver video
+                        </p>
+                    </button>
+                </div>
+                <div class="mx-2 my-2">
+                    <video id="video{{camara.idDevice}}" #video
+                        class="object-contain rounded-md" autoplay></video>
+                </div>
             </div>
         </div>
-        <footer class="bg-slate-100 text-center w-full rounded-b-md">
+
+        <footer class="w-full rounded-b-md">
             <nav>
                 <ul
-                    class="flex items-center justify-around [&>li>a]:border [&>li>a]:hover:cursor-pointer [&>li>a]:bg-blue-400 [&>li>a]:rounded-md [&>li>a]:inline-block [&>li>a]:px-2">
-                    <li><a class="hover:animate-pulse" (click)="activeContent = 'ajustes'; showVideo = true; activeCamera = camara.idDevice">Ajustes</a></li>
-                    <li><a class="hover:animate-pulse" (click)="activeContent = 'info'; showVideo = true; activeCamera = camara.idDevice">Info</a></li>
-                    <li><a class="hover:animate-pulse" (click)="activeContent = 'seguridad'; showVideo = true; activeCamera = camara.idDevice">Seguridad</a></li>
+                    class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+                    <li class="-mb-px mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="ajustes(camara.idDevice)">AJUSTES</a>
+                    </li>
+                    <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="info(camara.idDevice)">INFO</a>
+                    </li>
+                    <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="seguridad(camara)">SEGURIDAD</a>
+                    </li>
                 </ul>
             </nav>
-            <section *ngIf="showVideo && activeCamera === camara.idDevice">
-                <div *ngIf="activeContent === 'ajustes'" id="ajustes{{camara.idDevice}}">
-                    <p>Ajustes</p>
+            <section id="seccion{{camara.idDevice}}" *ngIf="activeCamara === camara.idDevice">
+                <div id="ajustes{{camara.idDevice}}" *ngIf="activeContent === 'ajustes' && camara.online"
+                    class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+                    <p>Ajustes no implementados</p>
                 </div>
-                <div *ngIf="activeContent === 'info'" id="info{{camara.idDevice}}">
-                    <p>Info</p>
+
+                <div *ngIf="activeContent === 'info'" class="ml-2" id="info{{camara.idDevice}}">
+                    <table class="w-full text-left">
+                        <tr>
+                            <td class="font-bold">Categoría:</td>
+                            <td class="text-sm">{{camara.tipoDevice}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Modelo:</td>
+                            <td class="text-sm cursor-pointer hover:bg-gray-300 inline-block rounded-md"
+                                (dblclick)="editModel = true" title="Doble click para editar">
+                                <input class="border hover:animate-pulse hover:text-blue-700 cursor-text"
+                                    *ngIf="editModel" type="text" [(ngModel)]="camara.model"
+                                    (keyup.enter)="editModel = false; updateInfo(camara)"
+                                    (focusout)="editModel = false">
+                                <span class="hover:text-blue-700" *ngIf="!editModel">{{camara.model}}</span>
+                                <span class="italic text-red-500" *ngIf="!editModel && !camara.model">Añadir
+                                    modelo</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">ID Device:</td>
+                            <td class="text-sm">{{camara.idDevice}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">IP:</td>
+                            <td class="text-sm">{{camara.ip}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Online:</td>
+                            <td class="text-sm">{{camara.online}}</td>
+                        </tr>
+                    </table>
                 </div>
+
                 <div *ngIf="activeContent === 'seguridad'" id="seguridad{{camara.idDevice}}">
-                    Seguridad
+
+                    <ng-container *ngIf="!vulnerabilities; else vulnerabilitiesLoaded">
+                        <div class="animate-pulse mx-2 my-2 cursor-wait">
+                            <div class="flex">
+                                <p class="h-4 bg-gray-300 rounded w-4/5"></p>
+                                <p class="h-4 bg-gray-300 rounded w-3 ml-2"></p>
+                            </div>
+                            <div class="flex [&>div]:rounded-full [&>div]:h-16 [&>div]:w-32 [&>div]:mt-2">
+                                <div class="bg-red-100"></div>
+                                <div class="bg-orange-100"></div>
+                                <div class="bg-yellow-100"></div>
+                                <div class="bg-slate-300"></div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #vulnerabilitiesLoaded>
+                        <div class="flex flex-wrap">
+                            <p class="ml-2 font-bold">Total de vulnerabilidades: {{ responseNVD.totalResults }}</p>
+                            <p class="ml-2" *ngIf="responseNVD.totalResults == 0">Este dispositivo no tiene
+                                vulnerabilidades
+                                registradas</p>
+                        </div>
+                        <div class="flex flex-wrap justify-center">
+                            <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
+                                <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
+                                    [ngClass]="{
+                                                    'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
+                                                    'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
+                                                    'bg-red-500': vulnerability.baseSeverity === 'HIGH',
+                                                    'bg-black': vulnerability.baseSeverity === 'CRITICAL'
+                                                    }" [style.width]="getCircleSize(vulnerability.count)"
+                                    [style.height]="getCircleSize(vulnerability.count)"></div>
+
+                                <div
+                                    class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
+                                    <span class="text-xs text-white">{{ vulnerability.count }}</span>
+                                </div>
+
+                                <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
+                                    class="group-hover:block absolute top-full left-1/2 transform -translate-x-1/2 p-2 rounded-md bg-gray-300 shadow-xl w-40 hidden z-10 h-auto">
+
+                                    <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
+                                        <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
+                                        <div *ngFor="let cve of vulnerability.cves">
+                                            <a href="https://www.cvedetails.com/cve/{{cve.cve.id}}" target="_blank"
+                                                class="text-center hover:bg-white hover:cursor-pointer"
+                                                (mouseenter)="selectCve(cve)" (mouseleave)="deselectCve()">
+                                                {{ cve.cve.id }}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tooltip con la descripción del objeto CVE seleccionado -->
+                                    <ng-container *ngIf="selectedCve">
+                                        <div
+                                            class="text-xs absolute top-0 left-full transform translate-x-2 p-2 rounded-md bg-gray-300 shadow-xl w-96 z-20">
+                                            <p>{{ getDescription(selectedCve) }}</p>
+                                        </div>
+                                    </ng-container>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </ng-template>
+
                 </div>
+
             </section>
         </footer>
     </section>

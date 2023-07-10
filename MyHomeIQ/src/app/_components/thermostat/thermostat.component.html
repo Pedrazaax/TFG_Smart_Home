@@ -157,52 +157,54 @@
 
           <ng-template #vulnerabilitiesLoaded>
             <div class="flex flex-wrap">
-              <p class="ml-2 font-bold">Total de vulnerabilidades: {{ responseNVD.totalResults }}</p>
-              <p class="ml-2" *ngIf="responseNVD.totalResults == 0">Este dispositivo no tiene vulnerabilidades
-                registradas</p>
+                <p class="ml-2 font-bold">Total de vulnerabilidades: {{ responseNVD.totalResults }}</p>
+                <p class="ml-2" *ngIf="responseNVD.totalResults == 0">Este dispositivo no tiene
+                    vulnerabilidades
+                    registradas</p>
             </div>
             <div class="flex flex-wrap justify-center">
-              <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
-                <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
-                  [ngClass]="{
-                    'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
-                    'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
-                    'bg-red-500': vulnerability.baseSeverity === 'HIGH',
-                    'bg-black': vulnerability.baseSeverity === 'CRITICAL'
-                  }" [style.width]="getCircleSize(vulnerability.count)"
-                  [style.height]="getCircleSize(vulnerability.count)"></div>
+                <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
+                    <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
+                        [ngClass]="{
+                                        'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
+                                        'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
+                                        'bg-red-500': vulnerability.baseSeverity === 'HIGH',
+                                        'bg-black': vulnerability.baseSeverity === 'CRITICAL'
+                                        }" [style.width]="getCircleSize(vulnerability.count)"
+                        [style.height]="getCircleSize(vulnerability.count)"></div>
 
-                <div
-                  class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
-                  <span class="text-xs">{{ vulnerability.count }}</span>
-                </div>
-
-                <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
-                  class="group-hover:block absolute top-full left-1/2 transform -translate-x-1/2 p-2 rounded-md bg-gray-300 shadow-xl w-40 hidden z-10 h-auto">
-
-                  <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
-                    <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
-                    <div *ngFor="let cve of vulnerability.cves">
-                      <p class="text-center hover:bg-white hover:cursor-pointer" (mouseenter)="selectCve(cve)"
-                        (mouseleave)="deselectCve()">
-                        {{ cve.cve.id }}
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Tooltip con la descripción del objeto CVE seleccionado -->
-                  <ng-container *ngIf="selectedCve">
                     <div
-                      class="text-xs absolute top-0 left-full transform translate-x-2 p-2 rounded-md bg-gray-300 shadow-xl w-96 z-20">
-                      <p>{{ getDescription(selectedCve) }}</p>
+                        class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
+                        <span class="text-xs text-white">{{ vulnerability.count }}</span>
                     </div>
-                  </ng-container>
+
+                    <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
+                        class="group-hover:block absolute top-full left-1/2 transform -translate-x-1/2 p-2 rounded-md bg-gray-300 shadow-xl w-40 hidden z-10 h-auto">
+
+                        <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
+                            <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
+                            <div *ngFor="let cve of vulnerability.cves">
+                                <a href="https://www.cvedetails.com/cve/{{cve.cve.id}}" target="_blank"
+                                    class="text-center hover:bg-white hover:cursor-pointer"
+                                    (mouseenter)="selectCve(cve)" (mouseleave)="deselectCve()">
+                                    {{ cve.cve.id }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Tooltip con la descripción del objeto CVE seleccionado -->
+                        <ng-container *ngIf="selectedCve">
+                            <div
+                                class="text-xs absolute top-0 left-full transform translate-x-2 p-2 rounded-md bg-gray-300 shadow-xl w-96 z-20">
+                                <p>{{ getDescription(selectedCve) }}</p>
+                            </div>
+                        </ng-container>
+
+                    </div>
 
                 </div>
-
-              </div>
             </div>
-          </ng-template>
+        </ng-template>
 
         </div>
 

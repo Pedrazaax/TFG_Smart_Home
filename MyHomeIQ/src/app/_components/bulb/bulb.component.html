@@ -70,8 +70,7 @@
                     </li>
                 </ul>
             </nav>
-            <section id="seccion{{bombilla.idDevice}}" *ngIf="activeBulb === bombilla.idDevice"
-                [class.hiddenSection]="activeBulb !== bombilla.idDevice">
+            <section id="seccion{{bombilla.idDevice}}" *ngIf="activeBulb === bombilla.idDevice">
                 <div id="ajustes{{bombilla.idDevice}}" *ngIf="activeContent === 'ajustes' && bombilla.online"
                     class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
                     <div class="flex items-center mb-1">
@@ -186,16 +185,16 @@
                             <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
                                 <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
                                     [ngClass]="{
-                      'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
-                      'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
-                      'bg-red-500': vulnerability.baseSeverity === 'HIGH',
-                      'bg-black': vulnerability.baseSeverity === 'CRITICAL'
-                    }" [style.width]="getCircleSize(vulnerability.count)"
+                                                    'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
+                                                    'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
+                                                    'bg-red-500': vulnerability.baseSeverity === 'HIGH',
+                                                    'bg-black': vulnerability.baseSeverity === 'CRITICAL'
+                                                    }" [style.width]="getCircleSize(vulnerability.count)"
                                     [style.height]="getCircleSize(vulnerability.count)"></div>
 
                                 <div
                                     class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
-                                    <span class="text-xs">{{ vulnerability.count }}</span>
+                                    <span class="text-xs text-white">{{ vulnerability.count }}</span>
                                 </div>
 
                                 <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
@@ -204,10 +203,11 @@
                                     <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
                                         <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
                                         <div *ngFor="let cve of vulnerability.cves">
-                                            <p class="text-center hover:bg-white hover:cursor-pointer"
+                                            <a href="https://www.cvedetails.com/cve/{{cve.cve.id}}" target="_blank"
+                                                class="text-center hover:bg-white hover:cursor-pointer"
                                                 (mouseenter)="selectCve(cve)" (mouseleave)="deselectCve()">
                                                 {{ cve.cve.id }}
-                                            </p>
+                                            </a>
                                         </div>
                                     </div>
 
