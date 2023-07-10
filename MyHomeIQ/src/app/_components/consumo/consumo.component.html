@@ -1,8 +1,55 @@
-<main>
-    <section>
-        Tabla listando pruebas de consumo
+<main class="flex flex-wrap mx-6 my-6">
+    <section class="flex-1 flex justify-center">
+        <table>
+            <thead class="border-b-2 bg-neutral-800 font-medium text-white dark:border-neutral-500 dark:bg-neutral-900">
+                <tr class="[&>th]:px-2">
+                    <th scope="col">#</th>
+                    <th scope="col">idPrueba</th>
+                    <th scope="col">Tiempo</th>
+                    <th scope="col">Cosumo</th>
+                </tr>
+            </thead>
+            <tbody class="rounded-md border-b-2">
+                <tr class="[&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
+                    <th class="font-medium">1</th>
+                    <th>id</th>
+                    <th>a</th>
+                    <th>f</th>
+                </tr>
+            </tbody>
+        </table>
     </section>
-    <section>
-        Información de las pruebas de consumo
+    <section class="flex-1">
+        <ul class="[&>li>p]:border-b-2 [&>li>p]:border-neutral-100 [&>li>p]:border-opacity-100">
+            <li>
+                <p>
+                    idPrueba: id
+                </p>
+            </li>
+            <li>
+                <p>
+                    Tipo de dispositivo: tipo
+                </p>
+            </li>
+            <li>
+                <p>
+                    Tipo de prueba: tipo
+                </p>
+            </li>
+            <li>
+                <p>
+                    Tiempo total: tiempo
+                </p>
+            </li>
+            <li>
+                <p>
+                    Consumo medio: consumo
+                </p>
+            </li>
+            <li class="w-1/2 overflow-hidden">
+                <canvas id="bar-chart"></canvas>
+            </li>
+        </ul>
+        
     </section>
 </main>
