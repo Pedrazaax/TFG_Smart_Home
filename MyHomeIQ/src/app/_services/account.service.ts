@@ -18,7 +18,7 @@ export class AccountService {
   }
 
   listarUsuarios():any {
-    const url = `${this.config.apiUrl}/users`;
+    const url = `${this.config.apiUrl}/users/`;
 
     return this.httpClient.get(url);
   }

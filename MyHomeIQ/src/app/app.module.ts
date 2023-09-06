@@ -23,6 +23,8 @@ import { IntroComponent } from './_components/intro/intro.component';
 import { VideoCamaraComponent } from './_components/video-camara/video-camara.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ConsumoComponent } from './_components/consumo/consumo.component';
+import { LoaderComponent } from './_components/loader/loader.component';
+import { CheckComponent } from './_components/check/check.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { ConsumoComponent } from './_components/consumo/consumo.component';
     InicioComponent,
     IntroComponent,
     VideoCamaraComponent,
-    ConsumoComponent
+    ConsumoComponent,
+    LoaderComponent,
+    CheckComponent
   ],
   imports: [
     BrowserModule,

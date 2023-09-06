@@ -34,7 +34,7 @@ export class SocketComponent {
   selectedCve: any;
   responseNVD: any;
 
-  constructor (private DeviceService: DispositivoService, private nvdService: NvdapiService , private deviceService:DispositivoService, private toastr:ToastrService){
+  constructor (private deviceService: DispositivoService, private nvdService: NvdapiService, private toastr:ToastrService){
 
   }
 
@@ -43,8 +43,8 @@ export class SocketComponent {
   }
 
   listarDevices(){
-    this.DeviceService.listarDevices().subscribe(respuesta => {
-      this.sockets = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Socket');;
+    this.deviceService.listarDevices().subscribe(respuesta => {
+      this.sockets = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Socket');
       this.updateStates();
     },
       (error: any) => {
@@ -104,7 +104,7 @@ export class SocketComponent {
       respuesta.result.forEach(element => {
         idDevices.forEach(idDevice => {
           if (element.id == idDevice) {
-            console.log('Estado de id: ', idDevice, ' Estado: ', element.status)
+            console.log('Estado de id: ', idDevice, ' Estado: ', element)
             this.updateValues(idDevice, element.status)
           }
         });

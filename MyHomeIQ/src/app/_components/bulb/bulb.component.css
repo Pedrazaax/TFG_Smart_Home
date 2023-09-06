@@ -49,9 +49,3 @@ svg:hover {
     stroke: none;
     filter: url(#blur);
 }
-
-.circle2 {
-    stroke: none;
-    filter: url(#blur);
-    fill: black;
-}
