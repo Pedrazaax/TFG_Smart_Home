@@ -75,8 +75,8 @@ export class SocketComponent {
 
   delete(idDevice:string){
     this.deviceService.deleteDevice(idDevice).subscribe(respuesta =>{
-      console.log(respuesta)
       this.toastr.success("Dispositivo eliminado", "Éxito")
+      this.listarDevices()
     }, error =>{
       this.toastr.error(error.error.detail, "Error")
     })
@@ -100,6 +100,8 @@ export class SocketComponent {
     let idDevices = this.sockets!.map(device => device.idDevice);
 
     this.deviceService.statusDevices(idDevices).subscribe((respuesta: Estados) => {
+
+      console.log(respuesta)
 
       respuesta.result.forEach(element => {
         idDevices.forEach(idDevice => {

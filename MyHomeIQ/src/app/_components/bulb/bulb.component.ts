@@ -256,7 +256,7 @@ export class BulbComponent {
 
   updateStates() {
     let idDevices = this.bombillas!.map(device => device.idDevice);
-
+    
     this.deviceService.statusDevices(idDevices).subscribe((respuesta: Estados) => {
 
       respuesta.result.forEach(element => {
@@ -269,6 +269,7 @@ export class BulbComponent {
       });
 
     }, error => {
+      
       this.toastr.error(error.error.detail, "Error")
     })
 
@@ -399,6 +400,7 @@ export class BulbComponent {
   delete(idDevice: string) {
     this.deviceService.deleteDevice(idDevice).subscribe(respuesta => {
       this.toastr.success("Dispositivo eliminado", "Éxito")
+      this.listarDevices()
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })

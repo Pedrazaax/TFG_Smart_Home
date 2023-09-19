@@ -32,7 +32,7 @@ export class VideoCamaraComponent {
   selectedCve: any;
   responseNVD: any;
 
-  constructor(private deviceService: DispositivoService, private nvdService:NvdapiService ,private toastr: ToastrService, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
+  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, private toastr: ToastrService, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
 
   }
 
@@ -119,8 +119,8 @@ export class VideoCamaraComponent {
 
   delete(idDevice: string) {
     this.deviceService.deleteDevice(idDevice).subscribe(respuesta => {
-      //console.log(respuesta)
       this.toastr.success("Dispositivo eliminado", "Éxito")
+      this.listarDevices()
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
@@ -132,7 +132,7 @@ export class VideoCamaraComponent {
 
   ajustes(idDevice: string) {
 
-    if (this.activeContent == 'ajustes' && this.activeCamara == idDevice){
+    if (this.activeContent == 'ajustes' && this.activeCamara == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'ajustes';
@@ -142,7 +142,7 @@ export class VideoCamaraComponent {
   }
 
   info(idDevice: string) {
-    if (this.activeContent == 'info' && this.activeCamara == idDevice){
+    if (this.activeContent == 'info' && this.activeCamara == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'info';
@@ -152,7 +152,7 @@ export class VideoCamaraComponent {
   }
 
   seguridad(device: Device) {
-    if (this.activeContent == 'seguridad' && this.activeCamara == device.idDevice){
+    if (this.activeContent == 'seguridad' && this.activeCamara == device.idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'seguridad';
@@ -228,7 +228,7 @@ export class VideoCamaraComponent {
     }
     return description ? description.value : '';
   }
-  
+
   selectCve(cve: any) {
     this.selectedCve = cve;
   }

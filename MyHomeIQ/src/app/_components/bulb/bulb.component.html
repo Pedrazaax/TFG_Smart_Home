@@ -25,7 +25,7 @@
                     </svg>
                 </div>
                 <div class="mr-2 hover:cursor-pointer">
-                    <svg *ngIf="bombilla.online" (click)="delete(bombilla.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                    <svg (click)="delete(bombilla.idDevice)" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path
                             d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
@@ -43,7 +43,7 @@
                 <img *ngIf="!switch_led[bombilla.idDevice] || !bombilla.online" src="../../../assets/img/BombillaOFF.png" alt="Termostato"
                     class="w-72" [class.opacity-30]="!bombilla.online" (click)="toggleBombillas()">
                 <!--Color de la bombilla-->
-                <svg *ngIf="switch_led[bombilla.idDevice] && bombilla.online" #circle [attr.id]="'circle-' + bombilla.idDevice" height="25vh" width="25vh"
+                <svg *ngIf="switch_led[bombilla.idDevice] && bombilla.online && work_mode[bombilla.idDevice]=='colour'" #circle [attr.id]="'circle-' + bombilla.idDevice" height="25vh" width="25vh"
                     class="circle-container" (click)="toggleBombillas()">
                     <defs>
                         <filter id="blur">

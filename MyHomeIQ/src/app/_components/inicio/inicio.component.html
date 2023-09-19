@@ -1,4 +1,4 @@
-<body class="flex flex-col min-h-screen">
+<body *ngIf="ruta !== 'login'" class="flex flex-col min-h-screen">
     <header>
         <app-sidebar></app-sidebar>
     </header>
@@ -11,3 +11,7 @@
         <app-footer></app-footer>
     </footer>   
 </body>
+
+<section *ngIf="ruta === 'login'">
+    <router-outlet></router-outlet>
+</section>
