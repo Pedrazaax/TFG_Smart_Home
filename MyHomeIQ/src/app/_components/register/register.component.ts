@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
 
   register(){
     let info = {
-      name: this.formulario.get('name')!.value,
+      username: this.formulario.get('name')!.value,
       email: this.formulario.get('email')!.value,
       pwd1: this.formulario.get('password1')!.value,
       pwd2: this.formulario.get('password2')!.value,

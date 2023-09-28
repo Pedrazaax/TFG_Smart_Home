@@ -12,13 +12,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
 
   formulario: FormGroup
-  name?: string
+  username?: string
   pwd?: string
   message?: string
 
   constructor(private router:Router, private accountService : AccountService) {
     this.formulario = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]),
+      username: new FormControl('', [Validators.required]),
       pwd: new FormControl('', [Validators.required]),
     });
    }
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     let info={
-      name: this.formulario.get('email')!.value,
+      username: this.formulario.get('username')!.value,
       pwd: this.formulario.get('pwd')!.value
     }
 

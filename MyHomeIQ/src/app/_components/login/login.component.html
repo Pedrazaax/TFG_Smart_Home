@@ -12,12 +12,12 @@
                 </h1>
                 <form [formGroup]="formulario" class="space-y-4 md:space-y-6" action="#">
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
-                        <input formControlName="email" type="email" name="email" id="email"
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre de usuario</label>
+                        <input formControlName="username" type="username" name="username" id="username"
                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="usuario@dom.com" required="">
-                        <div *ngIf="formulario.controls['email'].invalid && (formulario.controls['email'].dirty || formulario.controls['email'].touched)"
-                            class="alert alert-danger">Email inválido</div>
+                            placeholder="Nombre de usuario..." required="">
+                        <div *ngIf="formulario.controls['username'].invalid && (formulario.controls['username'].dirty || formulario.controls['username'].touched)"
+                            class="alert alert-danger">Nombre de usuario invalido</div>
                     </div>
                     <div>
                         <label for="password"
