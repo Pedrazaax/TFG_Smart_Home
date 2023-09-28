@@ -8,7 +8,7 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class InicioComponent {
 
-  ruta!: string;
+  flag: boolean = true;
 
   constructor(private router: Router) {
 
@@ -17,9 +17,13 @@ export class InicioComponent {
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (event.url === "/login"){
-          this.ruta = "login";
+
+        this.flag = true
+
+        if (event.url === "/login" || event.url === "/register"){
+          this.flag = false
         }
+        
       }
     });
   }
