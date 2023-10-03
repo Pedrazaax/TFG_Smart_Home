@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
   
       this.accountService.login(info).subscribe(
         respuesta => {
-          console.log(respuesta)
+          sessionStorage.setItem('token', respuesta.access_token)
           this.router.navigate(['/intro'])
         },
         (error: any)=>{
