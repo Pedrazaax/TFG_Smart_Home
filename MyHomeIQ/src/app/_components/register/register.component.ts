@@ -20,34 +20,70 @@ export class RegisterComponent implements OnInit {
     this.formulario = new FormGroup({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]),
-      password1: new FormControl('', [Validators.required]),
+      password1: new FormControl('', [Validators.required, this.passwordValidator()]),
       password2: new FormControl('', [Validators.required]),
     });
   }
 
   ngOnInit(): void {
+    
+  }
+
+  passwordValidator(){
+    return (control: FormControl) => {
+      const pwd = control.value;
+      const hasUppercase = /[A-Z]/.test(pwd);
+      const hasLowercase = /[a-z]/.test(pwd);
+      const hasMinLength = pwd.length >=8;
+
+      const errors : { [key: string]: boolean } = {};
+
+      if (!hasUppercase) {
+        errors['noUppercase'] = true;
+      }
+
+      if (!hasLowercase) {
+        errors['noUppercase'] = true;
+      }
+
+      if (!hasMinLength) {
+        errors['noMinLength'] = true;
+      }
+
+      return Object.keys(errors).length === 0 ? null : errors;
+    };
   }
 
   register() {
-    let info = {
-      username: this.formulario.get('name')!.value,
-      email: this.formulario.get('email')!.value,
-      pwd: this.formulario.get('password1')!.value,
-      pwd2: this.formulario.get('password2')!.value,
+
+    if(this.formulario.valid){
+
+      const pwd = this.formulario.get('password1')!.value;
+      const pwd2 = this.formulario.get('password2')!.value;
+
+      // Comprobar que las contraseñas coincidan
+      if (pwd != pwd2){
+        alert("Error, las contraseñas no coinciden")
+        return;
+      }
+        
+      let info = {
+        username: this.formulario.get('name')!.value,
+        disabled: true,
+        email: this.formulario.get('email')!.value,
+        pwd: this.formulario.get('password1')!.value,
+        pwd2: this.formulario.get('password2')!.value,
+      }
+  
+      this.accountService.createUser(info).subscribe((respuesta: any) => {
+        this.router.navigate(['/login'])
+      },
+        (error: any) => {
+          alert("Error" + error.detail)
+        }
+      )
     }
 
-    console.log(info)
-
-    this.accountService.createUser(info).subscribe((respuesta: any) => {
-      console.log(respuesta)
-    },
-      (error: any) => {
-        console.log(error)
-        alert("Error" + error.error.message)
-      }
-    )
-
-    this.router.navigate(['/login'])
   }
 
 }
