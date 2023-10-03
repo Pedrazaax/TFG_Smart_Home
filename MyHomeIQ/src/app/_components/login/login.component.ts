@@ -28,22 +28,26 @@ export class LoginComponent implements OnInit {
 
 
   login(){
-    let info={
-      username: this.formulario.get('username')!.value,
-      pwd: this.formulario.get('pwd')!.value
+
+    if(this.formulario.valid){
+
+      let info={
+        username: this.formulario.get('username')!.value,
+        password: this.formulario.get('pwd')!.value
+      }
+  
+      this.accountService.login(info).subscribe(
+        respuesta => {
+          console.log(respuesta)
+          this.router.navigate(['/intro'])
+        },
+        (error: any)=>{
+          alert("Error " + error.error.detail)
+        }
+      )
+      
     }
 
-    console.log(info)
-
-    /*this.accountService.login(info).subscribe(
-      respuesta => {
-        console.log(respuesta)
-      },
-      (error: any)=>{
-        this.message="Ha habido un error"
-      }
-    )
-    */
   }
   
 }

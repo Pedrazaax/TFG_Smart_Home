@@ -12,9 +12,13 @@ export class AccountService {
   constructor(private httpClient:HttpClient, private config: AppConfig) { }
 
   login(info:any):Observable<any>{
-    const url = `${this.config.apiUrl}/login`;
+    const url = `${this.config.apiUrl}/auth/login`;
 
-    return this.httpClient.put<any>(url,info)
+    const formData = new FormData();
+    formData.append('username', info.username)
+    formData.append('password', info.password)
+
+    return this.httpClient.post<any>(url,formData)
   }
 
   listarUsuarios():any {

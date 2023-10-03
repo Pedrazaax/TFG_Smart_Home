@@ -69,9 +69,9 @@ export class RegisterComponent implements OnInit {
         
       let info = {
         username: this.formulario.get('name')!.value,
-        disabled: true,
+        disabled: false,
         email: this.formulario.get('email')!.value,
-        pwd: this.formulario.get('password1')!.value,
+        password: this.formulario.get('password1')!.value,
         pwd2: this.formulario.get('password2')!.value,
       }
   
@@ -79,7 +79,7 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/login'])
       },
         (error: any) => {
-          alert("Error" + error.detail)
+          alert("Error" + error.error.detail)
         }
       )
     }
