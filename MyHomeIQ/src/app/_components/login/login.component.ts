@@ -12,9 +12,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
 
   formulario: FormGroup
-  username?: string
-  pwd?: string
-  message?: string
 
   constructor(private router:Router, private accountService : AccountService) {
     this.formulario = new FormGroup({
@@ -39,7 +36,7 @@ export class LoginComponent implements OnInit {
       this.accountService.login(info).subscribe(
         respuesta => {
           sessionStorage.setItem('token', respuesta.access_token)
-          this.router.navigate(['/intro'])
+          this.router.navigate(['/api'])
         },
         (error: any)=>{
           alert("Error " + error.error.detail)

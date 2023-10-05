@@ -13,10 +13,11 @@ import { IntroComponent } from './_components/intro/intro.component';
 import { VideoCamaraComponent } from './_components/video-camara/video-camara.component';
 import { AlarmComponent } from './_components/alarm/alarm.component';
 import { ConsumoComponent } from './_components/consumo/consumo.component';
+import { FormAPIComponent } from './_components/form-api/form-api.component';
 
 const routes: Routes = [
   {path : 'login',component:LoginComponent},
-  {path: '',redirectTo:'intro',pathMatch:'full'},
+  {path : '',redirectTo:'login',pathMatch:'full'},
   {path : 'register',component:RegisterComponent},
   {path : 'control-admin',component:ControlAdminComponent},
   {path : 'sidebar',component:SidebarComponent},
@@ -28,7 +29,9 @@ const routes: Routes = [
   {path : 'video',component:VideoCamaraComponent},
   {path : 'intro',component:IntroComponent},
   {path : 'alarm',component:AlarmComponent},
-  {path : 'consumo',component:ConsumoComponent}
+  {path : 'consumo',component:ConsumoComponent},
+  {path : 'api',component:FormAPIComponent}
+
 ];
 
 @NgModule({

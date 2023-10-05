@@ -20,8 +20,18 @@ export class InicioComponent {
 
         this.flag = true
 
-        if (event.url === "/login" || event.url === "/register"){
+        if (event.url === "/login" || event.url === "/register" || event.url === "/"){
           this.flag = false
+        }
+
+        if (event.url === "/api"){
+          if (event.url === "/api") {
+            const section = document.querySelector('section.flex-grow');
+            if (section !== null) {
+              section.classList.add('flex', 'items-center', 'justify-center');
+            }
+          }
+          
         }
         
       }

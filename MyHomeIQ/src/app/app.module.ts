@@ -25,6 +25,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { ConsumoComponent } from './_components/consumo/consumo.component';
 import { LoaderComponent } from './_components/loader/loader.component';
 import { CheckComponent } from './_components/check/check.component';
+import { FormAPIComponent } from './_components/form-api/form-api.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { CheckComponent } from './_components/check/check.component';
     VideoCamaraComponent,
     ConsumoComponent,
     LoaderComponent,
-    CheckComponent
+    CheckComponent,
+    FormAPIComponent
   ],
   imports: [
     BrowserModule,
