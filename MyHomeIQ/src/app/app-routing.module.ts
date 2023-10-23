@@ -14,23 +14,23 @@ import { VideoCamaraComponent } from './_components/video-camara/video-camara.co
 import { AlarmComponent } from './_components/alarm/alarm.component';
 import { ConsumoComponent } from './_components/consumo/consumo.component';
 import { FormAPIComponent } from './_components/form-api/form-api.component';
+import { AuthGuard } from './app.guard';
 
 const routes: Routes = [
   {path : 'login',component:LoginComponent},
   {path : '',redirectTo:'login',pathMatch:'full'},
   {path : 'register',component:RegisterComponent},
-  {path : 'control-admin',component:ControlAdminComponent},
-  {path : 'sidebar',component:SidebarComponent},
-  {path : 'panel',component:DispositivoComponent},
-  {path : 'thermostat',component:ThermostatComponent},
-  {path : 'socket',component:SocketComponent},
-  {path : 'bulb',component:BulbComponent},
-  {path : 'inicio',component:InicioComponent},
-  {path : 'video',component:VideoCamaraComponent},
-  {path : 'intro',component:IntroComponent},
-  {path : 'alarm',component:AlarmComponent},
-  {path : 'consumo',component:ConsumoComponent},
-  {path : 'api',component:FormAPIComponent}
+  {path : 'control-admin',component:ControlAdminComponent, canActivate: [AuthGuard]},
+  {path : 'panel',component:DispositivoComponent, canActivate: [AuthGuard]},
+  {path : 'thermostat',component:ThermostatComponent, canActivate: [AuthGuard]},
+  {path : 'socket',component:SocketComponent, canActivate: [AuthGuard]},
+  {path : 'bulb',component:BulbComponent, canActivate: [AuthGuard]},
+  {path : 'inicio',component:InicioComponent, canActivate: [AuthGuard]},
+  {path : 'video',component:VideoCamaraComponent, canActivate: [AuthGuard]},
+  {path : 'intro',component:IntroComponent, canActivate: [AuthGuard]},
+  {path : 'alarm',component:AlarmComponent, canActivate: [AuthGuard]},
+  {path : 'consumo',component:ConsumoComponent, canActivate: [AuthGuard]},
+  {path : 'api',component:FormAPIComponent, canActivate: [AuthGuard]}
 
 ];
 

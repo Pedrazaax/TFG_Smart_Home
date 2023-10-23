@@ -43,6 +43,7 @@ export class VideoCamaraComponent {
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
       this.camaras = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Smart Camera');
+      console.log(this.camaras)
       this.updateStates();
     },
       (error: any) => {

@@ -38,12 +38,14 @@
         <div class="flex justify-center hover:cursor-pointer">
             <div (click)="toggleVideo()" class="relative rounded-t-md flex items-center justify-center w-full h-full">
                 <div class="absolute z-10">
-                    <button id="boton{{camara.idDevice}}" type="button"
+                    <p *ngIf="!camara.online" class="text-red-600 text-4xl font-bold">OFFLINE</p>
+
+                    <button *ngIf="camara.online" id="boton{{camara.idDevice}}" type="button"
                         class="bg-blue-600 rounded-md hover:bg-blue-700 text-white text-center"
                         (click)="verVideo(camara.idDevice); toggleVideo()">
                         <p class="mx-1">
                             Ver video
-                        </p>
+                        </p> 
                     </button>
                 </div>
                 <div class="mx-2 my-2">

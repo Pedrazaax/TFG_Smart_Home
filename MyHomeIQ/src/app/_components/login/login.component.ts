@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
       this.accountService.login(info).subscribe(
         respuesta => {
           sessionStorage.setItem('token', respuesta.access_token)
+          sessionStorage.setItem('username', info.username)
           this.router.navigate(['/api'])
         },
         (error: any)=>{

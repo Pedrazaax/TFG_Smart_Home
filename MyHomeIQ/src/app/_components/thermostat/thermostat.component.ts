@@ -99,6 +99,7 @@ export class ThermostatComponent {
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
       this.termostatos = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Thermostat');
+      console.log(this.termostatos)
       this.updateStates();
     },
       (error: any) => {
