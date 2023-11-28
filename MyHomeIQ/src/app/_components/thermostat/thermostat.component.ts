@@ -122,7 +122,7 @@ export class ThermostatComponent {
     this.valor = (event.target as HTMLInputElement)?.checked;
     this.temperatureValue = (event.target as HTMLInputElement)?.value;
 
-    this.control_value(valorKey);
+    this.control_value();
 
     dispositivo.key = valorKey
     dispositivo.commands = [
@@ -235,7 +235,7 @@ export class ThermostatComponent {
     })
   }
 
-  private control_value(valorKey: string) {
+  private control_value() {
     if (this.temperatureValue != "on") {
       this.valor = this.temperatureValue;
     }

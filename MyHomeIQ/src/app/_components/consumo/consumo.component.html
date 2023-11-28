@@ -267,7 +267,104 @@
               </section>
             </div>
 
-            <!--*************************************************************************************************-->
+            <!--*************************************************************************************************************-->
+
+            <!-- Termostato *************************************************************************************************-->
+
+            <div *ngIf="tipoDeviceTP=='Thermostat'"
+              class="grid lg:grid-cols-2 lg:gap-2 md:grid-cols-2 md:gap-2 grid-cols-1">
+
+              <section *ngFor="let intervalo of intervalos_thermostat"
+                class="mb-6 w-52 justify-center border rounded-md mt-3 shadow-2xl animate-fad block ml-2 mr-2">
+
+                <div class="my-2 flex">
+                  <label for="timeIntervalo" class="block text-gray-700 font-bold mb-2 mx-2">Tiempo(s):</label>
+                  <input type="number" name="timeIntervalo" id="timeIntervalo" [(ngModel)]="intervalo.time"
+                    class="border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 w-24">
+                </div>
+
+                <header class="bg-slate-100 rounded-t-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md">
+                      <span class="ml-2">Termostato</span>
+                    </div>
+                    <div class="mr-2 hover:cursor-pointer z-10" (click)="deleteIntervalo(intervalo)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                          d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                        <path
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                      </svg>
+                    </div>
+                  </div>
+                </header>
+                <div class="flex justify-center hover:cursor-pointer">
+                  <img src="../../../assets/img/TermostatoON.png" alt="Termostato" class="w-72">
+                </div>
+                <footer class="w-full rounded-b-md">
+                  <nav>
+                    <ul
+                      class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+                      <li class="-mb-px mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="ajustes()">AJUSTES</a>
+                      </li>
+                    </ul>
+                  </nav>
+                  <section id="seccion{{device}}">
+                    <div id="ajustes{{device}}" *ngIf="activeContent === 'ajustes'"
+                      class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+                      <div class="flex items-center mb-1">
+                        <input name="OnOff"
+                          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                          type="checkbox" role="switch" id="onoff{{device}}" [(ngModel)]="intervalo.status[0].value"
+                          [class.bg-green-500]="intervalo.status[0].value" checked>
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                          for="onoff{{device}}">ON/OFF</label>
+                      </div>
+                      <div>
+                        <input
+                          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                          type="checkbox" role="switch" id="child{{device}}" [(ngModel)]="intervalo.status[1].value"
+                          [disabled]="!intervalo.status[0].value">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                          Child lock
+                        </label>
+                      </div>
+
+                      <div>
+                        <input
+                          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                          type="checkbox" role="switch" id="eco{{device}}" [(ngModel)]="intervalo.status[2].value"
+                          [disabled]="!intervalo.status[0].value">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                          Eco
+                        </label>
+                      </div>
+
+                      <div class="flex flex-wrap gap-2">
+                        <label class="text-gray-700" for="temperatureRange">Temperatura:</label>
+                        <input type="range" class="form-range w-28 ml-3" id="temperatureRange" min="10" max="70"
+                          showTickMarks discrete [(ngModel)]="intervalo.status[3].value" step="5"
+                          [disabled]="!intervalo.status[0].value">
+                        <output class="text-gray-700">{{intervalo.status[3].value}} ºC</output>
+                      </div>
+
+                      <div class="flex flex-wrap gap-2">
+                        <label class="text-gray-700" for="upperTempRange">Upper temp:</label>
+                        <input type="range" class="form-range w-28 ml-3" id="upperTempRange" min="0" max="100"
+                          showTickMarks discrete [(ngModel)]="intervalo.status[4].value" step="5"
+                          [disabled]="!intervalo.status[0].value">
+                        <output class="text-gray-700">{{intervalo.status[4].value}} ºC</output>
+                      </div>
+                    </div>
+                  </section>
+                </footer>
+              </section>
+
+            </div>
+
+            <!--*************************************************************************************************************-->
 
             <!--Modal footer-->
             <div
@@ -409,13 +506,13 @@
     <div class="w-80">
       <p class="text-2xl">Tipos de prueba</p>
       <select name="selectedTDevice" id="selectedTDevice" class="form-control mx-2 my-2 w-32" id="selectedTDevice"
-        [(ngModel)]="selectedTDevice">
+        [(ngModel)]="selectedTDevice" (click)="filterTP()">
         <option value="Light Source">Bombilla</option>
         <option value="Thermostat">Termostato</option>
         <option value="Camara">Camara</option>
         <option value="Other">Otros</option>
       </select>
-      <table *ngIf="selectedTDevice=='Light Source'">
+      <table *ngIf="selectedTDevice">
         <thead class="border-b-2 bg-neutral-800 font-medium text-white">
           <tr class="[&>th]:px-2">
             <th scope="col">#</th>
@@ -425,17 +522,30 @@
           </tr>
         </thead>
         <tbody class="rounded-md border-b-2">
-          <tr *ngFor="let tprueba of tipoPruebas; index as i" (click)="selectedTipoPrueba(tprueba, i)"
+          <tr *ngFor="let tprueba of filteredPruebas; index as i" (click)="selectedTipoPrueba(tprueba, i)"
             [ngClass]="{'bg-blue-200': selectedTPRow === i}"
             class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
             <th class="font-medium">{{i + 1}}</th>
             <th>{{tprueba.nombre}}</th>
             <th>{{tprueba.tipoDevice}}</th>
             <th>{{tprueba.intervaloPrueba.length}}</th>
+            <th>
+              <div class="mr-2 hover:cursor-pointer z-10" (click)="deleteTipoPrueba(tprueba.idTipoPrueba)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                  <path
+                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                </svg>
+              </div>
+            </th>
           </tr>
+
         </tbody>
       </table>
     </div>
+
 
     <div *ngIf="selectedTPrueba && selectedTDevice=='Light Source'"
       class="grid lg:grid-cols-2 lg:gap-2 md:grid-cols-2 md:gap-2 grid-cols-1">
@@ -527,6 +637,94 @@
       </section>
     </div>
 
-  </section>
+    <div *ngIf="selectedTPrueba && selectedTDevice=='Thermostat'"
+      class="grid lg:grid-cols-2 lg:gap-2 md:grid-cols-2 md:gap-2 grid-cols-1">
+      <section *ngFor="let intervalo of selectedTPrueba.intervaloPrueba"
+        class="mb-6 w-52 justify-center border rounded-md mt-3 shadow-2xl animate-fad block ml-2 mr-2">
 
-</div>
+        <div class="my-2 flex">
+          <label for="timeIntervalo" class="block text-gray-700 font-bold mb-2 mx-2">Tiempo(s):</label>
+          <input type="number" name="timeIntervalo" id="timeIntervalo" [(ngModel)]="intervalo.time"
+            class="border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 w-24">
+        </div>
+
+        <header class="bg-slate-100 rounded-t-md">
+          <div class="flex items-center justify-between">
+            <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md">
+              <span class="ml-2">Termostato</span>
+            </div>
+            <div class="mr-2 hover:cursor-pointer z-10" (click)="deleteIntervalo(intervalo)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+                viewBox="0 0 16 16">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                <path
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+              </svg>
+            </div>
+          </div>
+        </header>
+        <div class="flex justify-center hover:cursor-pointer">
+          <img src="../../../assets/img/TermostatoON.png" alt="Termostato" class="w-72">
+        </div>
+        <footer class="w-full rounded-b-md">
+          <nav>
+            <ul
+              class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+              <li class="-mb-px mr-1 hover:bg-gray-300">
+                <a class="inline-block" (click)="ajustes()">AJUSTES</a>
+              </li>
+            </ul>
+          </nav>
+          <section id="seccion{{device}}">
+            <div id="ajustes{{device}}" *ngIf="activeContent === 'ajustes'"
+              class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+              <div class="flex items-center mb-1">
+                <input name="OnOff"
+                  class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox" role="switch" id="onoff{{device}}" [(ngModel)]="intervalo.status[0].value"
+                  [class.bg-green-500]="intervalo.status[0].value" checked>
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="onoff{{device}}">ON/OFF</label>
+              </div>
+              <div>
+                <input
+                  class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox" role="switch" id="child{{device}}" [(ngModel)]="intervalo.status[1].value"
+                  [disabled]="!intervalo.status[0].value">
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                  Child lock
+                </label>
+              </div>
+
+              <div>
+                <input
+                  class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox" role="switch" id="eco{{device}}" [(ngModel)]="intervalo.status[2].value"
+                  [disabled]="!intervalo.status[0].value">
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                  Eco
+                </label>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <label class="text-gray-700" for="temperatureRange">Temperatura:</label>
+                <input type="range" class="form-range w-28 ml-3" id="temperatureRange" min="10" max="70" showTickMarks
+                  discrete [(ngModel)]="intervalo.status[3].value" step="5" [disabled]="!intervalo.status[0].value">
+                <output class="text-gray-700">{{intervalo.status[3].value}} ºC</output>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <label class="text-gray-700" for="upperTempRange">Upper temp:</label>
+                <input type="range" class="form-range w-28 ml-3" id="upperTempRange" min="0" max="100" showTickMarks
+                  discrete [(ngModel)]="intervalo.status[4].value" step="5" [disabled]="!intervalo.status[0].value">
+                <output class="text-gray-700">{{intervalo.status[4].value}} ºC</output>
+              </div>
+
+            </div>
+
+  
+          </section>
+        </footer>
+      </section>
+
+    </div>

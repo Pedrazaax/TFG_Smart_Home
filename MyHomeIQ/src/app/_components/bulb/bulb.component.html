@@ -2,7 +2,7 @@
     Bombillas:
 </p>
 
-<div class="grid grid-cols-custom gap-2">
+<div class="grid grid-cols-custom gap-2 animate-fade-up animate-duration-[2000ms]">
     <section class="border rounded-md mt-3 shadow-2xl animate-fad block ml-8" *ngFor="let bombilla of bombillas">
         <!--HEADER del dispositivo donde se puede cambiar nombre eliminar o recargar la información-->
         <header class="bg-slate-100 rounded-t-md">
@@ -38,12 +38,14 @@
         <!--Imagen con información relevante del dispositivo como si está OFFLINE el color...-->
         <div class="flex justify-center hover:cursor-pointer">
             <div class="relative">
-                <img *ngIf="switch_led[bombilla.idDevice] && bombilla.online" src="../../../assets/img/BombillaON.png" alt="Termostato"
-                    class="w-72" [class.opacity-30]="!bombilla.online" (click)="toggleBombillas()">
-                <img *ngIf="!switch_led[bombilla.idDevice] || !bombilla.online" src="../../../assets/img/BombillaOFF.png" alt="Termostato"
-                    class="w-72" [class.opacity-30]="!bombilla.online" (click)="toggleBombillas()">
+                <img *ngIf="switch_led[bombilla.idDevice] && bombilla.online" src="../../../assets/img/BombillaON.png"
+                    alt="Termostato" class="w-72" [class.opacity-30]="!bombilla.online" (click)="toggleBombillas()">
+                <img *ngIf="!switch_led[bombilla.idDevice] || !bombilla.online"
+                    src="../../../assets/img/BombillaOFF.png" alt="Termostato" class="w-72"
+                    [class.opacity-30]="!bombilla.online" (click)="toggleBombillas()">
                 <!--Color de la bombilla-->
-                <svg *ngIf="switch_led[bombilla.idDevice] && bombilla.online && work_mode[bombilla.idDevice]=='colour'" #circle [attr.id]="'circle-' + bombilla.idDevice" height="25vh" width="25vh"
+                <svg *ngIf="switch_led[bombilla.idDevice] && bombilla.online && work_mode[bombilla.idDevice]=='colour'"
+                    #circle [attr.id]="'circle-' + bombilla.idDevice" height="25vh" width="25vh"
                     class="circle-container" (click)="toggleBombillas()">
                     <defs>
                         <filter id="blur">
@@ -67,6 +69,9 @@
                     </li>
                     <li class="mr-1 hover:bg-gray-300">
                         <a class="inline-block" (click)="info(bombilla.idDevice)">INFO</a>
+                    </li>
+                    <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="room(bombilla.idDevice)">HABITACIONES</a>
                     </li>
                     <li class="mr-1 hover:bg-gray-300">
                         <a class="inline-block" (click)="seguridad(bombilla)">SEGURIDAD</a>
@@ -149,6 +154,12 @@
                             <td class="text-sm">{{bombilla.online}}</td>
                         </tr>
                     </table>
+                </div>
+
+                <div *ngIf="activeContent === 'room'" class="ml-4 my-2 flex flex-wrap gap-2">
+                    <button *ngFor="let room of rooms"
+                    [ngClass]="commonClasses + (room.name === bombilla.room.name ? ' bg-blue-700 text-white' : ' bg-gray-100')"
+                        (click)="setRoom(bombilla, room)">{{room.name}}</button>
                 </div>
 
                 <div *ngIf="activeContent === 'color' && switch_led[bombilla.idDevice]" class="ml-4 my-2">

@@ -50,6 +50,8 @@ export class ConsumoComponent {
 
   intervaloPrueba!: IntervaloPrueba[];
   intervalos_bombilla: IntervaloPrueba[] = [];
+  intervalos_thermostat: IntervaloPrueba[] = [];
+
   time!: number;
   status!: Status[];
   n_intervalos: number = 0;
@@ -90,6 +92,8 @@ export class ConsumoComponent {
   selectedTPRow?: number;
   selectedTPrueba?: TipoPrueba;
 
+  filteredPruebas?: TipoPrueba[] = [];
+
 
 
   constructor(private deviceService: DispositivoService, private consumoService: ConsumoService, private toastr: ToastrService, private changeDetector: ChangeDetectorRef) {
@@ -105,6 +109,7 @@ export class ConsumoComponent {
     this.getTipoPruebas();
 
     this.constructor_intervalo_bombilla();
+    this.constructor_intervalo_thermostat();
   }
 
   togglePrueba() {
@@ -145,6 +150,32 @@ export class ConsumoComponent {
     this.intervalos_bombilla[0] = new IntervaloPrueba(0, newBombillaStatus);
   }
 
+  constructor_intervalo_thermostat(){
+    let newThermostatStatus : Status[] = [
+      {
+        code: "switch",
+        value: true
+      },
+      {
+        code: "child_lock",
+        value: false
+      },
+      {
+        code: "eco",
+        value: false
+      },
+      {
+        code: "temp_set",
+        value: 20
+      },
+      {
+        code: "upper_temp",
+        value: 25
+      }
+    ]
+    this.intervalos_thermostat[0] = new IntervaloPrueba(0, newThermostatStatus);
+  }
+
   addIntervalo(){
 
     if(this.n_intervalos < 3){
@@ -177,14 +208,46 @@ export class ConsumoComponent {
         this.intervalos_bombilla[this.n_intervalos] = new IntervaloPrueba(0,newBombillaStatus);
         this.intervaloPrueba = this.intervalos_bombilla;
       }
+      if (this.tipoDeviceTP == 'Thermostat'){
+        let newThermostatStatus : Status[] = [
+          {
+            code: "switch",
+            value: true
+          },
+          {
+            code: "child_lock",
+            value: false
+          },
+          {
+            code: "eco",
+            value: false
+          },
+          {
+            code: "temp_set",
+            value: 20
+          },
+          {
+            code: "upper_temp",
+            value: 25
+          }
+        ]
+
+        this.intervalos_thermostat[this.n_intervalos] = new IntervaloPrueba(0, newThermostatStatus);
+        this.intervaloPrueba = this.intervalos_thermostat;
+      }
     } else {
       this.toastr.error('No se pueden añadir más intervalos', 'Error');
     }
+  
   }
 
   deleteIntervalo(intervalo: IntervaloPrueba){
     if (this.tipoDeviceTP == 'Light Source'){
       this.intervalos_bombilla = this.intervalos_bombilla.filter(item => item !== intervalo);
+    }
+
+    if (this.tipoDeviceTP == 'Thermostat'){
+      this.intervalos_thermostat = this.intervalos_thermostat.filter(item => item !== intervalo);
     }
 
     this.changeDetector.detectChanges();
@@ -331,6 +394,10 @@ export class ConsumoComponent {
     )
   }
 
+  deleteTipoPrueba(id: string) {
+    
+  }
+
   selectedPrueba(pConsumo: PruebaConsumo, index: number) {
     this.selected_pConsumo = pConsumo;
     this.selectedRow = index;
@@ -355,6 +422,14 @@ export class ConsumoComponent {
   selectedTipoPrueba(tprueba: TipoPrueba, index: number){
     this.selectedTPrueba = tprueba;
     this.selectedTPRow = index;
+  }
+
+  filterTP(){
+    if (this.selectedTDevice == ''){
+      this.getTipoPruebas();
+    } else {
+      this.filteredPruebas = this.tipoPruebas?.filter((tipoPrueba) => tipoPrueba.tipoDevice === this.selectedTDevice);
+    }
   }
 
   clearAtributes() {

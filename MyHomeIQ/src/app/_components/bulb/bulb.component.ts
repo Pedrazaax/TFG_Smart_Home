@@ -1,10 +1,12 @@
-import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
 import { Estados } from 'src/app/_models/estados';
 import { Jso } from 'src/app/_models/jso';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
+import { Room } from 'src/app/_models/room';
+import { RoomService } from 'src/app/_services/room.service';
 
 
 @Component({
@@ -14,6 +16,7 @@ import { NvdapiService } from 'src/app/_services/nvdapi.service';
 })
 export class BulbComponent {
   @ViewChildren('circle') circleRefs!: QueryList<ElementRef<SVGElement>>;
+  @Input() devices?: Device[];
 
   bombillas?: Device[];
   valor: any
@@ -48,18 +51,57 @@ export class BulbComponent {
 
   selectedCve: any;
   responseNVD: any;
+
+  rooms: Room[] = []
+
+  commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
+
   
-  constructor(private deviceService: DispositivoService, private toastr: ToastrService, private nvdService: NvdapiService) {
+  constructor(private deviceService: DispositivoService, private toastr: ToastrService, private nvdService: NvdapiService, private roomService: RoomService) {
   }
 
   ngOnInit(): void {
     this.listarDevices()
+    this.listarRooms()
+  }
+
+  listarRooms() {
+    this.roomService.listarRooms().subscribe((respuesta: any[]) => {
+      this.rooms = respuesta
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    );
+  }
+
+  setRoom(device: Device, room: Room) {
+    this.roomService.setRoom(device, room).subscribe((response: any) => {
+      this.toastr.success('Dispositivo modificado', 'Éxito');
+      this.listarDevices();
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error");
+      }
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['devices']) {
+      this.bombillas = changes['devices'].currentValue;
+      
+      if (this.bombillas) {
+        this.bombillas = this.devices?.filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');
+        this.updateStates();
+      }
+      
+    }
   }
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
       this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');
-      console.log(this.bombillas);
+
       this.updateStates();
     },
       (error: any) => {
@@ -209,8 +251,6 @@ export class BulbComponent {
       }
     ]
 
-    
-
     this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
       this.toastr.success('Dispositivo modificado', 'Éxito')
 
@@ -258,20 +298,18 @@ export class BulbComponent {
     let idDevices = this.bombillas!.map(device => device.idDevice);
     
     this.deviceService.statusDevices(idDevices).subscribe((respuesta: Estados) => {
-
-      respuesta.result.forEach(element => {
-        idDevices.forEach(idDevice => {
-          if (element.id == idDevice) {
-            this.updateValues(idDevice, element.status)
-          }
+      if (respuesta.result) {
+        respuesta.result.forEach(element => {
+          idDevices.forEach(idDevice => {
+            if (element.id == idDevice) {
+              this.updateValues(idDevice, element.status);
+            }
+          });
         });
-
-      });
-
+      }
     }, error => {
-      
-      this.toastr.error(error.error.detail, "Error")
-    })
+      this.toastr.error(error.error.detail, "Error");
+    });
 
   }
 
@@ -452,6 +490,16 @@ export class BulbComponent {
 
   }
 
+  room(idDevice: string) {
+    if (this.activeContent == 'room' && this.activeBulb == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'room';
+      this.activeBulb = idDevice;
+    }
+
+  }
+
   seguridad(device: Device) {
     if (this.activeContent == 'seguridad' && this.activeBulb == device.idDevice){
       this.activeContent = ''
@@ -468,7 +516,6 @@ export class BulbComponent {
     if (this.vulnerabilities == '') {
       this.nvdService.searchVulnerabilities(keyword).subscribe(
         (respuesta) => {
-          console.log(respuesta);
           this.responseNVD = respuesta;
           this.vulnerabilities = this.responseNVD.vulnerabilities;
 
@@ -495,8 +542,6 @@ export class BulbComponent {
             count: groupedVulns[key].length,
             cves: groupedVulns[key],
           }));
-
-          console.log(this.vulnerabilities)
 
         },
         (error: any) => {

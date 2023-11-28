@@ -1,3 +1,5 @@
+import { Room } from "./room";
+
 export class Device {
     id: string;
     name: string;
@@ -10,10 +12,11 @@ export class Device {
     update_time: number;
     ip: string;
     model: string;
+    room: Room;
 
     constructor(id:string, name:string, idDevice: string, tipoDevice: string, 
         key: string, commands: { code: string; value: any }[], online: boolean, 
-        create_time: number, update_time: number, ip: string, model: string) {
+        create_time: number, update_time: number, ip: string, model: string, room: Room) {
 
         this.id = id;
         this.name = name;
@@ -26,6 +29,7 @@ export class Device {
         this.update_time = update_time;
         this.ip = ip;
         this.model = model;
+        this.room = room;
         
     }
 }

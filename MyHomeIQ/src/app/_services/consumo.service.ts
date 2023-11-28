@@ -35,4 +35,10 @@ export class ConsumoService {
     return this.httpClient.post(url, tipoPrueba, {headers: this.header.getHeaders()});
   }
 
+  deleteTipoPrueba(id:string):any {
+    const url = `${this.config.apiUrl}/consumo/deleteTipoPrueba/${id}`;
+
+    return this.httpClient.delete(url, {headers: this.header.getHeaders()});
+  }
+
 }

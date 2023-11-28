@@ -5,6 +5,8 @@ import { DispositivoService } from 'src/app/_services/dispositivo.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import Hls from 'hls.js'
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
+import { Estados } from 'src/app/_models/estados';
+import { Jso } from 'src/app/_models/jso';
 
 @Component({
   selector: 'app-video-camara',
@@ -21,6 +23,23 @@ export class VideoCamaraComponent {
   numValue: any = -1;
   dangerousvideoUrl: any;
   hls: Hls = new Hls;
+
+  // Variables para mostrar información de la cámara
+  basic_indicator: Jso = {};
+  basic_flip: Jso = {};
+  basic_osd: Jso = {};
+  basic_private: Jso = {};
+  motion_sensitivity: Jso = {};
+  basic_nightvision: Jso = {};
+  sd_status: Jso = {};
+  sd_format: Jso = {};
+  ptz_control: Jso = {};
+  motion_switch: Jso = {};
+  record_switch: Jso = {};
+  record_mode: Jso = {};
+  motion_tracking: Jso = {};
+  alarm_message: Jso = {};
+  initiative_message: Jso = {};
 
   activeCamara: string = '';
 
@@ -54,6 +73,9 @@ export class VideoCamaraComponent {
 
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {
     this.valor = (event.target as HTMLInputElement)?.checked;
+    this.numValue = (event.target as HTMLInputElement)?.value;
+
+    this.control_value();
 
     dispositivo.key = valorKey
     dispositivo.commands = [
@@ -64,12 +86,18 @@ export class VideoCamaraComponent {
     ]
 
     this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
-      //console.log(respuesta)
+      this.toastr.success('Dispositivo modificado', 'Éxito')
     },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error")
       }
     )
+  }
+
+  private control_value() {
+    if (this.numValue != "on") {
+      this.valor = this.numValue;
+    }
   }
 
   getURL(idDevice: string) {
@@ -110,11 +138,127 @@ export class VideoCamaraComponent {
   updateStates() {
     let idDevices = this.camaras!.map(device => device.idDevice);
 
-    this.deviceService.statusDevices(idDevices).subscribe(respuesta => {
-      //console.log("Estados: ", respuesta)
+    this.deviceService.statusDevices(idDevices).subscribe((respuesta: Estados) => {
+      console.log("Estados: ", respuesta)
+      
+      respuesta.result.forEach(element => {
+        idDevices.forEach(idDevice => {
+          if (element.id == idDevice) {
+            this.updateValues(idDevice, element.status)
+          }
+        });
+      })
     }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
+  }
+
+  updateValues(idDevice: string, respuesta: Device["commands"]) {
+
+    //Code  basic_indicator
+    let basic_indicatorItem = respuesta.filter(item => item.code == 'basic_indicator')
+    if (basic_indicatorItem[0]) {
+      let basic_indicatorValue = basic_indicatorItem[0].value;
+      this.basic_indicator[idDevice] = basic_indicatorValue;
+    }
+
+    //Code  basic_flip
+    let basic_flipItem = respuesta.filter(item => item.code == 'basic_flip')
+    if (basic_flipItem[0]) {
+      let basic_flipValue = basic_flipItem[0].value;
+      this.basic_flip[idDevice] = basic_flipValue;
+    }
+
+    //Code  basic_osd
+    let basic_osdItem = respuesta.filter(item => item.code == 'basic_osd')
+    if (basic_osdItem[0]) {
+      let basic_osdValue = basic_osdItem[0].value;
+      this.basic_osd[idDevice] = basic_osdValue;
+    }
+
+    //Code  basic_private
+    let basic_privateItem = respuesta.filter(item => item.code == 'basic_private')
+    if (basic_privateItem[0]) {
+      let basic_privateValue = basic_privateItem[0].value;
+      this.basic_private[idDevice] = basic_privateValue;
+    }
+
+    //Code  motion_sensitivity
+    let motion_sensitivityItem = respuesta.filter(item => item.code == 'motion_sensitivity')
+    if (motion_sensitivityItem[0]) {
+      let motion_sensitivityValue = motion_sensitivityItem[0].value;
+      this.motion_sensitivity[idDevice] = motion_sensitivityValue;
+    }
+
+    //Code  basic_nightvision
+    let basic_nightvisionItem = respuesta.filter(item => item.code == 'basic_nightvision')
+    if (basic_nightvisionItem[0]) {
+      let basic_nightvisionValue = basic_nightvisionItem[0].value;
+      this.basic_nightvision[idDevice] = basic_nightvisionValue;
+    }
+
+    //Code  sd_status
+    let sd_statusItem = respuesta.filter(item => item.code == 'sd_status')
+    if (sd_statusItem[0]) {
+      let sd_statusValue = sd_statusItem[0].value;
+      this.sd_status[idDevice] = sd_statusValue;
+    }
+
+    //Code  sd_format
+    let sd_formatItem = respuesta.filter(item => item.code == 'sd_format')
+    if (sd_formatItem[0]) {
+      let sd_formatValue = sd_formatItem[0].value;
+      this.sd_format[idDevice] = sd_formatValue;
+    }
+
+    //Code  ptz_control
+    let ptz_controlItem = respuesta.filter(item => item.code == 'ptz_control')
+    if (ptz_controlItem[0]) {
+      let ptz_controlValue = ptz_controlItem[0].value;
+      this.ptz_control[idDevice] = ptz_controlValue;
+    }
+
+    //Code  motion_switch
+    let motion_switchItem = respuesta.filter(item => item.code == 'motion_switch')
+    if (motion_switchItem[0]) {
+      let motion_switchValue = motion_switchItem[0].value;
+      this.motion_switch[idDevice] = motion_switchValue;
+    }
+
+    //Code  record_switch
+    let record_switchItem = respuesta.filter(item => item.code == 'record_switch')
+    if (record_switchItem[0]) {
+      let record_switchValue = record_switchItem[0].value;
+      this.record_switch[idDevice] = record_switchValue;
+    }
+
+    //Code  record_mode
+    let record_modeItem = respuesta.filter(item => item.code == 'record_mode')
+    if (record_modeItem[0]) {
+      let record_modeValue = record_modeItem[0].value;
+      this.record_mode[idDevice] = record_modeValue;
+    }
+
+    //Code  motion_tracking
+    let motion_trackingItem = respuesta.filter(item => item.code == 'motion_tracking')
+    if (motion_trackingItem[0]) {
+      let motion_trackingValue = motion_trackingItem[0].value;
+      this.motion_tracking[idDevice] = motion_trackingValue;
+    }
+
+    //Code  alarm_message
+    let alarm_messageItem = respuesta.filter(item => item.code == 'alarm_message')
+    if (alarm_messageItem[0]) {
+      let alarm_messageValue = alarm_messageItem[0].value;
+      this.alarm_message[idDevice] = alarm_messageValue;
+    }
+
+    //Code  initiative_message
+    let initiative_messageItem = respuesta.filter(item => item.code == 'initiative_message')
+    if (initiative_messageItem[0]) {
+      let initiative_messageValue = initiative_messageItem[0].value;
+      this.initiative_message[idDevice] = initiative_messageValue;
+    }
 
   }
 

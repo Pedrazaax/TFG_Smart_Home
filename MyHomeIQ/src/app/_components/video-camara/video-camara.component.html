@@ -2,7 +2,7 @@
     Cámaras:
 </p>
 
-<div class="grid grid-cols-custom gap-2">
+<div class="grid grid-cols-custom gap-2 animate-fade-up animate-duration-[2000ms]">
     <section class="border rounded-md mt-3 shadow-2xl animate-fad block ml-8" *ngFor="let camara of camaras">
         <header class="bg-slate-100 rounded-t-md">
             <div class="flex items-center justify-between">
@@ -45,12 +45,11 @@
                         (click)="verVideo(camara.idDevice); toggleVideo()">
                         <p class="mx-1">
                             Ver video
-                        </p> 
+                        </p>
                     </button>
                 </div>
                 <div class="mx-2 my-2">
-                    <video id="video{{camara.idDevice}}" #video
-                        class="object-contain rounded-md" autoplay></video>
+                    <video id="video{{camara.idDevice}}" #video class="object-contain rounded-md" autoplay></video>
                 </div>
             </div>
         </div>
@@ -73,7 +72,119 @@
             <section id="seccion{{camara.idDevice}}" *ngIf="activeCamara === camara.idDevice">
                 <div id="ajustes{{camara.idDevice}}" *ngIf="activeContent === 'ajustes' && camara.online"
                     class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
-                    <p>Ajustes no implementados</p>
+
+                    <!--Code: basic_indicator-->
+                    <div class="flex items-center mb-1">
+                        <input
+                            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                            type="checkbox" role="switch" id="basic_indicator{{camara.idDevice}}"
+                            [(ngModel)]="basic_indicator[camara.idDevice]"
+                            (click)="updateDevice($event, 'basic_indicator', camara)"
+                            [class.bg-green-500]="basic_indicator[camara.idDevice]">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="basic_indicator{{camara.idDevice}}">basic_indicator</label>
+                    </div>
+
+                    <!--Code: basic_flip-->
+                    <div class="flex items-center mb-1">
+                        <input
+                            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                            type="checkbox" role="switch" id="basic_flip{{camara.idDevice}}"
+                            [(ngModel)]="basic_flip[camara.idDevice]"
+                            (click)="updateDevice($event, 'basic_flip', camara)"
+                            [class.bg-green-500]="basic_flip[camara.idDevice]">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="basic_flip{{camara.idDevice}}">basic_flip</label>
+                    </div>
+
+                    <!--Code: basic_osd-->
+                    <div class="flex items-center mb-1">
+                        <input
+                            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                            type="checkbox" role="switch" id="basic_osd{{camara.idDevice}}"
+                            [(ngModel)]="basic_osd[camara.idDevice]" (click)="updateDevice($event, 'basic_osd', camara)"
+                            [class.bg-green-500]="basic_osd[camara.idDevice]">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="basic_osd{{camara.idDevice}}">basic_osd</label>
+                    </div>
+
+                    <!--Code: basic_private-->
+                    <div class="flex items-center mb-1">
+                        <input
+                            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                            type="checkbox" role="switch" id="basic_private{{camara.idDevice}}"
+                            [(ngModel)]="basic_private[camara.idDevice]"
+                            (click)="updateDevice($event, 'basic_private', camara)"
+                            [class.bg-green-500]="basic_private[camara.idDevice]">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="basic_private{{camara.idDevice}}">basic_private</label>
+                    </div>
+
+                    <!--Code: motion_sensitivity-->
+                    <div class="flex items-center mb-1">
+                        <label class="inline-block pl-[0.15rem]">Sensibilidad de movimiento: </label>
+                        <select id="motion_sensitivity{{camara.idDevice}}" class="form-control mx-2 w-9"
+                            id="motion_sensitivity" [(ngModel)]="motion_sensitivity[camara.idDevice]"
+                            (change)="updateDevice($event, 'motion_sensitivity', camara)">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+
+                    <!--Code: basic_nightvision-->
+                    <div class="flex items-center mb-1">
+                        <label class="inline-block pl-[0.15rem]">Visión nocturna: </label>
+                        <select id="basic_nightvision{{camara.idDevice}}" class="form-control mx-2 w-9"
+                            id="basic_nightvision" [(ngModel)]="basic_nightvision[camara.idDevice]"
+                            (change)="updateDevice($event, 'basic_nightvision', camara)">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+
+                    <!--Code: ptz_control-->
+                    <div class="flex items-center mb-1">
+                        <label class="inline-block pl-[0.15rem]">Control de movimiento: </label>
+                        <select id="ptz_control{{camara.idDevice}}" class="form-control mx-2 w-9" id="ptz_control"
+                            [(ngModel)]="ptz_control[camara.idDevice]"
+                            (change)="updateDevice($event, 'ptz_control', camara)">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
+                    </div>
+
+                    <!--Code: motion_switch-->
+                    <div class="flex items-center mb-1">
+                        <input
+                            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                            type="checkbox" role="switch" id="motion_switch{{camara.idDevice}}"
+                            [(ngModel)]="motion_switch[camara.idDevice]"
+                            (click)="updateDevice($event, 'motion_switch', camara)"
+                            [class.bg-green-500]="motion_switch[camara.idDevice]">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="motion_switch{{camara.idDevice}}">motion_switch</label>
+                    </div>
+
+                    <!--Code: motion_tracking-->
+                    <div class="flex items-center mb-1">
+                        <input
+                            class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                            type="checkbox" role="switch" id="motion_tracking{{camara.idDevice}}"
+                            [(ngModel)]="motion_tracking[camara.idDevice]"
+                            (click)="updateDevice($event, 'motion_tracking', camara)"
+                            [class.bg-green-500]="motion_tracking[camara.idDevice]">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                            for="motion_tracking{{camara.idDevice}}">motion_tracking</label>
+                    </div>
+
                 </div>
 
                 <div *ngIf="activeContent === 'info'" class="ml-2" id="info{{camara.idDevice}}">
