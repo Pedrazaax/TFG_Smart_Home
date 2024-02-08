@@ -7,6 +7,7 @@ import { DispositivoService } from 'src/app/_services/dispositivo.service';
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
 import { Room } from 'src/app/_models/room';
 import { RoomService } from 'src/app/_services/room.service';
+import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
 
 
 @Component({
@@ -57,7 +58,9 @@ export class BulbComponent {
   commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
 
   
-  constructor(private deviceService: DispositivoService, private toastr: ToastrService, private nvdService: NvdapiService, private roomService: RoomService) {
+  constructor(private deviceService: DispositivoService, private toastr: ToastrService, 
+    private nvdService: NvdapiService, private roomService: RoomService, 
+    private deviceFilter: DeviceFilterService) {
   }
 
   ngOnInit(): void {
@@ -78,6 +81,8 @@ export class BulbComponent {
   setRoom(device: Device, room: Room) {
     this.roomService.setRoom(device, room).subscribe((response: any) => {
       this.toastr.success('Dispositivo modificado', 'Éxito');
+      // Actualizar room en el dispositivo
+      device.room = room;
       this.listarDevices();
     },
       (error: any) => {
@@ -100,8 +105,7 @@ export class BulbComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.bombillas = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');
-
+      this.bombillas = this.deviceFilter.getFilteredDevices().filter((dispositivo) => dispositivo.tipoDevice === 'Light Source');
       this.updateStates();
     },
       (error: any) => {

@@ -1,4 +1,4 @@
-<p class="mt-2 ml-4 text-lg font-bold underline font-mono">
+<p *ngIf="camaras!.length > 0" class="mt-2 ml-4 text-lg font-bold underline font-mono">
     Cámaras:
 </p>
 
@@ -39,7 +39,6 @@
             <div (click)="toggleVideo()" class="relative rounded-t-md flex items-center justify-center w-full h-full">
                 <div class="absolute z-10">
                     <p *ngIf="!camara.online" class="text-red-600 text-4xl font-bold">OFFLINE</p>
-
                     <button *ngIf="camara.online" id="boton{{camara.idDevice}}" type="button"
                         class="bg-blue-600 rounded-md hover:bg-blue-700 text-white text-center"
                         (click)="verVideo(camara.idDevice); toggleVideo()">
@@ -51,6 +50,7 @@
                 <div class="mx-2 my-2">
                     <video id="video{{camara.idDevice}}" #video class="object-contain rounded-md" autoplay></video>
                 </div>
+                <p class="absolute bottom-0 text-center w-full text-blue-400">Habitación: {{camara.room.name}}</p>
             </div>
         </div>
 
@@ -63,6 +63,9 @@
                     </li>
                     <li class="mr-1 hover:bg-gray-300">
                         <a class="inline-block" (click)="info(camara.idDevice)">INFO</a>
+                    </li>
+                    <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="room(camara.idDevice)">HABITACIONES</a>
                     </li>
                     <li class="mr-1 hover:bg-gray-300">
                         <a class="inline-block" (click)="seguridad(camara)">SEGURIDAD</a>
@@ -219,6 +222,15 @@
                             <td class="text-sm">{{camara.online}}</td>
                         </tr>
                     </table>
+                </div>
+
+                <div *ngIf="activeContent === 'room'" class="ml-4 my-2 flex flex-col gap-2">
+                    <p class="text-sm">Elige otra habitación: </p>
+                    <div class="flex flex-wrap gap-2">
+                        <button *ngFor="let room of rooms"
+                        [ngClass]="commonClasses + (room.name === camara.room.name ? ' bg-blue-700 text-white' : ' bg-gray-100')"
+                            (click)="setRoom(camara, room)">{{room.name}}</button>
+                    </div>
                 </div>
 
                 <div *ngIf="activeContent === 'seguridad'" id="seguridad{{camara.idDevice}}">

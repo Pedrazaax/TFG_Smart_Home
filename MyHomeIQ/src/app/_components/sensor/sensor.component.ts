@@ -10,30 +10,24 @@ import { NvdapiService } from 'src/app/_services/nvdapi.service';
 import { RoomService } from 'src/app/_services/room.service';
 
 @Component({
-  selector: 'app-socket',
-  templateUrl: './socket.component.html',
-  styleUrls: ['./socket.component.css']
+  selector: 'app-sensor',
+  templateUrl: './sensor.component.html',
+  styleUrls: ['./sensor.component.css']
 })
-export class SocketComponent {
+export class SensorComponent {
   @Input() devices?: Device[];
 
-  sockets?: Device[];
+  sensors?: Device[];
   valor?: any
 
-  switch_1: Jso = {};
-  countdown_1: Jso = {};
-  add_ele: Jso = {};
-  cur_current: Jso = {};
-  cur_power: Jso = {};
-  cur_voltage: Jso = {};
-  relay_status: Jso = {};
-  light_mode: Jso = {};
-  child_lock: Jso = {};
+  pir: Jso = {};
+  pir_time: Jso = {};
+  battery_percentage: Jso = {};
 
   editName: boolean = false;
   editModel: boolean = false;
   activeContent: string = '';
-  activeSocket: string = '';
+  activeSensor: string = '';
   vulnerabilities: any = '';
 
   selectedCve: any;
@@ -42,8 +36,8 @@ export class SocketComponent {
   rooms: Room[] = [];
   commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
 
-  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, 
-    private toastr: ToastrService, private deviceFilter: DeviceFilterService, 
+  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService,
+    private toastr: ToastrService, private deviceFilter: DeviceFilterService,
     private roomService: RoomService) {
 
   }
@@ -55,10 +49,10 @@ export class SocketComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['devices']) {
-      this.sockets = changes['devices'].currentValue;
+      this.sensors = changes['devices'].currentValue;
 
-      if (this.sockets) {
-        this.sockets = this.devices?.filter((dispositivo) => dispositivo.tipoDevice === 'Socket');
+      if (this.sensors) {
+        this.sensors = this.devices?.filter((dispositivo) => dispositivo.tipoDevice === 'Motion Detector');
         this.updateStates();
       }
 
@@ -67,7 +61,8 @@ export class SocketComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.sockets = this.deviceFilter.getFilteredDevices().filter((dispositivo) => dispositivo.tipoDevice === 'Socket');
+      this.sensors = this.deviceFilter.getFilteredDevices().filter((dispositivo) => dispositivo.tipoDevice === 'Motion Detector');
+      console.log(this.sensors)
       this.updateStates();
     },
       (error: any) => {
@@ -100,11 +95,11 @@ export class SocketComponent {
   }
 
   room(idDevice: string) {
-    if (this.activeContent == 'room' && this.activeSocket == idDevice){
+    if (this.activeContent == 'room' && this.activeSensor == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'room';
-      this.activeSocket = idDevice;
+      this.activeSensor = idDevice;
     }
   }
 
@@ -144,7 +139,7 @@ export class SocketComponent {
       estados.forEach(element => {
         element.value = this.lowerLetters(element.value)
       });
-
+      
       this.updateValues(idDevice, estados);
     }, error => {
       this.toastr.error(error.error.detail, "Error")
@@ -152,10 +147,11 @@ export class SocketComponent {
   }
 
   updateStates() {
-    let idDevices = this.sockets!.map(device => device.idDevice);
+    let idDevices = this.sensors!.map(device => device.idDevice);
 
     this.deviceService.statusDevices(idDevices).subscribe((respuesta: Estados) => {
 
+      console.log("Estados sensores: ", respuesta)
       respuesta.result.forEach(element => {
         idDevices.forEach(idDevice => {
           if (element.id == idDevice) {
@@ -173,76 +169,28 @@ export class SocketComponent {
 
   updateValues(idDevice: string, respuesta: Device["commands"]) {
 
-    //Code switch
-    let switchItem = respuesta.filter(item => item.code === 'switch_1');
+    //Code pir
+    let pirItem = respuesta.filter(item => item.code === 'pir');
 
-    if (switchItem[0]) {
-      let switchValue = switchItem[0].value;
-      this.switch_1[idDevice] = switchValue;
+    if (pirItem[0]) {
+      let pirValue = pirItem[0].value;
+      this.pir[idDevice] = pirValue;
     }
 
-    //Code count down
-    let countDownItem = respuesta.filter(item => item.code === 'countdown_1');
+    //Code pir_time
+    let pirTimeItem = respuesta.filter(item => item.code === 'pir_time');
 
-    if (countDownItem[0]) {
-      let countDownValue = countDownItem[0].value;
-      this.countdown_1[idDevice] = countDownValue;
+    if (pirTimeItem[0]) {
+      let pirTimeValue = pirTimeItem[0].value;
+      this.pir_time[idDevice] = pirTimeValue;
     }
 
-    //Code add ele
-    let addeItem = respuesta.filter(item => item.code === 'add_ele');
+    //Code battery_percentage
+    let batteryItem = respuesta.filter(item => item.code === 'battery_percentage');
 
-    if (addeItem[0]) {
-      let addeValue = addeItem[0].value;
-      this.add_ele[idDevice] = addeValue;
-    }
-
-    //Code cur_current
-    let curItem = respuesta.filter(item => item.code === 'cur_current');
-
-    if (curItem[0]) {
-      let curValue = curItem[0].value;
-      this.cur_current[idDevice] = curValue;
-    }
-
-    //Code cur_power
-    let powerItem = respuesta.filter(item => item.code === 'cur_power');
-
-    if (powerItem[0]) {
-      let powerValue = powerItem[0].value / 10;
-      this.cur_power[idDevice] = powerValue;
-    }
-
-    //Code cur_voltage
-    let voltItem = respuesta.filter(item => item.code === 'cur_voltage');
-
-    if (voltItem[0]) {
-      let voltValue = voltItem[0].value / 10;
-      this.cur_voltage[idDevice] = voltValue;
-    }
-
-    //Code relay_status
-    let relayItem = respuesta.filter(item => item.code === 'relay_status');
-
-    if (relayItem[0]) {
-      let relayValue = relayItem[0].value;
-      this.relay_status[idDevice] = relayValue;
-    }
-
-    //Code light_mode
-    let lightItem = respuesta.filter(item => item.code === 'light_mode');
-
-    if (lightItem[0]) {
-      let lightValue = lightItem[0].value;
-      this.light_mode[idDevice] = lightValue;
-    }
-
-    //Code child_lock
-    let childItem = respuesta.filter(item => item.code === 'child_lock');
-
-    if (childItem) {
-      let childValue = childItem[0].value;
-      this.child_lock[idDevice] = childValue;
+    if (batteryItem[0]) {
+      let batteryValue = batteryItem[0].value;
+      this.battery_percentage[idDevice] = batteryValue;
     }
 
   }
@@ -259,46 +207,46 @@ export class SocketComponent {
 
   }
 
-  toggleEnchufes() {
-    this.activeSocket = '';
+  toggleSensors() {
+    this.activeSensor = '';
   }
 
   ajustes(idDevice: string) {
 
-    if (this.activeContent == 'ajustes' && this.activeSocket == idDevice) {
+    if (this.activeContent == 'ajustes' && this.activeSensor == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'ajustes';
-      this.activeSocket = idDevice;
+      this.activeSensor = idDevice;
     }
 
   }
 
   consumo(idDevice: string) {
-    if (this.activeContent == 'consumo' && this.activeSocket == idDevice) {
+    if (this.activeContent == 'consumo' && this.activeSensor == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'consumo';
-      this.activeSocket = idDevice;
+      this.activeSensor = idDevice;
     }
   }
 
   info(idDevice: string) {
-    if (this.activeContent == 'info' && this.activeSocket == idDevice) {
+    if (this.activeContent == 'info' && this.activeSensor == idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'info';
-      this.activeSocket = idDevice;
+      this.activeSensor = idDevice;
     }
 
   }
 
   seguridad(device: Device) {
-    if (this.activeContent == 'seguridad' && this.activeSocket == device.idDevice) {
+    if (this.activeContent == 'seguridad' && this.activeSensor == device.idDevice) {
       this.activeContent = ''
     } else {
       this.activeContent = 'seguridad';
-      this.activeSocket = device.idDevice;
+      this.activeSensor = device.idDevice;
       this.nvd(device);
     }
   }

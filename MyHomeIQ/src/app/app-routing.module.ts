@@ -15,6 +15,7 @@ import { AlarmComponent } from './_components/alarm/alarm.component';
 import { ConsumoComponent } from './_components/consumo/consumo.component';
 import { FormAPIComponent } from './_components/form-api/form-api.component';
 import { AuthGuard } from './app.guard';
+import { SensorComponent } from './_components/sensor/sensor.component';
 
 const routes: Routes = [
   {path : 'login',component:LoginComponent},
@@ -30,7 +31,8 @@ const routes: Routes = [
   {path : 'intro',component:IntroComponent, canActivate: [AuthGuard]},
   {path : 'alarm',component:AlarmComponent, canActivate: [AuthGuard]},
   {path : 'consumo',component:ConsumoComponent, canActivate: [AuthGuard]},
-  {path : 'api',component:FormAPIComponent, canActivate: [AuthGuard]}
+  {path : 'api',component:FormAPIComponent, canActivate: [AuthGuard]},
+  {path : 'sensor', component:SensorComponent, canActivate: [AuthGuard]}
 
 ];
 

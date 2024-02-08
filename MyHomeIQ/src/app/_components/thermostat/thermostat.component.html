@@ -1,4 +1,4 @@
-<p class="mt-2 ml-4 text-lg font-bold underline font-mono">
+<p *ngIf="termostatos!.length > 0" class="mt-2 ml-4 text-lg font-bold underline font-mono">
   Termostatos:
 </p>
 
@@ -6,11 +6,12 @@
   <section class="border rounded-md mt-3 shadow-2xl animate-fad block ml-8" *ngFor="let termostato of termostatos">
     <header class="bg-slate-100 rounded-t-md">
       <div class="flex items-center justify-between">
-        <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md" (dblclick)="editName = true" title="Doble click para editar">
-          <input  (focusout)="editName = false" class="hover:animate-pulse cursor-text" *ngIf="editName" type="text" [(ngModel)]="termostato.name"
-            (keyup.enter)="editName = false; updateInfo(termostato)">
+        <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md" (dblclick)="editName = true"
+          title="Doble click para editar">
+          <input (focusout)="editName = false" class="hover:animate-pulse cursor-text" *ngIf="editName" type="text"
+            [(ngModel)]="termostato.name" (keyup.enter)="editName = false; updateInfo(termostato)">
           <span *ngIf="!editName">{{termostato.name}}</span>
-        </div>        
+        </div>
         <div>
           <p *ngIf="termostato.online" class="text-green-500 mr-2">Online</p>
         </div>
@@ -40,17 +41,21 @@
         <img *ngIf="!switch[termostato.idDevice]" src="../../../assets/img/TermostatoOFF.png" alt="Termostato"
           class="w-72" [class.opacity-30]="!termostato.online" (click)="toggleTermostatos()">
         <p *ngIf="!termostato.online" class="text-red-600 text-4xl font-bold absolute top-4 left-14">OFFLINE</p>
+        <p class="absolute bottom-0 text-center w-full text-blue-400">Habitación: {{termostato.room.name}}</p>
         <p class="absolute bottom-8 right-7 text-3xl">{{temp_set[termostato.idDevice]}}ºC</p>
       </div>
     </div>
     <footer class="w-full rounded-b-md">
       <nav>
-        <ul class="flex items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+        <ul class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
           <li class="-mb-px mr-1 hover:bg-gray-300">
             <a class="inline-block" (click)="ajustes(termostato.idDevice)">AJUSTES</a>
           </li>
           <li class="mr-1 hover:bg-gray-300">
             <a class="inline-block" (click)="info(termostato.idDevice)">INFO</a>
+          </li>
+          <li class="mr-1 hover:bg-gray-300">
+            <a class="inline-block" (click)="room(termostato.idDevice)">HABITACIONES</a>
           </li>
           <li class="mr-1 hover:bg-gray-300">
             <a class="inline-block" (click)="seguridad(termostato)">SEGURIDAD</a>
@@ -116,8 +121,8 @@
               <td class="font-bold">Modelo:</td>
               <td class="text-sm cursor-pointer hover:bg-gray-300 inline-block rounded-md" (dblclick)="editModel = true"
                 title="Doble click para editar">
-                <input class="border hover:animate-pulse hover:text-blue-700 cursor-text" *ngIf="editModel"
-                  type="text" [(ngModel)]="termostato.model" (keyup.enter)="editModel = false; updateInfo(termostato)"
+                <input class="border hover:animate-pulse hover:text-blue-700 cursor-text" *ngIf="editModel" type="text"
+                  [(ngModel)]="termostato.model" (keyup.enter)="editModel = false; updateInfo(termostato)"
                   (focusout)="editModel = false">
                 <span class="hover:text-blue-700" *ngIf="!editModel">{{termostato.model}}</span>
                 <span class="italic text-red-500" *ngIf="!editModel && !termostato.model">Añadir modelo</span>
@@ -136,6 +141,15 @@
               <td class="text-sm">{{termostato.online}}</td>
             </tr>
           </table>
+        </div>
+
+        <div *ngIf="activeContent === 'room'" class="ml-4 my-2 flex flex-col gap-2">
+          <p class="text-sm">Elige otra habitación: </p>
+          <div class="flex flex-wrap gap-2">
+            <button *ngFor="let room of rooms"
+              [ngClass]="commonClasses + (room.name === termostato.room.name ? ' bg-blue-700 text-white' : ' bg-gray-100')"
+              (click)="setRoom(termostato, room)">{{room.name}}</button>
+          </div>
         </div>
 
         <div *ngIf="activeContent === 'seguridad'" id="seguridad{{termostato.idDevice}}">
@@ -157,54 +171,54 @@
 
           <ng-template #vulnerabilitiesLoaded>
             <div class="flex flex-wrap">
-                <p class="ml-2 font-bold">Total de vulnerabilidades: {{ responseNVD.totalResults }}</p>
-                <p class="ml-2" *ngIf="responseNVD.totalResults == 0">Este dispositivo no tiene
-                    vulnerabilidades
-                    registradas</p>
+              <p class="ml-2 font-bold">Total de vulnerabilidades: {{ responseNVD.totalResults }}</p>
+              <p class="ml-2" *ngIf="responseNVD.totalResults == 0">Este dispositivo no tiene
+                vulnerabilidades
+                registradas</p>
             </div>
             <div class="flex flex-wrap justify-center">
-                <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
-                    <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
-                        [ngClass]="{
+              <div *ngFor="let vulnerability of vulnerabilities" class="relative m-2 group">
+                <div class="rounded-full animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in"
+                  [ngClass]="{
                                         'bg-yellow-500': vulnerability.baseSeverity === 'LOW',
                                         'bg-orange-500': vulnerability.baseSeverity === 'MEDIUM',
                                         'bg-red-500': vulnerability.baseSeverity === 'HIGH',
                                         'bg-black': vulnerability.baseSeverity === 'CRITICAL'
                                         }" [style.width]="getCircleSize(vulnerability.count)"
-                        [style.height]="getCircleSize(vulnerability.count)"></div>
+                  [style.height]="getCircleSize(vulnerability.count)"></div>
 
+                <div
+                  class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
+                  <span class="text-xs text-white">{{ vulnerability.count }}</span>
+                </div>
+
+                <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
+                  class="group-hover:block absolute top-full left-1/2 transform -translate-x-1/2 p-2 rounded-md bg-gray-300 shadow-xl w-40 hidden z-10 h-auto">
+
+                  <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
+                    <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
+                    <div *ngFor="let cve of vulnerability.cves">
+                      <a href="https://www.cvedetails.com/cve/{{cve.cve.id}}" target="_blank"
+                        class="text-center hover:bg-white hover:cursor-pointer" (mouseenter)="selectCve(cve)"
+                        (mouseleave)="deselectCve()">
+                        {{ cve.cve.id }}
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Tooltip con la descripción del objeto CVE seleccionado -->
+                  <ng-container *ngIf="selectedCve">
                     <div
-                        class="flex items-center justify-center absolute top-0 right-0 bottom-0 left-0 animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-in">
-                        <span class="text-xs text-white">{{ vulnerability.count }}</span>
+                      class="text-xs absolute top-0 left-full transform translate-x-2 p-2 rounded-md bg-gray-300 shadow-xl w-96 z-20">
+                      <p>{{ getDescription(selectedCve) }}</p>
                     </div>
-
-                    <div [ngClass]="{'w-80': vulnerability.cves.length > 10}"
-                        class="group-hover:block absolute top-full left-1/2 transform -translate-x-1/2 p-2 rounded-md bg-gray-300 shadow-xl w-40 hidden z-10 h-auto">
-
-                        <div [ngClass]="{'columns-2 gap-2': vulnerability.cves.length > 10}">
-                            <p class="font-bold text-center">{{ vulnerability.baseSeverity }}</p>
-                            <div *ngFor="let cve of vulnerability.cves">
-                                <a href="https://www.cvedetails.com/cve/{{cve.cve.id}}" target="_blank"
-                                    class="text-center hover:bg-white hover:cursor-pointer"
-                                    (mouseenter)="selectCve(cve)" (mouseleave)="deselectCve()">
-                                    {{ cve.cve.id }}
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Tooltip con la descripción del objeto CVE seleccionado -->
-                        <ng-container *ngIf="selectedCve">
-                            <div
-                                class="text-xs absolute top-0 left-full transform translate-x-2 p-2 rounded-md bg-gray-300 shadow-xl w-96 z-20">
-                                <p>{{ getDescription(selectedCve) }}</p>
-                            </div>
-                        </ng-container>
-
-                    </div>
+                  </ng-container>
 
                 </div>
+
+              </div>
             </div>
-        </ng-template>
+          </ng-template>
 
         </div>
 

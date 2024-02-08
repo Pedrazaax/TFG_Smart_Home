@@ -26,6 +26,8 @@ import { ConsumoComponent } from './_components/consumo/consumo.component';
 import { LoaderComponent } from './_components/loader/loader.component';
 import { CheckComponent } from './_components/check/check.component';
 import { FormAPIComponent } from './_components/form-api/form-api.component';
+import { AlarmComponent } from './_components/alarm/alarm.component';
+import { SensorComponent } from './_components/sensor/sensor.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { FormAPIComponent } from './_components/form-api/form-api.component';
     ConsumoComponent,
     LoaderComponent,
     CheckComponent,
-    FormAPIComponent
+    FormAPIComponent,
+    AlarmComponent,
+    SensorComponent
   ],
   imports: [
     BrowserModule,

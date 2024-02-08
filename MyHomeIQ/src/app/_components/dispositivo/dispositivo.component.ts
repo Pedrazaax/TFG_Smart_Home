@@ -38,13 +38,11 @@ export class DispositivoComponent implements AfterViewInit {
   }
 
   showInputField() {
-    this.isInputFieldVisible = true;
+    this.isInputFieldVisible = this.isInputFieldVisible ? false : true;
   }
 
   addRoom(nameRoom: string, inputElement: HTMLInputElement) {
     inputElement.value = ''; // Limpia el input
-
-    this.rooms.push({name: nameRoom});
     this.isInputFieldVisible = false;
 
     let devices: Device[] = [];
@@ -56,12 +54,19 @@ export class DispositivoComponent implements AfterViewInit {
 
     this.roomService.addRoom(info).subscribe((respuesta:any) => {
       this.toastr.success("Habitación agregada")
+      this.rooms.push({name: nameRoom}); // Agrega la habitación a la lista
       this.listarRooms()
     },
       (error:any) => {
         this.toastr.error(error.error.detail, "Error")
       }
     )
+  }
+
+  handleDeleteClick(event: Event, room: Room): void {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta habitación?')) {
+      this.deleteRoom(room);
+    }
   }
 
   deleteRoom(room: Room) {
@@ -80,6 +85,11 @@ export class DispositivoComponent implements AfterViewInit {
 
   selectRoom(room: Room) {
     this.devicefilterService.selectRoom(room);
+    this.filteredDevices = this.devicefilterService.getFilteredDevices();
+  }
+
+  deselectedRoom() {
+    this.devicefilterService.selectRoom(undefined!);
     this.filteredDevices = this.devicefilterService.getFilteredDevices();
   }
 

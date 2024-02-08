@@ -24,7 +24,7 @@ export class DeviceFilterService {
         if (this.selectedRoom) {
             return this.devices!.filter(device => device.room.name === this.selectedRoom?.name);
         } else {
-            return [];
+            return this.devices!;
         }
     }
 }

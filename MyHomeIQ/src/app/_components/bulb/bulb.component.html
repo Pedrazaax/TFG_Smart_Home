@@ -1,4 +1,4 @@
-<p class="mt-2 ml-4 text-lg font-bold underline font-mono">
+<p *ngIf="bombillas!.length > 0" class="mt-2 ml-4 text-lg font-bold underline font-mono">
     Bombillas:
 </p>
 
@@ -55,6 +55,7 @@
                     <circle cx="50%" cy="50%" r="25%" class="circle"></circle>
                 </svg>
                 <p *ngIf="!bombilla.online" class="text-red-600 text-4xl font-bold absolute top-4 left-14">OFFLINE</p>
+                <p class="absolute bottom-0 text-center w-full text-blue-400">Habitación: {{bombilla.room.name}}</p>
             </div>
         </div>
         <footer class="w-full rounded-b-md">
@@ -156,10 +157,13 @@
                     </table>
                 </div>
 
-                <div *ngIf="activeContent === 'room'" class="ml-4 my-2 flex flex-wrap gap-2">
-                    <button *ngFor="let room of rooms"
-                    [ngClass]="commonClasses + (room.name === bombilla.room.name ? ' bg-blue-700 text-white' : ' bg-gray-100')"
-                        (click)="setRoom(bombilla, room)">{{room.name}}</button>
+                <div *ngIf="activeContent === 'room'" class="ml-4 my-2 flex flex-col gap-2">
+                    <p class="text-sm">Elige otra habitación: </p>
+                    <div class="flex flex-wrap gap-2">
+                        <button *ngFor="let room of rooms"
+                        [ngClass]="commonClasses + (room.name === bombilla.room.name ? ' bg-blue-700 text-white' : ' bg-gray-100')"
+                            (click)="setRoom(bombilla, room)">{{room.name}}</button>
+                    </div>
                 </div>
 
                 <div *ngIf="activeContent === 'color' && switch_led[bombilla.idDevice]" class="ml-4 my-2">

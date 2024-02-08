@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
 import { Estados } from 'src/app/_models/estados';
 import { Jso } from 'src/app/_models/jso';
+import { Room } from 'src/app/_models/room';
+import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
+import { RoomService } from 'src/app/_services/room.service';
 
 @Component({
   selector: 'app-thermostat',
@@ -13,6 +16,8 @@ import { NvdapiService } from 'src/app/_services/nvdapi.service';
 })
 
 export class ThermostatComponent {
+  @Input() devices?: Device[];
+
   termostatos?: Device[];
   valor: any;
   temperatureValue: any = -1;
@@ -36,12 +41,62 @@ export class ThermostatComponent {
   editName: boolean = false;
   editModel: boolean = false;
 
-  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, private toastr: ToastrService) {
+  rooms: Room[] = [];
+  commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
+
+  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, 
+    private toastr: ToastrService, private deviceFilter: DeviceFilterService, 
+    private roomService: RoomService) {
 
   }
 
   ngOnInit(): void {
     this.listarDevices();
+    this.listarRooms();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['devices']) {
+      this.termostatos = changes['devices'].currentValue;
+      
+      if (this.termostatos) {
+        this.termostatos = this.devices?.filter((dispositivo) => dispositivo.tipoDevice === 'Thermostat');
+        this.updateStates();
+      }
+      
+    }
+  }
+
+  listarRooms() {
+    this.roomService.listarRooms().subscribe((respuesta: any[]) => {
+      this.rooms = respuesta
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    );
+  }
+
+  setRoom(device: Device, room: Room) {
+    this.roomService.setRoom(device, room).subscribe((response: any) => {
+      this.toastr.success('Dispositivo modificado', 'Éxito');
+      // Actualizar room en el dispositivo
+      device.room = room;
+      this.listarDevices();
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error");
+      }
+    );
+  }
+
+  room(idDevice: string) {
+    if (this.activeContent == 'room' && this.activeTermostato == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'room';
+      this.activeTermostato = idDevice;
+    }
   }
 
   nvd(device: Device) {
@@ -98,8 +153,7 @@ export class ThermostatComponent {
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.termostatos = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Thermostat');
-      console.log(this.termostatos)
+      this.termostatos = this.deviceFilter.getFilteredDevices().filter((dispositivo) => dispositivo.tipoDevice === 'Thermostat');
       this.updateStates();
     },
       (error: any) => {

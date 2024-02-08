@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
@@ -7,6 +7,9 @@ import Hls from 'hls.js'
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
 import { Estados } from 'src/app/_models/estados';
 import { Jso } from 'src/app/_models/jso';
+import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
+import { Room } from 'src/app/_models/room';
+import { RoomService } from 'src/app/_services/room.service';
 
 @Component({
   selector: 'app-video-camara',
@@ -16,6 +19,7 @@ import { Jso } from 'src/app/_models/jso';
 
 export class VideoCamaraComponent {
   @ViewChild('video') video!: ElementRef<HTMLVideoElement>;
+  @Input() devices?: Device[];
 
   camaras?: Device[];
   valor: any
@@ -51,18 +55,66 @@ export class VideoCamaraComponent {
   selectedCve: any;
   responseNVD: any;
 
-  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, private toastr: ToastrService, private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
+  rooms: Room[] = [];
+  commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
+
+  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, 
+    private toastr: ToastrService, private sanitizer: DomSanitizer, 
+    private deviceFilter: DeviceFilterService, private roomService: RoomService) {
 
   }
 
   ngOnInit(): void {
     this.listarDevices()
+    this.listarRooms()
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['devices']) {
+      this.camaras = changes['devices'].currentValue;
+      
+      if (this.camaras) {
+        this.camaras = this.devices?.filter((dispositivo) => dispositivo.tipoDevice === 'Smart Camera');
+        this.updateStates();
+      }
+    }
+  }
+
+  listarRooms() {
+    this.roomService.listarRooms().subscribe((respuesta: any[]) => {
+      this.rooms = respuesta
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    );
+  }
+
+  setRoom(device: Device, room: Room) {
+    this.roomService.setRoom(device, room).subscribe((response: any) => {
+      this.toastr.success('Dispositivo modificado', 'Éxito');
+      // Actualizar room en el dispositivo
+      device.room = room;
+      this.listarDevices();
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error");
+      }
+    );
+  }
+
+  room(idDevice: string) {
+    if (this.activeContent == 'room' && this.activeCamara == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'room';
+      this.activeCamara = idDevice;
+    }
   }
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.camaras = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Smart Camera');
-      console.log(this.camaras)
+      this.camaras = this.deviceFilter.getFilteredDevices().filter((dispositivo) => dispositivo.tipoDevice === 'Smart Camera');
       this.updateStates();
     },
       (error: any) => {
