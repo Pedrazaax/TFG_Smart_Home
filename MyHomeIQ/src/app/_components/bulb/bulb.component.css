@@ -1,3 +1,51 @@
-.tamanio{
+.tamanio {
     width: 350px;
+}
+
+svg:hover {
+    cursor: pointer;
+}
+
+.bombilla-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 10px;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.show {
+    display: block;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.card-max {
+    max-width: 330px;
+}
+
+.container {
+    position: relative;
+    display: inline-block;
+}
+
+.container img {
+    min-width: 150px;
+}
+
+.circle-container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.circle {
+    stroke: none;
+    filter: url(#blur);
 }

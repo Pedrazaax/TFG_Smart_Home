@@ -21,6 +21,13 @@ import { BulbComponent } from './_components/bulb/bulb.component';
 import { InicioComponent } from './_components/inicio/inicio.component';
 import { IntroComponent } from './_components/intro/intro.component';
 import { VideoCamaraComponent } from './_components/video-camara/video-camara.component';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { ConsumoComponent } from './_components/consumo/consumo.component';
+import { LoaderComponent } from './_components/loader/loader.component';
+import { CheckComponent } from './_components/check/check.component';
+import { FormAPIComponent } from './_components/form-api/form-api.component';
+import { AlarmComponent } from './_components/alarm/alarm.component';
+import { SensorComponent } from './_components/sensor/sensor.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +44,13 @@ import { VideoCamaraComponent } from './_components/video-camara/video-camara.co
     BulbComponent,
     InicioComponent,
     IntroComponent,
-    VideoCamaraComponent
+    VideoCamaraComponent,
+    ConsumoComponent,
+    LoaderComponent,
+    CheckComponent,
+    FormAPIComponent,
+    AlarmComponent,
+    SensorComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +59,8 @@ import { VideoCamaraComponent } from './_components/video-camara/video-camara.co
     HttpClientModule,
     ReactiveFormsModule,
     ToastrModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ColorPickerModule
   ],
   providers: [AppConfig],
   bootstrap: [AppComponent]

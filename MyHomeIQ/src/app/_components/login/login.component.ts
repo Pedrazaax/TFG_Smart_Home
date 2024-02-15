@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from '../../_services/account.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -9,27 +10,42 @@ import { AccountService } from '../../_services/account.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  name?: string
-  pwd?: string
-  message?: string
 
-  constructor(private router:Router, private accountService : AccountService) { }
+  formulario: FormGroup
+
+  constructor(private router:Router, private accountService : AccountService) {
+    this.formulario = new FormGroup({
+      username: new FormControl('', [Validators.required]),
+      pwd: new FormControl('', [Validators.required]),
+    });
+   }
 
   ngOnInit(): void {
   }
+
+
   login(){
-    let info={
-      name:this.name,
-      pwd1:this.pwd
-    }
-    this.accountService.login(info).subscribe(
-      respuesta => {
-        console.log(respuesta)
-      },
-      (error: any)=>{
-        this.message="Ha habido un error"
+
+    if(this.formulario.valid){
+
+      let info={
+        username: this.formulario.get('username')!.value,
+        password: this.formulario.get('pwd')!.value
       }
-    )
+  
+      this.accountService.login(info).subscribe(
+        respuesta => {
+          sessionStorage.setItem('token', respuesta.access_token)
+          sessionStorage.setItem('username', info.username)
+          this.router.navigate(['/api'])
+        },
+        (error: any)=>{
+          alert("Error " + error.error.detail)
+        }
+      )
+      
+    }
+
   }
   
 }

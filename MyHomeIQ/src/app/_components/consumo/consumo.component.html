@@ -1,0 +1,730 @@
+<div class="relative h-full">
+
+  <div data-te-modal-init
+    class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+    id="iniciarprueba" tabindex="-1" aria-labelledby="exampleModalCenteredScrollable" aria-modal="true" role="dialog">
+    <div data-te-modal-dialog-ref
+      class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+      <div
+        class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none">
+        <div
+          class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4">
+          <!--Modal title-->
+          <h5 class="text-xl font-medium leading-normal text-neutral-800" id="exampleModalCenteredScrollableLabel">
+            Prueba de consumo
+          </h5>
+          <!--Close button-->
+          <button type="button"
+            class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+            data-te-modal-dismiss aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="h-6 w-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!--Modal body-->
+        <form class="relative p-4" (ngSubmit)="onSubmit()" data-te-input-wrapper-init>
+          <div class="p-6">
+            <div class="mb-4">
+              <label for="tipoDevice" class="block text-gray-700 font-bold mb-2">Tipo de dispositivo:</label>
+              <select name="tipoDevice" id="tipoDevice" [(ngModel)]="tipoDevice"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option value="Light Source">Bombilla</option>
+                <option value="Thermostat">Termostato</option>
+                <option value="Smart Camera">Camara</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="tipoDevice" class="block text-gray-700 font-bold mb-2">Elige el dispositivo: </label>
+              <select name="tipoDevice" id="tipoDevice" [(ngModel)]="idDevice"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option *ngFor="let dispositivo of devices" value="{{dispositivo.idDevice}}">{{dispositivo.name}}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="tipoPrueba" class="block text-gray-700 font-bold mb-2">Tipo de prueba:</label>
+              <select id="tipoPrueba" [(ngModel)]="tipoPrueba" name="tipoPrueba"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option *ngFor="let prueba of tipoPruebas" [ngValue]="prueba">{{prueba.nombre}}</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="enchufe" class="block text-gray-700 font-bold mb-2">Enchufe:</label>
+              <select id="enchufe" [(ngModel)]="enchufe_idDevice" name="enchufe"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option value="{{socket.idDevice}}" *ngFor="let socket of sockets">{{socket.name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <!--Modal footer-->
+          <div
+            class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4">
+            <button type="button"
+              class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+              data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+              Cerrar
+            </button>
+            <button type="submit"
+              class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              data-te-ripple-init data-te-ripple-color="light">
+              Iniciar prueba
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="load" class="flex items-center justify-center absolute inset-0 m-auto rounded-md bg-slate-100 w-60 h-60">
+    <app-loader></app-loader>
+  </div>
+
+  <div *ngIf="check" class="flex items-center justify-center absolute inset-0 m-auto rounded-md bg-slate-100 w-60 h-60">
+    <app-check></app-check>
+  </div>
+
+  <div data-te-modal-init
+    class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+    id="creartipoprueba" tabindex="-1" aria-labelledby="exampleModalCenteredScrollable" aria-modal="true" role="dialog">
+    <div data-te-modal-dialog-ref
+      class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+      <div
+        class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none">
+        <div
+          class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4">
+          <!--Modal title-->
+          <h5 class="text-xl font-medium leading-normal text-neutral-800" id="exampleModalCenteredScrollableLabel">
+            Crear tipo de prueba
+          </h5>
+          <!--Close button-->
+          <button type="button"
+            class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+            data-te-modal-dismiss aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="h-6 w-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!--Modal body-->
+        <form class="relative p-4" (ngSubmit)="onSubmitTP()" data-te-input-wrapper-init>
+          <ng-container *ngIf="!next; else nextLoaded">
+            <div class="p-6">
+              <div class="mb-4">
+                <label for="name" class="block text-gray-700 font-bold mb-2">Nombre:</label>
+                <input name="name" id="name" [(ngModel)]="nombreTipoPrueba"
+                  class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+              </div>
+
+              <div class="mb-4">
+                <label for="tipoDevice" class="block text-gray-700 font-bold mb-2">Tipo de dispositivo:</label>
+                <select name="tipoDevice" id="tipoDevice" [(ngModel)]="tipoDeviceTP"
+                  class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                  <option value="Light Source">Bombilla</option>
+                  <option value="Thermostat">Termostato</option>
+                  <option value="Smart Camera">Camara</option>
+                </select>
+              </div>
+            </div>
+
+            <!--Modal footer-->
+            <div
+              class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4">
+              <button type="button"
+                class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+                data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+                Cerrar
+              </button>
+              <button type="button"
+                class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                data-te-ripple-init data-te-ripple-color="light" (click)="toggleNext()">
+                Siguiente
+              </button>
+            </div>
+          </ng-container>
+          <ng-template #nextLoaded>
+
+            <p>Añadir intervalos (Máximo 4)</p>
+            <button type="button" class="cursor-pointer duration-200 hover:scale-125 active:scale-100"
+              title="Add Intervalo" (click)="addIntervalo()">
+              <svg class="stroke-blue-300 fill-blue-100" viewBox="0 0 24 24" height="30px" width="30px"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-width="1.5"
+                  d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"></path>
+                <path stroke-width="1.5" d="M8 12H16"></path>
+                <path stroke-width="1.5" d="M12 16V8"></path>
+              </svg>
+            </button>
+
+            <!-- Bombilla *************************************************************************************************-->
+            <div *ngIf="tipoDeviceTP=='Light Source'"
+              class="grid lg:grid-cols-2 lg:gap-2 md:grid-cols-2 md:gap-2 grid-cols-1">
+              <section *ngFor="let intervalo of intervalos_bombilla"
+                class="mb-6 w-52 justify-center border rounded-md mt-3 shadow-2xl animate-fad block ml-2 mr-2">
+
+                <div class="my-2 flex">
+                  <label for="timeIntervalo" class="block text-gray-700 font-bold mb-2 mx-2">Tiempo(s):</label>
+                  <input type="number" name="timeIntervalo" id="timeIntervalo" [(ngModel)]="intervalo.time"
+                    class="border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 w-24">
+                </div>
+
+                <header class="bg-slate-100 rounded-t-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md">
+                      <span class="ml-2">Bombilla</span>
+                    </div>
+                    <div class="mr-2 hover:cursor-pointer z-10" (click)="deleteIntervalo(intervalo)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                          d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                        <path
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                      </svg>
+                    </div>
+                  </div>
+                </header>
+                <div class="flex justify-center hover:cursor-pointer">
+                  <div class="relative">
+                    <img src="../../../assets/img/BombillaON.png" alt="Termostato" class="w-72">
+                    <svg #circle id="circle" height="25vh" width="25vh" class="circle-container">
+                      <defs>
+                        <filter id="blur">
+                          <feGaussianBlur class="blur" in="SourceGraphic" stdDeviation="5" />
+                        </filter>
+                      </defs>
+                      <circle cx="50%" cy="50%" r="25%" class="circle"></circle>
+                    </svg>
+                  </div>
+                </div>
+                <footer class="w-full rounded-b-md">
+                  <nav>
+                    <ul
+                      class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+                      <li class="-mb-px mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="ajustes()">AJUSTES</a>
+                      </li>
+                      <li class="mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="colores()">COLOR</a>
+                    </ul>
+                  </nav>
+                  <section id="seccion{{device}}">
+                    <div id="ajustes{{device}}" *ngIf="activeContent === 'ajustes'"
+                      class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+                      <div class="flex items-center mb-1">
+                        <input name="OnOff"
+                          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                          type="checkbox" role="switch" id="onoff{{device}}" [(ngModel)]="intervalo.status[0].value"
+                          [class.bg-green-500]="intervalo.status[0].value" checked>
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                          for="onoff{{device}}">ON/OFF</label>
+                      </div>
+                      <div>
+                        <select name="work_mode" id="work_mode{{ device }}" class="form-control mr-2" id="workMode"
+                          [(ngModel)]="intervalo.status[1].value" [disabled]="!intervalo.status[0].value">
+                          <option value="white">Blanco</option>
+                          <option value="colour">Color</option>
+                          <option value="scene">Escena</option>
+                          <option value="music">Música</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label class="text-gray-700" for="temperatureRange">Brillo:</label>
+                        <input name="bright_value_v2" type="range" class="form-range w-28 ml-3" id="temperatureRange"
+                          min="10" max="1000" showTickMarks discrete [(ngModel)]="intervalo.status[2].value" step="5"
+                          [disabled]="!intervalo.status[0].value">
+                        <output class="text-gray-700">{{intervalo.status[2].value}}</output>
+                      </div>
+
+                      <div>
+                        <label class="text-gray-700" for="upperTempRange">Temp:</label>
+                        <input name="temp_value_v2" type="range" class="form-range w-28 ml-3" id="upperTempRange"
+                          min="0" max="1000" showTickMarks discrete [(ngModel)]="intervalo.status[3].value" step="5"
+                          [disabled]="!intervalo.status[0].value">
+                        <output class="text-gray-700">{{intervalo.status[3].value}}</output>
+                      </div>
+                    </div>
+
+                    <div *ngIf="activeContent === 'color' && intervalo.status[0].value" class="ml-4 my-2">
+                      <span [style.background]="rgb" [cpToggle]="true" [cpDialogDisplay]="'inline'"
+                        [cpOutputFormat]="'rgba'"
+                        [cpPresetColors]="['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']"
+                        [(colorPicker)]="rgb" (colorPickerChange)="updateColor($event, intervalo)" [cpWidth]="'170px'">
+                      </span>
+                    </div>
+                  </section>
+                </footer>
+              </section>
+            </div>
+
+            <!--*************************************************************************************************************-->
+
+            <!-- Termostato *************************************************************************************************-->
+
+            <div *ngIf="tipoDeviceTP=='Thermostat'"
+              class="grid lg:grid-cols-2 lg:gap-2 md:grid-cols-2 md:gap-2 grid-cols-1">
+
+              <section *ngFor="let intervalo of intervalos_thermostat"
+                class="mb-6 w-52 justify-center border rounded-md mt-3 shadow-2xl animate-fad block ml-2 mr-2">
+
+                <div class="my-2 flex">
+                  <label for="timeIntervalo" class="block text-gray-700 font-bold mb-2 mx-2">Tiempo(s):</label>
+                  <input type="number" name="timeIntervalo" id="timeIntervalo" [(ngModel)]="intervalo.time"
+                    class="border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 w-24">
+                </div>
+
+                <header class="bg-slate-100 rounded-t-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md">
+                      <span class="ml-2">Termostato</span>
+                    </div>
+                    <div class="mr-2 hover:cursor-pointer z-10" (click)="deleteIntervalo(intervalo)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-trash" viewBox="0 0 16 16">
+                        <path
+                          d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                        <path
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                      </svg>
+                    </div>
+                  </div>
+                </header>
+                <div class="flex justify-center hover:cursor-pointer">
+                  <img src="../../../assets/img/TermostatoON.png" alt="Termostato" class="w-72">
+                </div>
+                <footer class="w-full rounded-b-md">
+                  <nav>
+                    <ul
+                      class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+                      <li class="-mb-px mr-1 hover:bg-gray-300">
+                        <a class="inline-block" (click)="ajustes()">AJUSTES</a>
+                      </li>
+                    </ul>
+                  </nav>
+                  <section id="seccion{{device}}">
+                    <div id="ajustes{{device}}" *ngIf="activeContent === 'ajustes'"
+                      class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+                      <div class="flex items-center mb-1">
+                        <input name="OnOff"
+                          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                          type="checkbox" role="switch" id="onoff{{device}}" [(ngModel)]="intervalo.status[0].value"
+                          [class.bg-green-500]="intervalo.status[0].value" checked>
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer"
+                          for="onoff{{device}}">ON/OFF</label>
+                      </div>
+                      <div>
+                        <input
+                          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                          type="checkbox" role="switch" id="child{{device}}" [(ngModel)]="intervalo.status[1].value"
+                          [disabled]="!intervalo.status[0].value">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                          Child lock
+                        </label>
+                      </div>
+
+                      <div>
+                        <input
+                          class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                          type="checkbox" role="switch" id="eco{{device}}" [(ngModel)]="intervalo.status[2].value"
+                          [disabled]="!intervalo.status[0].value">
+                        <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                          Eco
+                        </label>
+                      </div>
+
+                      <div class="flex flex-wrap gap-2">
+                        <label class="text-gray-700" for="temperatureRange">Temperatura:</label>
+                        <input type="range" class="form-range w-28 ml-3" id="temperatureRange" min="10" max="70"
+                          showTickMarks discrete [(ngModel)]="intervalo.status[3].value" step="5"
+                          [disabled]="!intervalo.status[0].value">
+                        <output class="text-gray-700">{{intervalo.status[3].value}} ºC</output>
+                      </div>
+
+                      <div class="flex flex-wrap gap-2">
+                        <label class="text-gray-700" for="upperTempRange">Upper temp:</label>
+                        <input type="range" class="form-range w-28 ml-3" id="upperTempRange" min="0" max="100"
+                          showTickMarks discrete [(ngModel)]="intervalo.status[4].value" step="5"
+                          [disabled]="!intervalo.status[0].value">
+                        <output class="text-gray-700">{{intervalo.status[4].value}} ºC</output>
+                      </div>
+                    </div>
+                  </section>
+                </footer>
+              </section>
+
+            </div>
+
+            <!--*************************************************************************************************************-->
+
+            <!--Modal footer-->
+            <div
+              class="flex flex-shrink-0 flex-wrap items-center justify-between rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4">
+              <button type="button"
+                class="ml-1 inline-block rounded bg-red-400 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                data-te-ripple-init data-te-ripple-color="light" (click)="toggleNext()">
+                Atrás
+              </button>
+              <button type="submit"
+                class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                data-te-ripple-init data-te-ripple-color="light">
+                Crear prueba
+              </button>
+            </div>
+
+          </ng-template>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <main class="flex flex-wrap gap-20 items-stretch justify-evenly h-full">
+    <section>
+      <button type="button"
+        class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        data-te-toggle="modal" data-te-target="#iniciarprueba" data-te-ripple-init data-te-ripple-color="light"
+        (click)="togglePrueba()">
+        INICIAR PRUEBA
+      </button>
+      <button type="button"
+        class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        data-te-toggle="modal" data-te-target="#creartipoprueba" data-te-ripple-init data-te-ripple-color="light"
+        (click)="toggleTipoP()">
+        CREAR TIPO DE PRUEBA
+      </button>
+      <table>
+        <thead class="border-b-2 bg-neutral-800 font-medium text-white">
+          <tr class="[&>th]:px-2">
+            <th scope="col">#</th>
+            <th scope="col">Categoría</th>
+            <th scope="col">Tiempo Total</th>
+            <th scope="col">Cosumo Medio</th>
+          </tr>
+        </thead>
+        <tbody class="rounded-md border-b-2">
+          <tr *ngFor="let pConsumo of pruebasConsumo; index as i" (click)="selectedPrueba(pConsumo, i)"
+            [ngClass]="{'bg-blue-200': selectedRow === i}"
+            class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
+            <th class="font-medium">{{i + 1}}</th>
+            <th>{{pConsumo.tipoDevice}}</th>
+            <th>{{pConsumo.timeTotal}}</th>
+            <th>{{pConsumo.consumoMedio!.toFixed(4)}}</th>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="mt-10">
+      <ng-container *ngIf="selected_pConsumo && selected_socket && selected_device; else empty">
+        <table class="text-left [&>tr>td]:border-b-2 [&>tr>td]:border-neutral-100 [&>tr>td]:border-opacity-100">
+          <tr>
+            <td class="font-bold">idPrueba:</td>
+            <td class="text-sm">{{selected_pConsumo.idPrueba}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Dispositivo testeado:</td>
+            <td class="text-sm">{{selected_device.name}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Enchufe utilizado:</td>
+            <td class="text-sm">{{selected_socket.name}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Tipo de dispositivo:</td>
+            <td class="text-sm">{{selected_pConsumo.tipoDevice}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Tipo de prueba:</td>
+            <td class="text-sm">{{selected_pConsumo.prueba.nombre}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Tiempo total:</td>
+            <td class="text-sm">{{selected_pConsumo.timeTotal}}</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Consumo medio:</td>
+            <td class="text-sm">{{selected_pConsumo.consumoMedio}}</td>
+          </tr>
+        </table>
+      </ng-container>
+
+      <ng-template #empty>
+        <table class="text-left [&>tr>td]:border-b-2 [&>tr>td]:border-neutral-100 [&>tr>td]:border-opacity-100">
+          <tr>
+            <td class="font-bold">idPrueba:</td>
+            <td class="text-sm text-red-200">No seleccionado o vacio</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Dispositivo testeado:</td>
+            <td class="text-sm text-red-200">No seleccionado o vacio</td>
+          </tr>
+          <tr>
+          <tr>
+            <td class="font-bold">Enchufe utilizado:</td>
+            <td class="text-sm text-red-200">No seleccionado o vacio</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Tipo de dispositivo:</td>
+            <td class="text-sm text-red-200">No seleccionado o vacio</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Tipo de prueba:</td>
+            <td class="text-sm text-red-200">No seleccionado o vacio</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Tiempo total:</td>
+            <td class="text-sm text-red-200">No seleccionado o vacio</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Consumo medio:</td>
+            <td class="text-sm text-red-200">No seleccionado o vacio</td>
+          </tr>
+        </table>
+      </ng-template>
+
+    </section>
+    <section class="w-80 overflow-hidden mt-10">
+      <canvas id="bar-chart"></canvas>
+    </section>
+
+  </main>
+
+  <!-- Listar Tipos de prueba -->
+
+  <section class="grid grid-cols-2 gap-4">
+
+    <div class="w-80">
+      <p class="text-2xl">Tipos de prueba</p>
+      <select name="selectedTDevice" id="selectedTDevice" class="form-control mx-2 my-2 w-32" id="selectedTDevice"
+        [(ngModel)]="selectedTDevice" (click)="filterTP()">
+        <option value="Light Source">Bombilla</option>
+        <option value="Thermostat">Termostato</option>
+        <option value="Camara">Camara</option>
+        <option value="Other">Otros</option>
+      </select>
+      <table *ngIf="selectedTDevice">
+        <thead class="border-b-2 bg-neutral-800 font-medium text-white">
+          <tr class="[&>th]:px-2">
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Tipo dispositivo</th>
+            <th scope="col">Numero de intervalos</th>
+          </tr>
+        </thead>
+        <tbody class="rounded-md border-b-2">
+          <tr *ngFor="let tprueba of filteredPruebas; index as i" (click)="selectedTipoPrueba(tprueba, i)"
+            [ngClass]="{'bg-blue-200': selectedTPRow === i}"
+            class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
+            <th class="font-medium">{{i + 1}}</th>
+            <th>{{tprueba.nombre}}</th>
+            <th>{{tprueba.tipoDevice}}</th>
+            <th>{{tprueba.intervaloPrueba.length}}</th>
+            <th>
+              <div class="mr-2 hover:cursor-pointer z-10" (click)="deleteTipoPrueba(tprueba.idTipoPrueba)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                  <path
+                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                </svg>
+              </div>
+            </th>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+
+    <div *ngIf="selectedTPrueba && selectedTDevice=='Light Source'"
+      class="grid lg:grid-cols-2 lg:gap-2 md:grid-cols-2 md:gap-2 grid-cols-1">
+      <section *ngFor="let intervalo of selectedTPrueba.intervaloPrueba"
+        class="mb-6 w-52 justify-center border rounded-md mt-3 shadow-2xl animate-fad block ml-2 mr-2">
+
+        <div class="my-2 flex">
+          <label for="timeIntervalo" class="block text-gray-700 font-bold mb-2 mx-2">Tiempo(s):</label>
+          <input type="number" name="timeIntervalo" id="timeIntervalo" [(ngModel)]="intervalo.time"
+            class="border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 w-24">
+        </div>
+
+        <header class="bg-slate-100 rounded-t-md">
+          <div class="flex items-center justify-between">
+            <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md">
+              <span class="ml-2">Bombilla</span>
+            </div>
+          </div>
+        </header>
+        <div class="flex justify-center hover:cursor-pointer">
+          <div class="relative">
+            <img src="../../../assets/img/BombillaON.png" alt="Termostato" class="w-72">
+            <svg #circle id="circle" height="25vh" width="25vh" class="circle-container">
+              <defs>
+                <filter id="blur">
+                  <feGaussianBlur class="blur" in="SourceGraphic" stdDeviation="5" />
+                </filter>
+              </defs>
+              <circle cx="50%" cy="50%" r="25%" class="circle"></circle>
+            </svg>
+          </div>
+        </div>
+        <footer class="w-full rounded-b-md">
+          <nav>
+            <ul
+              class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+              <li class="-mb-px mr-1 hover:bg-gray-300">
+                <a class="inline-block" (click)="ajustes()">AJUSTES</a>
+              </li>
+              <li class="mr-1 hover:bg-gray-300">
+                <a class="inline-block" (click)="colores()">COLOR</a>
+            </ul>
+          </nav>
+          <section id="seccion{{device}}">
+            <div id="ajustes{{device}}" *ngIf="activeContent === 'ajustes'"
+              class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+              <div class="flex items-center mb-1">
+                <input name="OnOff"
+                  class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox" role="switch" id="onoff{{device}}" [(ngModel)]="intervalo.status[0].value"
+                  [class.bg-green-500]="intervalo.status[0].value" checked>
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="onoff{{device}}">ON/OFF</label>
+              </div>
+              <div>
+                <select name="work_mode" id="work_mode{{ device }}" class="form-control mr-2" id="workMode"
+                  [(ngModel)]="intervalo.status[1].value" [disabled]="!intervalo.status[0].value">
+                  <option value="white">Blanco</option>
+                  <option value="colour">Color</option>
+                  <option value="scene">Escena</option>
+                  <option value="music">Música</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-gray-700" for="temperatureRange">Brillo:</label>
+                <input name="bright_value_v2" type="range" class="form-range w-28 ml-3" id="temperatureRange" min="10"
+                  max="1000" showTickMarks discrete [(ngModel)]="intervalo.status[2].value" step="5"
+                  [disabled]="!intervalo.status[0].value">
+                <output class="text-gray-700">{{intervalo.status[2].value}}</output>
+              </div>
+
+              <div>
+                <label class="text-gray-700" for="upperTempRange">Temp:</label>
+                <input name="temp_value_v2" type="range" class="form-range w-28 ml-3" id="upperTempRange" min="0"
+                  max="1000" showTickMarks discrete [(ngModel)]="intervalo.status[3].value" step="5"
+                  [disabled]="!intervalo.status[0].value">
+                <output class="text-gray-700">{{intervalo.status[3].value}}</output>
+              </div>
+            </div>
+
+            <div *ngIf="activeContent === 'color' && intervalo.status[0].value" class="ml-4 my-2">
+              <span [style.background]="rgb" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpOutputFormat]="'rgba'"
+                [cpPresetColors]="['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']"
+                [(colorPicker)]="rgb" (colorPickerChange)="updateColor($event, intervalo)" [cpWidth]="'170px'">
+              </span>
+            </div>
+          </section>
+        </footer>
+      </section>
+    </div>
+
+    <div *ngIf="selectedTPrueba && selectedTDevice=='Thermostat'"
+      class="grid lg:grid-cols-2 lg:gap-2 md:grid-cols-2 md:gap-2 grid-cols-1">
+      <section *ngFor="let intervalo of selectedTPrueba.intervaloPrueba"
+        class="mb-6 w-52 justify-center border rounded-md mt-3 shadow-2xl animate-fad block ml-2 mr-2">
+
+        <div class="my-2 flex">
+          <label for="timeIntervalo" class="block text-gray-700 font-bold mb-2 mx-2">Tiempo(s):</label>
+          <input type="number" name="timeIntervalo" id="timeIntervalo" [(ngModel)]="intervalo.time"
+            class="border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 w-24">
+        </div>
+
+        <header class="bg-slate-100 rounded-t-md">
+          <div class="flex items-center justify-between">
+            <div class="flex-grow cursor-pointer hover:bg-gray-400 inline-block rounded-md">
+              <span class="ml-2">Termostato</span>
+            </div>
+            <div class="mr-2 hover:cursor-pointer z-10" (click)="deleteIntervalo(intervalo)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+                viewBox="0 0 16 16">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                <path
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+              </svg>
+            </div>
+          </div>
+        </header>
+        <div class="flex justify-center hover:cursor-pointer">
+          <img src="../../../assets/img/TermostatoON.png" alt="Termostato" class="w-72">
+        </div>
+        <footer class="w-full rounded-b-md">
+          <nav>
+            <ul
+              class="flex flex-wrap items-center justify-around [&>li>a]:hover:cursor-pointer [&>li>a]:inline-block [&>li>a]:px-2">
+              <li class="-mb-px mr-1 hover:bg-gray-300">
+                <a class="inline-block" (click)="ajustes()">AJUSTES</a>
+              </li>
+            </ul>
+          </nav>
+          <section id="seccion{{device}}">
+            <div id="ajustes{{device}}" *ngIf="activeContent === 'ajustes'"
+              class="[&>div]:flex [&>div]:mb-1 [&>div]:mt-2 [&>div]:ml-2">
+              <div class="flex items-center mb-1">
+                <input name="OnOff"
+                  class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-slate-300 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox" role="switch" id="onoff{{device}}" [(ngModel)]="intervalo.status[0].value"
+                  [class.bg-green-500]="intervalo.status[0].value" checked>
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="onoff{{device}}">ON/OFF</label>
+              </div>
+              <div>
+                <input
+                  class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox" role="switch" id="child{{device}}" [(ngModel)]="intervalo.status[1].value"
+                  [disabled]="!intervalo.status[0].value">
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                  Child lock
+                </label>
+              </div>
+
+              <div>
+                <input
+                  class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-400 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-green-600 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox" role="switch" id="eco{{device}}" [(ngModel)]="intervalo.status[2].value"
+                  [disabled]="!intervalo.status[0].value">
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer">
+                  Eco
+                </label>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <label class="text-gray-700" for="temperatureRange">Temperatura:</label>
+                <input type="range" class="form-range w-28 ml-3" id="temperatureRange" min="10" max="70" showTickMarks
+                  discrete [(ngModel)]="intervalo.status[3].value" step="5" [disabled]="!intervalo.status[0].value">
+                <output class="text-gray-700">{{intervalo.status[3].value}} ºC</output>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <label class="text-gray-700" for="upperTempRange">Upper temp:</label>
+                <input type="range" class="form-range w-28 ml-3" id="upperTempRange" min="0" max="100" showTickMarks
+                  discrete [(ngModel)]="intervalo.status[4].value" step="5" [disabled]="!intervalo.status[0].value">
+                <output class="text-gray-700">{{intervalo.status[4].value}} ºC</output>
+              </div>
+
+            </div>
+
+  
+          </section>
+        </footer>
+      </section>
+
+    </div>

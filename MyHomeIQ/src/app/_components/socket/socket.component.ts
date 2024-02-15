@@ -1,21 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
+import { Estados } from 'src/app/_models/estados';
+import { Jso } from 'src/app/_models/jso';
+import { Room } from 'src/app/_models/room';
+import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
-
-interface jso {
-  [key: string]: any;
-}
-
-interface Estados {
-  result: [{
-    id: string,
-    status: Device["commands"]
-  }];
-  success: boolean;
-  t: number;
-  tid: string;
-}
+import { NvdapiService } from 'src/app/_services/nvdapi.service';
+import { RoomService } from 'src/app/_services/room.service';
 
 @Component({
   selector: 'app-socket',
@@ -23,38 +15,97 @@ interface Estados {
   styleUrls: ['./socket.component.css']
 })
 export class SocketComponent {
+  @Input() devices?: Device[];
+
   sockets?: Device[];
-  valor?:any
+  valor?: any
 
-  switch_1: jso = {};
-  countdown_1: jso = {};
-  add_ele: jso = {};
-  cur_current: jso = {};
-  cur_power: jso = {};
-  cur_voltage: jso = {};
-  relay_status: jso = {};
-  light_mode: jso = {};
-  child_lock: jso = {};
+  switch_1: Jso = {};
+  countdown_1: Jso = {};
+  add_ele: Jso = {};
+  cur_current: Jso = {};
+  cur_power: Jso = {};
+  cur_voltage: Jso = {};
+  relay_status: Jso = {};
+  light_mode: Jso = {};
+  child_lock: Jso = {};
 
-  showEnchufes: boolean = false;
+  editName: boolean = false;
+  editModel: boolean = false;
+  activeContent: string = '';
+  activeSocket: string = '';
+  vulnerabilities: any = '';
 
-  constructor (private DeviceService: DispositivoService, private deviceService:DispositivoService, private toastr:ToastrService){
+  selectedCve: any;
+  responseNVD: any;
+
+  rooms: Room[] = [];
+  commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
+
+  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, 
+    private toastr: ToastrService, private deviceFilter: DeviceFilterService, 
+    private roomService: RoomService) {
 
   }
 
   ngOnInit(): void {
     this.listarDevices()
+    this.listarRooms()
   }
 
-  listarDevices(){
-    this.DeviceService.listarDevices().subscribe(respuesta => {
-      this.sockets = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Enchufe');;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['devices']) {
+      this.sockets = changes['devices'].currentValue;
+
+      if (this.sockets) {
+        this.sockets = this.devices?.filter((dispositivo) => dispositivo.tipoDevice === 'Socket');
+        this.updateStates();
+      }
+
+    }
+  }
+
+  listarDevices() {
+    this.deviceService.listarDevices().subscribe(respuesta => {
+      this.sockets = this.deviceFilter.getFilteredDevices().filter((dispositivo) => dispositivo.tipoDevice === 'Socket');
       this.updateStates();
     },
       (error: any) => {
         alert("Error" + error.error.message)
       }
     )
+  }
+
+  listarRooms() {
+    this.roomService.listarRooms().subscribe((respuesta: any[]) => {
+      this.rooms = respuesta
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    );
+  }
+
+  setRoom(device: Device, room: Room) {
+    this.roomService.setRoom(device, room).subscribe((response: any) => {
+      this.toastr.success('Dispositivo modificado', 'Éxito');
+      // Actualizar room en el dispositivo
+      device.room = room;
+      this.listarDevices();
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error");
+      }
+    );
+  }
+
+  room(idDevice: string) {
+    if (this.activeContent == 'room' && this.activeSocket == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'room';
+      this.activeSocket = idDevice;
+    }
   }
 
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {
@@ -69,7 +120,7 @@ export class SocketComponent {
     ]
 
     this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
-      //console.log(respuesta)
+      this.listarDevices()
     },
       (error: any) => {
         this.toastr.error(error.error.detail, "Error")
@@ -77,11 +128,11 @@ export class SocketComponent {
     )
   }
 
-  delete(idDevice:string){
-    this.deviceService.deleteDevice(idDevice).subscribe(respuesta =>{
-      console.log(respuesta)
+  delete(idDevice: string) {
+    this.deviceService.deleteDevice(idDevice).subscribe(respuesta => {
       this.toastr.success("Dispositivo eliminado", "Éxito")
-    }, error =>{
+      this.listarDevices()
+    }, error => {
       this.toastr.error(error.error.detail, "Error")
     })
   }
@@ -89,8 +140,6 @@ export class SocketComponent {
   updateState(idDevice: string) {
     this.deviceService.statusDevice(idDevice).subscribe(respuesta => {
       let estados: Device["commands"] = respuesta
-
-      console.log('Estado de id: ', idDevice, ' Estado: ', respuesta)
 
       estados.forEach(element => {
         element.value = this.lowerLetters(element.value)
@@ -110,7 +159,6 @@ export class SocketComponent {
       respuesta.result.forEach(element => {
         idDevices.forEach(idDevice => {
           if (element.id == idDevice) {
-            console.log('Estado de id: ', idDevice, ' Estado: ', element.status)
             this.updateValues(idDevice, element.status)
           }
         });
@@ -124,7 +172,7 @@ export class SocketComponent {
   }
 
   updateValues(idDevice: string, respuesta: Device["commands"]) {
-    
+
     //Code switch
     let switchItem = respuesta.filter(item => item.code === 'switch_1');
 
@@ -161,7 +209,7 @@ export class SocketComponent {
     let powerItem = respuesta.filter(item => item.code === 'cur_power');
 
     if (powerItem[0]) {
-      let powerValue = powerItem[0].value;
+      let powerValue = powerItem[0].value / 10;
       this.cur_power[idDevice] = powerValue;
     }
 
@@ -169,7 +217,7 @@ export class SocketComponent {
     let voltItem = respuesta.filter(item => item.code === 'cur_voltage');
 
     if (voltItem[0]) {
-      let voltValue = voltItem[0].value;
+      let voltValue = voltItem[0].value / 10;
       this.cur_voltage[idDevice] = voltValue;
     }
 
@@ -212,8 +260,133 @@ export class SocketComponent {
   }
 
   toggleEnchufes() {
-    this.showEnchufes = !this.showEnchufes;
+    this.activeSocket = '';
   }
 
+  ajustes(idDevice: string) {
+
+    if (this.activeContent == 'ajustes' && this.activeSocket == idDevice) {
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'ajustes';
+      this.activeSocket = idDevice;
+    }
+
+  }
+
+  consumo(idDevice: string) {
+    if (this.activeContent == 'consumo' && this.activeSocket == idDevice) {
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'consumo';
+      this.activeSocket = idDevice;
+    }
+  }
+
+  info(idDevice: string) {
+    if (this.activeContent == 'info' && this.activeSocket == idDevice) {
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'info';
+      this.activeSocket = idDevice;
+    }
+
+  }
+
+  seguridad(device: Device) {
+    if (this.activeContent == 'seguridad' && this.activeSocket == device.idDevice) {
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'seguridad';
+      this.activeSocket = device.idDevice;
+      this.nvd(device);
+    }
+  }
+
+  nvd(device: Device) {
+    let keyword = device.tipoDevice + device.model;
+
+    if (this.vulnerabilities == '') {
+      this.nvdService.searchVulnerabilities(keyword).subscribe(
+        (respuesta) => {
+          console.log(respuesta);
+          this.responseNVD = respuesta;
+          this.vulnerabilities = this.responseNVD.vulnerabilities;
+
+          const vulns = this.vulnerabilities;
+
+          // Agrupar vulnerabilidades por nivel de severidad
+          const groupedVulns = vulns.reduce((acc: any, vuln: any) => {
+            let severity;
+            if (vuln.cve.metrics.cvssMetricV2) {
+              severity = vuln.cve.metrics.cvssMetricV2[0].baseSeverity;
+            } else if (vuln.cve.metrics.cvssMetricV31) {
+              severity = vuln.cve.metrics.cvssMetricV31[0].cvssData.baseSeverity;
+            }
+            if (!acc[severity]) {
+              acc[severity] = [];
+            }
+            acc[severity].push(vuln);
+            return acc;
+          }, {});
+
+          // Crear array de vulnerabilidades con el formato adecuado
+          this.vulnerabilities = Object.keys(groupedVulns).map((key) => ({
+            baseSeverity: key,
+            count: groupedVulns[key].length,
+            cves: groupedVulns[key],
+          }));
+
+          console.log(this.vulnerabilities)
+
+        },
+        (error: any) => {
+          this.toastr.error(error.error.detail, 'Error');
+        }
+      );
+    }
+  }
+
+  getCircleSize(count: number) {
+    // Establecer tamaño mínimo y máximo
+    const minSize = 50;
+    const maxSize = 150;
+
+    // Calcular tamaño del círculo
+    let size = count * 10;
+    if (size < minSize) {
+      size = minSize;
+    } else if (size > maxSize) {
+      size = maxSize;
+    }
+
+    return size + 'px';
+  }
+
+  getDescription(cve: any) {
+    let description = cve.cve.descriptions.find((desc: any) => desc.lang === 'es');
+    if (!description) {
+      description = cve.cve.descriptions.find((desc: any) => desc.lang === 'en');
+    }
+    return description ? description.value : '';
+  }
+
+  selectCve(cve: any) {
+    this.selectedCve = cve;
+  }
+
+  deselectCve() {
+    this.selectedCve = null;
+  }
+
+  updateInfo(device: Device) {
+    this.deviceService.updateNameModel(device).subscribe(respuesta => {
+      this.toastr.success('Dispositivo modificado', 'Éxito')
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    )
+  }
 
 }

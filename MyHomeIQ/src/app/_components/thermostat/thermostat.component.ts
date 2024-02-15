@@ -1,22 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Device } from 'src/app/_models/device';
+import { Estados } from 'src/app/_models/estados';
+import { Jso } from 'src/app/_models/jso';
+import { Room } from 'src/app/_models/room';
+import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
-
-
-interface jso {
-  [key: string]: any;
-}
-
-interface Estados {
-  result: [{
-    id: string,
-    status: Device["commands"]
-  }];
-  success: boolean;
-  t: number;
-  tid: string;
-}
+import { NvdapiService } from 'src/app/_services/nvdapi.service';
+import { RoomService } from 'src/app/_services/room.service';
 
 @Component({
   selector: 'app-thermostat',
@@ -25,29 +16,144 @@ interface Estados {
 })
 
 export class ThermostatComponent {
+  @Input() devices?: Device[];
+
   termostatos?: Device[];
   valor: any;
   temperatureValue: any = -1;
 
-  switch: jso = {};
-  child: jso = {};
-  eco: jso = {};
-  temp_set: jso = {};
-  upper_temp: jso = {};
+  switch: Jso = {};
+  child: Jso = {};
+  eco: Jso = {};
+  temp_set: Jso = {};
+  upper_temp: Jso = {};
 
-  showTermostatos: boolean = false;
+  switchON: boolean = false;
 
-  constructor(private deviceService: DispositivoService, private toastr: ToastrService) {
+  activeContent = '';
+  activeTermostato = '';
+
+  responseNVD: any;
+  vulnerabilities: any = '';
+
+  selectedCve: any;
+
+  editName: boolean = false;
+  editModel: boolean = false;
+
+  rooms: Room[] = [];
+  commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
+
+  constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, 
+    private toastr: ToastrService, private deviceFilter: DeviceFilterService, 
+    private roomService: RoomService) {
 
   }
 
   ngOnInit(): void {
     this.listarDevices();
+    this.listarRooms();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['devices']) {
+      this.termostatos = changes['devices'].currentValue;
+      
+      if (this.termostatos) {
+        this.termostatos = this.devices?.filter((dispositivo) => dispositivo.tipoDevice === 'Thermostat');
+        this.updateStates();
+      }
+      
+    }
+  }
+
+  listarRooms() {
+    this.roomService.listarRooms().subscribe((respuesta: any[]) => {
+      this.rooms = respuesta
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    );
+  }
+
+  setRoom(device: Device, room: Room) {
+    this.roomService.setRoom(device, room).subscribe((response: any) => {
+      this.toastr.success('Dispositivo modificado', 'Éxito');
+      // Actualizar room en el dispositivo
+      device.room = room;
+      this.listarDevices();
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error");
+      }
+    );
+  }
+
+  room(idDevice: string) {
+    if (this.activeContent == 'room' && this.activeTermostato == idDevice){
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'room';
+      this.activeTermostato = idDevice;
+    }
+  }
+
+  nvd(device: Device) {
+    let keyword = device.tipoDevice + device.model;
+
+    if (this.vulnerabilities == '') {
+      this.nvdService.searchVulnerabilities(keyword).subscribe(
+        (respuesta) => {
+          console.log(respuesta);
+          this.responseNVD = respuesta;
+          this.vulnerabilities = this.responseNVD.vulnerabilities;
+
+          const vulns = this.vulnerabilities;
+
+          // Agrupar vulnerabilidades por nivel de severidad
+          const groupedVulns = vulns.reduce((acc: any, vuln: any) => {
+            let severity;
+            if (vuln.cve.metrics.cvssMetricV2) {
+              severity = vuln.cve.metrics.cvssMetricV2[0].baseSeverity;
+            } else if (vuln.cve.metrics.cvssMetricV31) {
+              severity = vuln.cve.metrics.cvssMetricV31[0].cvssData.baseSeverity;
+            }
+            if (!acc[severity]) {
+              acc[severity] = [];
+            }
+            acc[severity].push(vuln);
+            return acc;
+          }, {});
+
+          // Crear array de vulnerabilidades con el formato adecuado
+          this.vulnerabilities = Object.keys(groupedVulns).map((key) => ({
+            baseSeverity: key,
+            count: groupedVulns[key].length,
+            cves: groupedVulns[key],
+          }));
+
+          console.log(this.vulnerabilities)
+
+        },
+        (error: any) => {
+          this.toastr.error(error.error.detail, 'Error');
+        }
+      );
+    }
+  }
+
+  getDescription(cve: any) {
+    let description = cve.cve.descriptions.find((desc: any) => desc.lang === 'es');
+    if (!description) {
+      description = cve.cve.descriptions.find((desc: any) => desc.lang === 'en');
+    }
+    return description ? description.value : '';
   }
 
   listarDevices() {
     this.deviceService.listarDevices().subscribe(respuesta => {
-      this.termostatos = respuesta.filter((dispositivo) => dispositivo.tipoDevice === 'Termostato');
+      this.termostatos = this.deviceFilter.getFilteredDevices().filter((dispositivo) => dispositivo.tipoDevice === 'Thermostat');
       this.updateStates();
     },
       (error: any) => {
@@ -56,12 +162,21 @@ export class ThermostatComponent {
     )
   }
 
+  updateInfo(device: Device) {
+    this.deviceService.updateNameModel(device).subscribe(respuesta => {
+      this.toastr.success('Dispositivo modificado', 'Éxito')
+    },
+      (error: any) => {
+        this.toastr.error(error.error.detail, "Error")
+      }
+    )
+  }
+
   updateDevice(event: Event, valorKey: string, dispositivo: Device) {
-    console.log('id: ', dispositivo.idDevice, ' valorKey: ', valorKey)
     this.valor = (event.target as HTMLInputElement)?.checked;
     this.temperatureValue = (event.target as HTMLInputElement)?.value;
 
-    this.control_value(valorKey);
+    this.control_value();
 
     dispositivo.key = valorKey
     dispositivo.commands = [
@@ -71,13 +186,16 @@ export class ThermostatComponent {
       }
     ]
 
-    this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
-      this.toastr.success('Dispositivo modificado', 'Éxito')
-    },
-      (error: any) => {
-        this.toastr.error(error.error.detail, "Error")
-      }
-    )
+    if (this.switch[dispositivo.idDevice] == true || valorKey == 'switch') {
+      this.deviceService.updateDevice(dispositivo).subscribe(respuesta => {
+        this.toastr.success('Dispositivo modificado', 'Éxito')
+      },
+        (error: any) => {
+          this.toastr.error(error.error.detail, "Error")
+        }
+      )
+    }
+
   }
 
   updateState(idDevice: string) {
@@ -171,7 +289,7 @@ export class ThermostatComponent {
     })
   }
 
-  private control_value(valorKey: string) {
+  private control_value() {
     if (this.temperatureValue != "on") {
       this.valor = this.temperatureValue;
     }
@@ -190,9 +308,68 @@ export class ThermostatComponent {
   }
 
   toggleTermostatos() {
-    this.showTermostatos = !this.showTermostatos;
+    this.activeTermostato = '';
   }
-  
+
+  ajustes(idDevice: string) {
+
+    if (this.activeContent == 'ajustes' && this.activeTermostato == idDevice) {
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'ajustes';
+      this.activeTermostato = idDevice;
+    }
+
+  }
+
+  info(idDevice: string) {
+    if (this.activeContent == 'info' && this.activeTermostato == idDevice) {
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'info';
+      this.activeTermostato = idDevice;
+      console.log(this.activeTermostato)
+    }
+
+  }
+
+  seguridad(device: Device) {
+    if (this.activeContent == 'seguridad' && this.activeTermostato == device.idDevice) {
+      this.activeContent = ''
+    } else {
+      this.activeContent = 'seguridad';
+      this.activeTermostato = device.idDevice;
+      this.nvd(device);
+    }
+  }
+
+  getCircleSize(count: number) {
+    // Establecer tamaño mínimo y máximo
+    const minSize = 50;
+    const maxSize = 150;
+
+    // Calcular tamaño del círculo
+    let size = count * 10;
+    if (size < minSize) {
+      size = minSize;
+    } else if (size > maxSize) {
+      size = maxSize;
+    }
+
+    return size + 'px';
+  }
+
+  selectCve(cve: any) {
+    this.selectedCve = cve;
+  }
+
+  deselectCve() {
+    this.selectedCve = null;
+  }
+
+
+
+
 }
 
 
