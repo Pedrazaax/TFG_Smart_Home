@@ -105,6 +105,18 @@
             "firebaseProject": "myhomeiq-web",
             "firebaseHostingSite": "myhomeiq-web"
           }
+        },
+        "budgets": {
+          "builder": "@angular-devkit/build-angular:app-budgets",
+          "options": {
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "1MB",
+                "maximumError": "5MB"
+              }
+            ]
+          }
         }
       }
     }
