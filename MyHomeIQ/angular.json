@@ -38,8 +38,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -104,18 +104,6 @@
             "browserTarget": "MyHomeIQ:build:production",
             "firebaseProject": "myhomeiq-web",
             "firebaseHostingSite": "myhomeiq-web"
-          }
-        },
-        "budgets": {
-          "builder": "@angular-devkit/build-angular:app-budgets",
-          "options": {
-            "budgets": [
-              {
-                "type": "initial",
-                "maximumWarning": "1MB",
-                "maximumError": "5MB"
-              }
-            ]
           }
         }
       }
