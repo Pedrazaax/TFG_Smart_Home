@@ -43,7 +43,10 @@ export class AccountService {
   createUser(user:User):any {
     const url = `${this.config.apiUrl}/users/register`;
 
-    return this.httpClient.post(url, user, {headers: this.header.getHeaders()});
+    user.id = '0';
+    console.log(user);
+
+    return this.httpClient.post(url, user);
   }
 
   delete(id:string):any {

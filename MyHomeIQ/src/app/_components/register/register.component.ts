@@ -77,9 +77,10 @@ export class RegisterComponent implements OnInit {
   
       this.accountService.createUser(info).subscribe((respuesta: any) => {
         this.router.navigate(['/login'])
+        console.log(respuesta)
       },
         (error: any) => {
-          alert("Error " + error.error.detail)
+          console.log(error)
         }
       )
     }
