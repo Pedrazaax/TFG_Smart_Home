@@ -43,9 +43,23 @@
             Gestión de usuarios
         </a>
 
-        <a href="/consumo" class="hover:text-blue-300">
-            Pruebas de consumo
-        </a>
+        <div class="mt-4 lg:inline-block lg:mt-0 text-white mr-4">
+            <a (click)="toggleConsumoDropDown()" class="hover:text-blue-300 hover:cursor-pointer">
+                <span class="flex items-center">
+                    Pruebas de consumo
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill ml-1" viewBox="0 0 16 16">
+                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                    </svg>
+                </span>
+            </a>
+
+            <div *ngIf="consumodropdown" class="bg-gray-700 rounded-md w-36 lg:absolute lg:animate-fade-down lg:animate-duration-200 lg:animate-delay-0 mt-2 bg-opacity-95">
+                <ul class="text-white mt-1 mb-1 [&>li]:ml-2">
+                    <li><a href="/consumo" class="hover:text-blue-300">Consumo nube</a></li>
+                    <li><a href="/consumo-local" class="hover:text-blue-300">Consumo local</a></li>
+                </ul>
+            </div>
+        </div>
 
       </div>
       <div>

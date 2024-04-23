@@ -28,6 +28,9 @@ import { CheckComponent } from './_components/check/check.component';
 import { FormAPIComponent } from './_components/form-api/form-api.component';
 import { AlarmComponent } from './_components/alarm/alarm.component';
 import { SensorComponent } from './_components/sensor/sensor.component';
+import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,8 @@ import { SensorComponent } from './_components/sensor/sensor.component';
     CheckComponent,
     FormAPIComponent,
     AlarmComponent,
-    SensorComponent
+    SensorComponent,
+    ConsumoLocalComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +64,9 @@ import { SensorComponent } from './_components/sensor/sensor.component';
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    ColorPickerModule
+    ColorPickerModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
   providers: [AppConfig],
   bootstrap: [AppComponent]

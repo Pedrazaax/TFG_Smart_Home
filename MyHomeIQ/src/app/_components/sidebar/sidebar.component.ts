@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 export class SidebarComponent {
   dropdown: boolean = false;
   menu: boolean = false;
+  consumodropdown: boolean = false;
 
   constructor() {
     const largeMediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -24,6 +25,10 @@ export class SidebarComponent {
 
   toggleMenu() {
     this.menu = !this.menu;
+  }
+
+  toggleConsumoDropDown() {
+    this.consumodropdown = !this.consumodropdown;
   }
 }
 
