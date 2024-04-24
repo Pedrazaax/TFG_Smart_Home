@@ -29,8 +29,6 @@ import { FormAPIComponent } from './_components/form-api/form-api.component';
 import { AlarmComponent } from './_components/alarm/alarm.component';
 import { SensorComponent } from './_components/sensor/sensor.component';
 import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -65,8 +63,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
     ColorPickerModule,
-    MatTableModule,
-    MatPaginatorModule,
   ],
   providers: [AppConfig],
   bootstrap: [AppComponent]
