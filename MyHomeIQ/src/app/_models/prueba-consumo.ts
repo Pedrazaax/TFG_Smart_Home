@@ -40,6 +40,16 @@ export class IntervaloPrueba {
     }
 }
 
+export class HomeAssistant {
+    token: string;
+    dominio: string;
+
+    constructor(token: string, dominio: string) {
+        this.token = token;
+        this.dominio = dominio;
+    }
+}
+
 export interface Status {
     code: string;
     value: any;

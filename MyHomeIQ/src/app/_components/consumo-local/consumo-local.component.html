@@ -1,19 +1,132 @@
 <main class="h-screen w-screen">
-    <section class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border">
-        <div class="">
-            <p class="text-9xl">1</p>
-        </div>
-        <div class="">
-            <p class="text-9xl">2</p>
-        </div>
-    </section>
-    <section class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border">
-        <div class="">
-            <p class="text-9xl">3</p>
-        </div>
-        <div class="">
-            <p class="text-9xl">4</p>
-        </div>
-    </section>
-</main>
+  <section *ngIf="flagHA; else homeAssistantIU">
+    <div
+      class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border"
+    >
+      <div class="">
+        <p class="text-9xl">1</p>
+      </div>
+      <div class="">
+        <p class="text-9xl">2</p>
+      </div>
+    </div>
+    <div
+      class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border"
+    >
+      <div class="">
+        <p class="text-9xl">3</p>
+      </div>
+      <div class="">
+        <p class="text-9xl">4</p>
+      </div>
+    </div>
+  </section>
 
+  <ng-template #homeAssistantIU>
+    <section class="flex justify-center mt-10">
+        <div class="bg-slate-50 rounded-md shadow-md">
+            <p class="lg:text-4xl text-3xl text-blue-500 text-center mt-4">Home Assistant</p>
+            <form class="text-center lg:mx-10 mt-4 [&>div>label]:lg:text-xl grid grid-cols-1 gap-4" [formGroup]="formHA" (ngSubmit)="saveHA()">
+                <div class="flex flex-col mx-2">
+                    <label class="text-sm" for="token">Token*:</label>
+                    <input
+                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="text"
+                        id="token"
+                        name="token"
+                        formControlName="token"
+                        required
+                    />
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg
+                            class="w-5 h-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            ></path>
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div
+                        *ngIf="
+                            formHA.controls['token'].invalid &&
+                            (formHA.controls['token'].dirty ||
+                                formHA.controls['token'].touched)
+                        "
+                        class="alert alert-danger mt-2"
+                    >
+                        El campo Token es obligatorio.
+                    </div>
+                </div>
+
+                <div class="flex flex-col mx-2">
+                    <label class="text-sm" for="dominio">Dominio*:</label>
+                    <input
+                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="text"
+                        id="dominio"
+                        name="dominio"
+                        formControlName="dominio"
+                        required
+                    />
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg
+                            class="w-5 h-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            ></path>
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div
+                        *ngIf="
+                            formHA.controls['dominio'].invalid &&
+                            (formHA.controls['dominio'].dirty ||
+                                formHA.controls['dominio'].touched)
+                        "
+                        class="alert alert-danger mt-2"
+                    >
+                        El campo Token es obligatorio.
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <button
+                        type="submit"
+                        [disabled]="!formHA.valid"
+                        [ngClass]="{ 'bg-gray-500 hover:bg-gray-800': !formHA.valid }"
+                        class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl lg:text-2xl px-5 py-2.5 text-center"
+                    >
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+  </ng-template>
+</main>
