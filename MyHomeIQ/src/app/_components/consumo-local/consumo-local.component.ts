@@ -24,6 +24,7 @@ export class ConsumoLocalComponent {
 
   ngOnInit() {
     this.flagHA = this.getHA();
+    this.getScripts();
   }
 
   saveHA() {
@@ -60,6 +61,18 @@ export class ConsumoLocalComponent {
     );
 
     return flag;
+  }
+
+  getScripts() {
+    // Obtenemos los scripts del backend
+    this.controlLocalService.getScripts().subscribe(
+      (response: any) => {
+        console.log(response);
+      },
+      (error: any) => {
+        this.toastr.error(error.error.detail, 'Error');
+      }
+    );
   }
 
 }

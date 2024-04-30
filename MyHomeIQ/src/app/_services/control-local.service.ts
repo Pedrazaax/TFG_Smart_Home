@@ -35,4 +35,10 @@ export class ControlLocalService {
     return this.httpClient.post(url, data, { headers: this.getHeaders() });
   }
 
+  getScripts(){
+    const url = `${this.config.apiUrl}/localDevices/getScripts`;
+
+    return this.httpClient.get(url, { headers: this.getHeaders()});
+  }
+
 }
