@@ -1,23 +1,153 @@
 <main class="h-screen w-screen">
+
+    <div data-te-modal-init
+    class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+    id="iniciarprueba" tabindex="-1" aria-labelledby="exampleModalCenteredScrollable" aria-modal="true" role="dialog">
+    <div data-te-modal-dialog-ref
+      class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+      <div
+        class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none">
+        <div
+          class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4">
+          <!--Modal title-->
+          <h5 class="text-xl font-medium leading-normal text-neutral-800" id="exampleModalCenteredScrollableLabel">
+            Prueba de consumo
+          </h5>
+          <!--Close button-->
+          <button type="button"
+            class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+            data-te-modal-dismiss aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="h-6 w-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!--Modal body-->
+        <form class="relative p-4" [formGroup]="formPConsumo" (ngSubmit)="savePConsumo()" data-te-input-wrapper-init>
+          <div class="p-6">
+            <div class="mb-4">
+              <label for="category" class="block text-gray-700 font-bold mb-2">Categoría (entity_id):</label>
+              <select name="category" id="category"
+                (change)="setCategory($event)"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option *ngFor="let category of categories" [value]="category" formControlName="category">{{category}}</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="device" class="block text-gray-700 font-bold mb-2">Elige el dispositivo: </label>
+              <select name="device" id="device"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option *ngFor="let device of devicesCategory" value="{{device.entity_id}}" formControlName="device">{{device.attributes.friendly_name}}</option>
+              </select>
+            </div>
+
+            <!--
+            <div class="mb-4">
+              <label for="tipoPrueba" class="block text-gray-700 font-bold mb-2">Tipo de prueba:</label>
+              <select id="tipoPrueba" [(ngModel)]="tipoPrueba" name="tipoPrueba"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option *ngFor="let device of devicesCategory" value="{{dispositivo.idDevice}}">{{device.entity_id}}</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="enchufe" class="block text-gray-700 font-bold mb-2">Enchufe:</label>
+              <select id="enchufe" [(ngModel)]="enchufe_idDevice" name="enchufe"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
+                <option value="" *ngFor="let socket of sockets">{{socket.entity_id}}</option>
+              </select>
+            </div>
+            -->
+            
+
+          </div>
+
+          <!--Modal footer-->
+          <div
+            class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4">
+            <button type="button"
+              class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+              data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+              Cerrar
+            </button>
+            <button 
+                type="submit"
+                [disabled]="!formHA.valid"
+                class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                data-te-ripple-init data-te-ripple-color="light">
+              Iniciar prueba
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <section *ngIf="flagHA; else homeAssistantIU">
     <div
       class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border"
     >
       <div class="">
-        <p class="text-9xl">1</p>
+        <button type="button"
+            class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
+            text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 
+            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 
+            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none 
+            focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            data-te-toggle="modal" data-te-target="#iniciarprueba" data-te-ripple-init data-te-ripple-color="light"
+            (click)="togglePrueba()">
+            INICIAR PRUEBA DE CONSUMO
+        </button>
+        <button type="button"
+            class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
+            text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 
+            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 
+            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none 
+            focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            data-te-toggle="modal" data-te-target="#creartipoprueba" data-te-ripple-init data-te-ripple-color="light"
+            (click)="toggleTipoP()">
+            CREAR TIPO DE PRUEBA
+        </button>
+        <p class="text-3xl">Tabla de pruebas de consumo</p>
+        <!--
+        <table>
+            <thead class="border-b-2 bg-neutral-800 font-medium text-white">
+                <tr class="[&>th]:px-2">
+                <th scope="col">#</th>
+                <th scope="col">Dispositivo</th>
+                <th scope="col">Consumo</th>
+                <th scope="col">Enchufe</th>
+                </tr>
+            </thead>
+            <tbody class="rounded-md border-b-2">
+                <tr *ngFor="let pConsumo of pruebasConsumo; index as i" (click)="selectedPrueba(pConsumo, i)"
+                [ngClass]="{'bg-blue-200': selectedRow === i}"
+                class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
+                <th class="font-medium">{{i + 1}}</th>
+                <th>{{pConsumo.tipoDevice}}</th>
+                <th>{{pConsumo.consumoMedio!.toFixed(4)}}</th>
+                <th>{{pConsumo.socket.name}}</th>
+                </tr>
+            </tbody>
+        </table>
+        -->
+        
       </div>
       <div class="">
-        <p class="text-9xl">2</p>
+        <p class="text-3xl">Info pruebas de consumo</p>
       </div>
     </div>
     <div
       class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border"
     >
       <div class="">
-        <p class="text-9xl">3</p>
+        <p class="text-3xl">Tabla tipos de prueba según dispositivo</p>
       </div>
       <div class="">
-        <p class="text-9xl">4</p>
+        <p class="text-3xl">Info de los tipos de prueba y estados de scripts</p>
       </div>
     </div>
   </section>
