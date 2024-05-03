@@ -40,6 +40,16 @@ export class IntervaloPrueba {
     }
 }
 
+export class IntervaloLocal {
+    time: number;
+    script: string;
+
+    constructor(time: number, script: string){
+        this.time = time;
+        this.script = script;
+    }
+}
+
 export class HomeAssistant {
     token: string;
     dominio: string;

@@ -1,6 +1,7 @@
 <main class="h-screen w-screen">
 
-    <div data-te-modal-init
+  <!--Modal Prueba de consumo-->
+  <div data-te-modal-init
     class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
     id="iniciarprueba" tabindex="-1" aria-labelledby="exampleModalCenteredScrollable" aria-modal="true" role="dialog">
     <div data-te-modal-dialog-ref
@@ -27,41 +28,68 @@
         <!--Modal body-->
         <form class="relative p-4" [formGroup]="formPConsumo" (ngSubmit)="savePConsumo()" data-te-input-wrapper-init>
           <div class="p-6">
+
+            <div class="mb-4">
+              <label for="name" class="block text-gray-700 font-bold mb-2">Nombre:</label>
+              <input class="w-full block border py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" id="name" name="name" formControlName="name" required />
+            </div>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01">
+                </path>
+              </svg>
+            </div>
+            <div *ngIf="
+                    formPConsumo.controls['name'].invalid &&
+                    (formPConsumo.controls['name'].dirty ||
+                    formPConsumo.controls['name'].touched)
+                " class="alert alert-danger mt-2">
+              El campo name es obligatorio.
+            </div>
+
             <div class="mb-4">
               <label for="category" class="block text-gray-700 font-bold mb-2">Categoría (entity_id):</label>
-              <select name="category" id="category"
-                (change)="setCategory($event)"
-                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
-                <option *ngFor="let category of categories" [value]="category" formControlName="category">{{category}}</option>
+              <select name="category" id="category" (change)="setCategory($event)"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="category">
+                <option *ngFor="let category of categories" value="{{category}}">{{category}}
+                </option>
               </select>
             </div>
 
             <div class="mb-4">
               <label for="device" class="block text-gray-700 font-bold mb-2">Elige el dispositivo: </label>
               <select name="device" id="device"
-                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
-                <option *ngFor="let device of devicesCategory" value="{{device.entity_id}}" formControlName="device">{{device.attributes.friendly_name}}</option>
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="device">
+                <option *ngFor="let device of devicesCategory" value="{{device.attributes.friendly_name}}">
+                  {{device.attributes.friendly_name}}</option>
               </select>
             </div>
 
             <!--
             <div class="mb-4">
               <label for="tipoPrueba" class="block text-gray-700 font-bold mb-2">Tipo de prueba:</label>
-              <select id="tipoPrueba" [(ngModel)]="tipoPrueba" name="tipoPrueba"
+              <select id="tipoPrueba" name="tipoPrueba"
                 class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
-                <option *ngFor="let device of devicesCategory" value="{{dispositivo.idDevice}}">{{device.entity_id}}</option>
-              </select>
-            </div>
-
-            <div class="mb-4">
-              <label for="enchufe" class="block text-gray-700 font-bold mb-2">Enchufe:</label>
-              <select id="enchufe" [(ngModel)]="enchufe_idDevice" name="enchufe"
-                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
-                <option value="" *ngFor="let socket of sockets">{{socket.entity_id}}</option>
+                <option *ngFor="let prueba of tipoPruebas" value="{{prueba}}">{{device.name}}</option>
               </select>
             </div>
             -->
-            
+
+
+            <div class="mb-4">
+              <label for="socket" class="block text-gray-700 font-bold mb-2">Enchufe:</label>
+              <select id="socket" name="socket"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="socket">
+                <option  *ngFor="let socket of sockets" value="{{socket}}">{{socket.entity_id}}</option>
+              </select>
+            </div>
 
           </div>
 
@@ -73,11 +101,9 @@
               data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
               Cerrar
             </button>
-            <button 
-                type="submit"
-                [disabled]="!formHA.valid"
-                class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                data-te-ripple-init data-te-ripple-color="light">
+            <button type="submit" [disabled]="!formPConsumo.valid"
+              class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              data-te-ripple-init data-te-ripple-color="light">
               Iniciar prueba
             </button>
           </div>
@@ -86,30 +112,138 @@
     </div>
   </div>
 
+  <!--Modal Crear tipo de prueba-->
+  <div data-te-modal-init
+    class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+    id="creartipoprueba" tabindex="-1" aria-labelledby="exampleModalCenteredScrollable" aria-modal="true" role="dialog">
+    <div data-te-modal-dialog-ref
+      class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+      <div
+        class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none">
+        <div
+          class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4">
+          <!--Modal title-->
+          <h5 class="text-xl font-medium leading-normal text-neutral-800" id="exampleModalCenteredScrollableLabel">
+            Tipo de prueba
+          </h5>
+          <!--Close button-->
+          <button type="button"
+            class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+            data-te-modal-dismiss aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="h-6 w-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!--Modal body-->
+        <form class="relative p-4" [formGroup]="formTPrueba" (ngSubmit)="saveTPrueba()" data-te-input-wrapper-init>
+          <div class="p-6">
+
+            <div class="mb-4">
+              <label for="name" class="block text-gray-700 font-bold mb-2">Nombre:</label>
+              <input class="w-full block border py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" id="name" name="name" formControlName="name" required />
+            </div>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01">
+                </path>
+              </svg>
+            </div>
+            <div *ngIf="
+                    formTPrueba.controls['name'].invalid &&
+                    (formTPrueba.controls['name'].dirty ||
+                    formTPrueba.controls['name'].touched)
+                " class="alert alert-danger mt-2">
+              El campo name es obligatorio.
+            </div>
+
+            <div class="mb-4">
+              <label for="category" class="block text-gray-700 font-bold mb-2">Categoría (entity_id):</label>
+              <select name="category" id="category" (change)="setCategory($event)"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="category">
+                <option *ngFor="let category of categories" value="{{category}}">{{category}}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="device" class="block text-gray-700 font-bold mb-2">Elige el dispositivo: </label>
+              <select name="device" id="device"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="device">
+                <option *ngFor="let device of devicesCategory" value="{{device.entity_id}}">
+                  {{device.attributes.friendly_name}}</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="nIntervalos" class="block text-gray-700 font-bold mb-2">Número de intervalos:</label>
+              <input class="w-full block border py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" (change)="setIntervalo($event)" type="number" id="nIntervalos" name="nIntervalos" formControlName="nIntervalos" required />
+            </div>
+
+            <div class="mb-4 ml-2" *ngFor="let intervalo of intervalos">
+              <label for="time" class="block mb-2">Tiempo:</label>
+              <input class="w-full block border py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="number" id="time" name="time" formControlName="time" required />
+
+              <label for="script" class="block mb-2">Script:</label>
+              <select id="script" name="script"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="script">
+                <option *ngFor="let script of scripts" value="{{script.entity_id}}">{{script.attributes.friendly_name}}</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!--Modal footer-->
+          <div
+            class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4">
+            <button type="button"
+              class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+              data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+              Cerrar
+            </button>
+            <button type="submit" [disabled]="!formTPrueba.valid"
+              class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              data-te-ripple-init data-te-ripple-color="light">
+              Crear
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
   <section *ngIf="flagHA; else homeAssistantIU">
-    <div
-      class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border"
-    >
+    <div class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border">
       <div class="">
         <button type="button"
-            class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
+          class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
             text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 
             hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 
             focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none 
             focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-            data-te-toggle="modal" data-te-target="#iniciarprueba" data-te-ripple-init data-te-ripple-color="light"
-            (click)="togglePrueba()">
-            INICIAR PRUEBA DE CONSUMO
+          data-te-toggle="modal" data-te-target="#iniciarprueba" data-te-ripple-init data-te-ripple-color="light"
+          (click)="togglePrueba()">
+          INICIAR PRUEBA DE CONSUMO
         </button>
         <button type="button"
-            class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
+          class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
             text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 
             hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 
             focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none 
             focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-            data-te-toggle="modal" data-te-target="#creartipoprueba" data-te-ripple-init data-te-ripple-color="light"
-            (click)="toggleTipoP()">
-            CREAR TIPO DE PRUEBA
+          data-te-toggle="modal" data-te-target="#creartipoprueba" data-te-ripple-init data-te-ripple-color="light"
+          (click)="toggleTipoP()">
+          CREAR TIPO DE PRUEBA
         </button>
         <p class="text-3xl">Tabla de pruebas de consumo</p>
         <!--
@@ -134,15 +268,13 @@
             </tbody>
         </table>
         -->
-        
+
       </div>
       <div class="">
         <p class="text-3xl">Info pruebas de consumo</p>
       </div>
     </div>
-    <div
-      class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border"
-    >
+    <div class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 [&>div]:border">
       <div class="">
         <p class="text-3xl">Tabla tipos de prueba según dispositivo</p>
       </div>
@@ -154,109 +286,65 @@
 
   <ng-template #homeAssistantIU>
     <section class="flex justify-center mt-10">
-        <div class="bg-slate-50 rounded-md shadow-md">
-            <p class="lg:text-4xl text-3xl text-blue-500 text-center mt-4">Home Assistant</p>
-            <form class="text-center lg:mx-10 mt-4 [&>div>label]:lg:text-xl grid grid-cols-1 gap-4" [formGroup]="formHA" (ngSubmit)="saveHA()">
-                <div class="flex flex-col mx-2">
-                    <label class="text-sm" for="token">Token*:</label>
-                    <input
-                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="text"
-                        id="token"
-                        name="token"
-                        formControlName="token"
-                        required
-                    />
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <svg
-                            class="w-5 h-5 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                            ></path>
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01"
-                            ></path>
-                        </svg>
-                    </div>
-                    <div
-                        *ngIf="
+      <div class="bg-slate-50 rounded-md shadow-md">
+        <p class="lg:text-4xl text-3xl text-blue-500 text-center mt-4">Home Assistant</p>
+        <form class="text-center lg:mx-10 mt-4 [&>div>label]:lg:text-xl grid grid-cols-1 gap-4" [formGroup]="formHA"
+          (ngSubmit)="saveHA()">
+          <div class="flex flex-col mx-2">
+            <label class="text-sm" for="token">Token*:</label>
+            <input class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text"
+              id="token" name="token" formControlName="token" required />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01">
+                </path>
+              </svg>
+            </div>
+            <div *ngIf="
                             formHA.controls['token'].invalid &&
                             (formHA.controls['token'].dirty ||
                                 formHA.controls['token'].touched)
-                        "
-                        class="alert alert-danger mt-2"
-                    >
-                        El campo Token es obligatorio.
-                    </div>
-                </div>
+                        " class="alert alert-danger mt-2">
+              El campo Token es obligatorio.
+            </div>
+          </div>
 
-                <div class="flex flex-col mx-2">
-                    <label class="text-sm" for="dominio">Dominio*:</label>
-                    <input
-                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="text"
-                        id="dominio"
-                        name="dominio"
-                        formControlName="dominio"
-                        required
-                    />
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <svg
-                            class="w-5 h-5 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                            ></path>
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01"
-                            ></path>
-                        </svg>
-                    </div>
-                    <div
-                        *ngIf="
+          <div class="flex flex-col mx-2">
+            <label class="text-sm" for="dominio">Dominio*:</label>
+            <input class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text"
+              id="dominio" name="dominio" formControlName="dominio" required />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v.01M12 8v.01M4.93 4.93l.01.01M19.07 19.07l.01.01M1 12h2M21 12h2M4.93 19.07l.01-.01M19.07 4.93l.01-.01">
+                </path>
+              </svg>
+            </div>
+            <div *ngIf="
                             formHA.controls['dominio'].invalid &&
                             (formHA.controls['dominio'].dirty ||
                                 formHA.controls['dominio'].touched)
-                        "
-                        class="alert alert-danger mt-2"
-                    >
-                        El campo Token es obligatorio.
-                    </div>
-                </div>
+                        " class="alert alert-danger mt-2">
+              El campo Token es obligatorio.
+            </div>
+          </div>
 
-                <div class="mb-4">
-                    <button
-                        type="submit"
-                        [disabled]="!formHA.valid"
-                        [ngClass]="{ 'bg-gray-500 hover:bg-gray-800': !formHA.valid }"
-                        class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl lg:text-2xl px-5 py-2.5 text-center"
-                    >
-                        Enviar
-                    </button>
-                </div>
-            </form>
-        </div>
+          <div class="mb-4">
+            <button type="submit" [disabled]="!formHA.valid"
+              [ngClass]="{ 'bg-gray-500 hover:bg-gray-800': !formHA.valid }"
+              class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xl lg:text-2xl px-5 py-2.5 text-center">
+              Enviar
+            </button>
+          </div>
+        </form>
+      </div>
     </section>
   </ng-template>
 </main>
