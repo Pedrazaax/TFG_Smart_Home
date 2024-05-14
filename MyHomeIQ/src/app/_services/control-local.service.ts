@@ -48,4 +48,16 @@ export class ControlLocalService {
 
   }
 
+  getTPrueba(){
+    const url = `${this.config.apiUrl}/localDevices/getTPrueba`;
+
+    return this.httpClient.get(url, { headers: this.getHeaders()});
+  }
+
+  savePConsumo(data: any){
+    const url = `${this.config.apiUrl}/localDevices/savePConsumo`;
+
+    return this.httpClient.post(url, data, { headers: this.getHeaders() });
+  }
+
 }

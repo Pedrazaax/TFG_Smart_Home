@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { HomeAssistant, PruebaConsumo, IntervaloLocal } from 'src/app/_models/prueba-consumo';
+import { HomeAssistant, IntervaloLocal, TipoPruebaLocal, PruebaConsumoLocal } from 'src/app/_models/prueba-consumo';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ControlLocalService } from 'src/app/_services/control-local.service';
 import { ToastrService } from 'ngx-toastr';
@@ -30,7 +30,15 @@ export class ConsumoLocalComponent {
   allStatus!: any[];
   sockets!: any[];
   nIntervalos!: number;
-  intervalos: IntervaloLocal[] = [new IntervaloLocal(0, '')];
+  intervalos: IntervaloLocal[] = [];
+
+  TPruebas!: TipoPruebaLocal[];
+  selected_TPrueba!: TipoPruebaLocal;
+  selectedRow!: number;
+
+  PConsumos!: PruebaConsumoLocal[];
+  selected_PConsumo!: PruebaConsumoLocal;
+  selectedRowPConsumo!: number;
 
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
     this.formHA = new FormGroup({
@@ -51,8 +59,8 @@ export class ConsumoLocalComponent {
       category: new FormControl('', [Validators.required]),
       device: new FormControl('', [Validators.required]),
       nIntervalos: new FormControl('', [Validators.required]),
-      time: new FormControl('', [Validators.required]),
-      script: new FormControl('', [Validators.required]),
+      time0: new FormControl('', [Validators.required]),
+      script0: new FormControl('', [Validators.required]),
     });
 
   }
@@ -63,6 +71,7 @@ export class ConsumoLocalComponent {
 
     this.flagHA = this.getHA();
     this.getAll();
+    this.getTPrueba();
   }
 
   saveHA() {
@@ -134,8 +143,9 @@ export class ConsumoLocalComponent {
     this.sockets = this.sockets.filter((item) => item !== undefined);
   }
 
-  selectedPrueba(pConsumo: PruebaConsumo, indice: Number) {
-
+  selectedPConsumo(pConsumo: PruebaConsumoLocal, indice: number) {
+    this.selected_PConsumo = pConsumo;
+    this.selectedRowPConsumo = indice;
   }
 
   togglePrueba() {
@@ -153,50 +163,94 @@ export class ConsumoLocalComponent {
     this.devicesCategory = this.allStatus.filter((item: any) => item.entity_id.split('.')[0] === category);
   }
 
-  setIntervalo(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const nIntervalos = parseInt(selectElement.value);
-    console.log(nIntervalos);
-    
-    // Ajusta el tamaño del array según el nuevo valor de nIntervalos
-    if (nIntervalos > this.intervalos.length) {
-      while (this.intervalos.length < nIntervalos) {
-        this.intervalos.push(new IntervaloLocal(0, ''));
-      }
-    } else if (nIntervalos < this.intervalos.length) {
-      this.intervalos.splice(nIntervalos);
-    }
+  setNIntervalos(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const nIntervalos = parseInt(selectElement.value);
 
-    console.log(this.intervalos.length);
+  // Ajusta el tamaño del array según el nuevo valor de nIntervalos
+  if (nIntervalos > this.intervalos.length) {
+    while (this.intervalos.length < nIntervalos) {
+      const newIntervalo = { time: 0, script: '' };
+      this.intervalos.push(newIntervalo);
+
+      // Agrega los nuevos controles al FormGroup
+      this.formTPrueba.addControl('time' + this.intervalos.length, new FormControl('', Validators.required));
+      this.formTPrueba.addControl('script' + this.intervalos.length, new FormControl('', Validators.required));
+    }
+  } else if (nIntervalos < this.intervalos.length) {
+    while (this.intervalos.length > nIntervalos) {
+      // Elimina los controles del FormGroup
+      this.formTPrueba.removeControl('time' + this.intervalos.length);
+      this.formTPrueba.removeControl('script' + this.intervalos.length);
+
+      this.intervalos.pop();
+    }
+  }
+}
+  
+  setIntervalo(index: number, time: number, script: string) {
+    this.intervalos[index].time = time;
+    this.intervalos[index].script = script;
+
+    // Mantener el modal abierto
+    this.modalTipoP.show();
   }
   
 
   savePConsumo() {
     alert('Prueba de consumo guardada');
     console.log(this.formPConsumo.value);
+
+    const data = this.formPConsumo.value;
+
     this.modalPrueba.hide();
-    /* Guardamos la prueba de consumo en el backend
-    this.controlLocalService.savePConsumo().subscribe(
+    // Guardamos la prueba de consumo en el backend
+    this.controlLocalService.savePConsumo(data).subscribe(
       (response) => {
+        alert('Prueba de consumo guardada');
         console.log(response);
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
       }
     );
-    */
+    
   }
 
   saveTPrueba() {
-    console.log(this.formTPrueba.value);
+    // Obtenemos los datos del formulario
+    const data = this.formTPrueba.value;
+    
     this.modalTipoP.hide();
 
-    const data = this.formTPrueba.value;
+    
+    // Borramos nIntervalos, time y script del objeto data
+    delete data.nIntervalos;
+    for (let i = 0; i <= this.intervalos.length; i++) {
+      delete data['time' + i];
+      delete data['script' + i];
+    }
+
+    // Añadimos los intervalos al objeto data
+    data.intervalos = this.intervalos;
     // Guardamos el tipo de prueba en el backend
+    
     this.controlLocalService.saveTPrueba(data).subscribe(
       (response) => {
         alert('Tipo de prueba guardado');
-        console.log(response);
+      },
+      (error: any) => {
+        this.toastr.error(error.error.detail, 'Error');
+      }
+    );
+
+  }
+
+  getTPrueba() {
+    // Obtenemos el tipo de prueba del backend
+    this.controlLocalService.getTPrueba().subscribe(
+      (response: any) => {
+        this.TPruebas = response;
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
@@ -204,4 +258,9 @@ export class ConsumoLocalComponent {
     );
   }
 
+
+  selectedTPrueba(tPrueba: any, indice: number) {
+    this.selected_TPrueba = tPrueba;
+    this.selectedRow = indice;
+  }
 }

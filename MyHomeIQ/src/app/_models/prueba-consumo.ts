@@ -40,13 +40,61 @@ export class IntervaloPrueba {
     }
 }
 
+export class TipoPruebaLocal {
+    userName: string;
+    name: string;
+    category: string;
+    device: string;
+    intervalos: IntervaloLocal[];
+
+    constructor(userName: string, name: string, category: string, device: string, intervalos: IntervaloLocal[]){
+        this.userName = userName;
+        this.name = name;
+        this.category = category;
+        this.device = device;
+        this.intervalos = intervalos;
+    }
+}
+
 export class IntervaloLocal {
     time: number;
     script: string;
+    consumo?: number;
+    current?: number;
+    power?: number;
+    voltage?: number;
 
     constructor(time: number, script: string){
         this.time = time;
         this.script = script;
+    }
+}
+
+export class PruebaConsumoLocal {
+    userName: string;
+    name: string;
+    category: string;
+    device: string;
+    tipoPrueba: TipoPruebaLocal;
+    intervalos: IntervaloLocal[];
+    socket: string;
+    timeTotal: number;
+    consumoMedio: number;
+    dateTime: string;
+
+    constructor(userName: string, name: string, category: string, device: string,
+         tipoPrueba: TipoPruebaLocal, intervalos: IntervaloLocal[], socket: string, timeTotal: number,
+          consumoMedio: number, dateTime: string){
+        this.userName = userName;
+        this.name = name;
+        this.category = category;
+        this.device = device;
+        this.tipoPrueba = tipoPrueba;
+        this.intervalos = intervalos;
+        this.socket = socket;
+        this.timeTotal = timeTotal;
+        this.consumoMedio = consumoMedio;
+        this.dateTime = dateTime;
     }
 }
 

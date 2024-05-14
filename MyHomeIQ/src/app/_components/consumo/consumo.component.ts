@@ -423,7 +423,7 @@ export class ConsumoComponent {
     this.selectedTPrueba = tprueba;
     this.selectedTPRow = index;
   }
-
+  
   filterTP(){
     if (this.selectedTDevice == ''){
       this.getTipoPruebas();
