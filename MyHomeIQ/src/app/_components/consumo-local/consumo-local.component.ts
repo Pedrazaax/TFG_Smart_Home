@@ -198,9 +198,6 @@ export class ConsumoLocalComponent {
   
 
   savePConsumo() {
-    alert('Prueba de consumo guardada');
-    console.log(this.formPConsumo.value);
-
     const data = this.formPConsumo.value;
 
     this.modalPrueba.hide();

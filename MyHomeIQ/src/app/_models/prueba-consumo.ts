@@ -61,7 +61,6 @@ export class IntervaloLocal {
     script: string;
     consumo?: number;
     current?: number;
-    power?: number;
     voltage?: number;
 
     constructor(time: number, script: string){

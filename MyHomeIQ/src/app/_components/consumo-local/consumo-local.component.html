@@ -66,7 +66,7 @@
               <select name="device" id="device"
                 class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
                 formControlName="device">
-                <option *ngFor="let device of devicesCategory" value="{{device.attributes.friendly_name}}">
+                <option *ngFor="let device of devicesCategory" value="{{device.entity_id}}">
                   {{device.attributes.friendly_name}}</option>
               </select>
             </div>
@@ -74,8 +74,9 @@
             <div class="mb-4">
               <label for="tipoPrueba" class="block text-gray-700 font-bold mb-2">Tipo de prueba:</label>
               <select id="tipoPrueba" name="tipoPrueba"
-                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
-                <option *ngFor="let prueba of TPruebas" value="{{prueba}}">{{prueba.name}}</option>
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="tipoPrueba">
+                <option *ngFor="let prueba of TPruebas" value="{{prueba.name}}">{{prueba.name}}</option>
               </select>
             </div>
 
@@ -85,7 +86,7 @@
               <select id="socket" name="socket"
                 class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
                 formControlName="socket">
-                <option  *ngFor="let socket of sockets" value="{{socket}}">{{socket.entity_id}}</option>
+                <option  *ngFor="let socket of sockets" value="{{socket.entity_id}}">{{socket.entity_id}}</option>
               </select>
             </div>
 
@@ -99,7 +100,7 @@
               data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
               Cerrar
             </button>
-            <button type="submit" [disabled]="!formPConsumo.valid"
+            <button type="submit"
               class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
               data-te-ripple-init data-te-ripple-color="light">
               Iniciar prueba
