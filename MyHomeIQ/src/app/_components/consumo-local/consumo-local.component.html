@@ -247,7 +247,7 @@
           CREAR TIPO DE PRUEBA
         </button>
         
-      <table *ngIf="PConsumos; else PConsumoEmpty" class="ml-6">
+      <table *ngIf="PConsumos; else PConsumoEmpty" class="grid content-end">
         <thead class="border-b-2 bg-neutral-800 font-medium text-white">
           <tr class="[&>th]:px-2">
             <th scope="col">#</th>
@@ -271,8 +271,8 @@
       </table>
 
       <ng-template #PConsumoEmpty>
-        <div class="ml-6">
-          <p>No hay pruebas de consumo</p>
+        <div class="ml-2">
+          <p class="text-xl text-red-500">No hay pruebas de consumo</p>
         </div>
       </ng-template>
 
@@ -362,7 +362,7 @@
       </ng-template>
     </div>
     <div class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 mt-4">
-      <div *ngIf="TPruebas; else TPruebasEmpty">
+      <div *ngIf="TPruebas; else TPruebasEmpty" class="grid content-end">
         <table class="ml-6">
           <thead class="border-b-2 bg-neutral-800 font-medium text-white">
             <tr class="[&>th]:px-2">
