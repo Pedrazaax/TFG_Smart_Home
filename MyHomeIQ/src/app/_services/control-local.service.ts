@@ -60,4 +60,10 @@ export class ControlLocalService {
     return this.httpClient.post(url, data, { headers: this.getHeaders() });
   }
 
+  getPConsumo() {
+    const url = `${this.config.apiUrl}/localDevices/getPConsumo`;
+
+    return this.httpClient.get(url, { headers: this.getHeaders()});
+  }
+
 }

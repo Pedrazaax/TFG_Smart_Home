@@ -72,6 +72,7 @@ export class ConsumoLocalComponent {
     this.flagHA = this.getHA();
     this.getAll();
     this.getTPrueba();
+    this.getPConsumo();
   }
 
   saveHA() {
@@ -200,11 +201,14 @@ export class ConsumoLocalComponent {
   savePConsumo() {
     const data = this.formPConsumo.value;
 
+    console.log(data);
+
     this.modalPrueba.hide();
     // Guardamos la prueba de consumo en el backend
     this.controlLocalService.savePConsumo(data).subscribe(
       (response) => {
         alert('Prueba de consumo guardada');
+        this.getPConsumo();
         console.log(response);
       },
       (error: any) => {
@@ -228,16 +232,27 @@ export class ConsumoLocalComponent {
       delete data['script' + i];
     }
 
+    // Añadimos a intervalos los valores consumo, current y voltage. Cosumo es floar, current y voltage son arrays de floats
+    this.intervalos.forEach((intervalo) => {
+      intervalo.consumo = 0.0;
+      intervalo.current = [0.0];
+      intervalo.voltage = [0.0];
+    });
+
+
     // Añadimos los intervalos al objeto data
     data.intervalos = this.intervalos;
+
+    console.log(data);
     // Guardamos el tipo de prueba en el backend
-    
     this.controlLocalService.saveTPrueba(data).subscribe(
       (response) => {
         alert('Tipo de prueba guardado');
+        this.getTPrueba();
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
+        console.log(error);
       }
     );
 
@@ -248,6 +263,18 @@ export class ConsumoLocalComponent {
     this.controlLocalService.getTPrueba().subscribe(
       (response: any) => {
         this.TPruebas = response;
+      },
+      (error: any) => {
+        this.toastr.error(error.error.detail, 'Error');
+      }
+    );
+  }
+
+  getPConsumo() {
+    // Obtenemos la prueba de consumo del backend
+    this.controlLocalService.getPConsumo().subscribe(
+      (response: any) => {
+        this.PConsumos = response;
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');

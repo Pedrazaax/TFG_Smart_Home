@@ -60,8 +60,8 @@ export class IntervaloLocal {
     time: number;
     script: string;
     consumo?: number;
-    current?: number;
-    voltage?: number;
+    current?: Array<number>;
+    voltage?: Array<number>;
 
     constructor(time: number, script: string){
         this.time = time;
