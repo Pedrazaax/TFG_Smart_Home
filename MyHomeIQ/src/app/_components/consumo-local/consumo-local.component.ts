@@ -275,6 +275,7 @@ export class ConsumoLocalComponent {
     this.controlLocalService.getPConsumo().subscribe(
       (response: any) => {
         this.PConsumos = response;
+        console.log(response);
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');

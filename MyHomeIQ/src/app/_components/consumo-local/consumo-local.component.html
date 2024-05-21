@@ -311,16 +311,21 @@
             <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.timeTotal}}</td>
           </tr>
-          <table>
-            <tr>
-              <th class="border border-gray-300 px-4 py-2">Time</th>
-              <th class="border border-gray-300 px-4 py-2">Script</th>
-            </tr>
-            <tr *ngFor="let intervalo of selected_PConsumo.intervalos; let i = index">
-              <td class="border border-gray-300 px-4 py-2">{{intervalo.time}}</td>
-              <td class="border border-gray-300 px-4 py-2">{{intervalo.script}}</td>
-            </tr>
-          </table>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Intervalos:</th>
+            <td class="border border-gray-300 px-4 py-2">
+            <table class="border-collapse">
+                <tr>
+                  <th class="border border-gray-300 px-4 py-2">Time</th>
+                  <th class="border border-gray-300 px-4 py-2">Script</th>
+                </tr>
+                <tr *ngFor="let intervalo of selected_PConsumo.intervalos; let i = index">
+                  <td class="border border-gray-300 px-4 py-2">{{intervalo.time}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{intervalo.script}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
         </table>
       </div>
 
@@ -413,7 +418,7 @@
             <tr>
               <th class="border border-gray-300 px-4 py-2">Intervalos:</th>
               <td class="border border-gray-300 px-4 py-2">
-                <table class="border-collapse">
+              <table class="border-collapse">
                   <tr>
                     <th class="border border-gray-300 px-4 py-2">Time</th>
                     <th class="border border-gray-300 px-4 py-2">Script</th>
