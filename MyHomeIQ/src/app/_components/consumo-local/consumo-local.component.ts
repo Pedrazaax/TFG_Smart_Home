@@ -31,6 +31,7 @@ export class ConsumoLocalComponent {
   sockets!: any[];
   nIntervalos!: number;
   intervalos: IntervaloLocal[] = [];
+  intervalosGuardados: boolean[];
 
   TPruebas!: TipoPruebaLocal[];
   selected_TPrueba!: TipoPruebaLocal;
@@ -41,6 +42,9 @@ export class ConsumoLocalComponent {
   selectedRowPConsumo!: number;
 
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
+
+    this.intervalosGuardados = [];
+    
     this.formHA = new FormGroup({
       token: new FormControl('', [Validators.required]),
       dominio: new FormControl('', [Validators.required]),
@@ -187,14 +191,25 @@ export class ConsumoLocalComponent {
       this.intervalos.pop();
     }
   }
+
+  this.intervalosGuardados = new Array(nIntervalos).fill(false);
+
 }
   
   setIntervalo(index: number, time: number, script: string) {
     this.intervalos[index].time = time;
     this.intervalos[index].script = script;
 
+    this.intervalosGuardados[index] = true;
+
     // Mantener el modal abierto
     this.modalTipoP.show();
+  }
+
+  get todosIntervalosGuardados(): boolean {
+    const todosGuardados = this.intervalosGuardados.every(v => v);
+    console.log('Todos los intervalos guardados:', todosGuardados);
+    return todosGuardados;
   }
   
 
@@ -224,7 +239,9 @@ export class ConsumoLocalComponent {
     
     this.modalTipoP.hide();
 
-    
+    // Borramos los controles del formulario
+    this.formTPrueba.reset();
+
     // Borramos nIntervalos, time y script del objeto data
     delete data.nIntervalos;
     for (let i = 0; i <= this.intervalos.length; i++) {

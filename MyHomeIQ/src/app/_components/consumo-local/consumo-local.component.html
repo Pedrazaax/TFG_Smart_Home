@@ -198,7 +198,12 @@
                 <option *ngFor="let script of scripts" value="{{script.entity_id}}">{{script.attributes.friendly_name}}</option>
               </select>
             
-              <a id="{{i}}" class="rounded-full bg-green-500 text-white px-4 py-2 hover:bg-green-700 text-xs ml-2" (click)="setIntervalo(i, formTPrueba.get('time' + i)!.value, formTPrueba.get('script' + i)!.value)">Guardar intervalo</a>
+              <a id="{{i}}" 
+              [ngClass]="{
+                'rounded-full bg-green-600 text-white mt-2 px-4 py-2 hover:bg-green-300 text-xs ml-2': true,
+                'opacity-50 cursor-pointer': !intervalosGuardados[i]
+              }"
+              (click)="setIntervalo(i, formTPrueba.get('time' + i)!.value, formTPrueba.get('script' + i)!.value)">Guardar intervalo</a>
             </div>
 
           </div>
@@ -211,11 +216,13 @@
               data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
               Cerrar
             </button>
+
             <button type="submit"
-              class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-              data-te-ripple-init data-te-ripple-color="light">
+            class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            [disabled]="!todosIntervalosGuardados">
               Crear
             </button>
+
           </div>
         </form>
       </div>
@@ -319,7 +326,7 @@
                   <th class="border border-gray-300 px-4 py-2">Time</th>
                   <th class="border border-gray-300 px-4 py-2">Script</th>
                 </tr>
-                <tr *ngFor="let intervalo of selected_PConsumo.intervalos; let i = index">
+                <tr *ngFor="let intervalo of selected_PConsumo.tipoPrueba.intervalos; let i = index">
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.time}}</td>
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.script}}</td>
                 </tr>

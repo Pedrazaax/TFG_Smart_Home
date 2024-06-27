@@ -75,21 +75,19 @@ export class PruebaConsumoLocal {
     category: string;
     device: string;
     tipoPrueba: TipoPruebaLocal;
-    intervalos: IntervaloLocal[];
     socket: string;
     timeTotal: number;
     consumoMedio: number;
     dateTime: string;
 
     constructor(userName: string, name: string, category: string, device: string,
-         tipoPrueba: TipoPruebaLocal, intervalos: IntervaloLocal[], socket: string, timeTotal: number,
+         tipoPrueba: TipoPruebaLocal, socket: string, timeTotal: number,
           consumoMedio: number, dateTime: string){
         this.userName = userName;
         this.name = name;
         this.category = category;
         this.device = device;
         this.tipoPrueba = tipoPrueba;
-        this.intervalos = intervalos;
         this.socket = socket;
         this.timeTotal = timeTotal;
         this.consumoMedio = consumoMedio;
