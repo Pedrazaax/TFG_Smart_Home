@@ -45,7 +45,20 @@ export class ControlLocalService {
     const url = `${this.config.apiUrl}/localDevices/saveTPrueba`;
 
     return this.httpClient.post(url, data, { headers: this.getHeaders() });
+  }
 
+  deleteTPrueba(name: string){
+    console.log(name);
+    const url = `${this.config.apiUrl}/localDevices/deleteTPrueba/${name}`;
+
+    return this.httpClient.delete(url, { headers: this.getHeaders() });
+  }
+
+  deletePConsumo(name: string){
+    console.log(name);
+    const url = `${this.config.apiUrl}/localDevices/deletePConsumo/${name}`;
+
+    return this.httpClient.delete(url, { headers: this.getHeaders() });
   }
 
   getTPrueba(){

@@ -208,7 +208,6 @@ export class ConsumoLocalComponent {
 
   get todosIntervalosGuardados(): boolean {
     const todosGuardados = this.intervalosGuardados.every(v => v);
-    console.log('Todos los intervalos guardados:', todosGuardados);
     return todosGuardados;
   }
   
@@ -273,6 +272,33 @@ export class ConsumoLocalComponent {
       }
     );
 
+  }
+
+  delete(selected: any, key: string) {
+    if (key === 'pconsumo') {
+      // Delete PruebaConsumo
+      this.controlLocalService.deletePConsumo(selected.name).subscribe(
+        (response) => {
+          alert('Prueba de consumo eliminada');
+          this.getPConsumo();
+        },
+        (error: any) => {
+          this.toastr.error(error.error.detail, 'Error');
+        }
+      );
+    } else if (key === 'tprueba') {
+      console.log(selected);
+      // Delete TipoPrueba
+      this.controlLocalService.deleteTPrueba(selected.name).subscribe(
+        (response) => {
+          alert('Tipo de prueba eliminado');
+          this.getTPrueba();
+        },
+        (error: any) => {
+          this.toastr.error(error.error.detail, 'Error');
+        }
+      );
+    }
   }
 
   getTPrueba() {
