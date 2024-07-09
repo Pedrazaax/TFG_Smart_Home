@@ -41,6 +41,8 @@ export class ConsumoLocalComponent {
   selected_PConsumo!: PruebaConsumoLocal;
   selectedRowPConsumo!: number;
 
+  isTestRunning: boolean = false;
+
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
     this.intervalosGuardados = [];
@@ -218,9 +220,13 @@ export class ConsumoLocalComponent {
     console.log(data);
 
     this.modalPrueba.hide();
+
+    this.isTestRunning = true;
+
     // Guardamos la prueba de consumo en el backend
     this.controlLocalService.savePConsumo(data).subscribe(
       (response) => {
+        this.isTestRunning = false;
         alert('Prueba de consumo guardada');
         this.getPConsumo();
         console.log(response);
@@ -280,7 +286,6 @@ export class ConsumoLocalComponent {
       this.controlLocalService.deletePConsumo(selected.name).subscribe(
         (response) => {
           alert('Prueba de consumo eliminada');
-          this.getPConsumo();
         },
         (error: any) => {
           this.toastr.error(error.error.detail, 'Error');
@@ -292,13 +297,14 @@ export class ConsumoLocalComponent {
       this.controlLocalService.deleteTPrueba(selected.name).subscribe(
         (response) => {
           alert('Tipo de prueba eliminado');
-          this.getTPrueba();
         },
         (error: any) => {
           this.toastr.error(error.error.detail, 'Error');
         }
       );
     }
+    this.getPConsumo();
+    this.getTPrueba();
   }
 
   getTPrueba() {
