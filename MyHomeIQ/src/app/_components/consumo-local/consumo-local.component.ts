@@ -41,6 +41,12 @@ export class ConsumoLocalComponent {
   selected_PConsumo!: PruebaConsumoLocal;
   selectedRowPConsumo!: number;
 
+  currentPagePConsumo = 1;
+  currentPageTPrueba = 1;
+  itemsPerPage = 10;
+  pagedPConsumos: PruebaConsumoLocal[] = [];
+  pagedTPruebas: TipoPruebaLocal[] = [];
+
   isTestRunning: boolean = false;
 
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
@@ -68,18 +74,17 @@ export class ConsumoLocalComponent {
       time0: new FormControl('', [Validators.required]),
       script0: new FormControl('', [Validators.required]),
     });
-
   }
-
+  
   ngOnInit() {
     this.modalPrueba = new Modal(document.getElementById('iniciarprueba'));
     this.modalTipoP = new Modal(document.getElementById('creartipoprueba'));
-
+  
     this.flagHA = this.getHA();
     this.getAll();
     this.getTPrueba();
     this.getPConsumo();
-  }
+  }  
 
   saveHA() {
     // Guardamos el atributo homeAssistant en el backend
@@ -308,10 +313,10 @@ export class ConsumoLocalComponent {
   }
 
   getTPrueba() {
-    // Obtenemos el tipo de prueba del backend
     this.controlLocalService.getTPrueba().subscribe(
       (response: any) => {
         this.TPruebas = response;
+        this.updatePagedItems('TPruebas');
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
@@ -320,18 +325,79 @@ export class ConsumoLocalComponent {
   }
 
   getPConsumo() {
-    // Obtenemos la prueba de consumo del backend
     this.controlLocalService.getPConsumo().subscribe(
       (response: any) => {
         this.PConsumos = response;
-        console.log(response);
+        this.updatePagedItems('PConsumos');
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
       }
     );
+  }  
+
+  setPage(page: number, type: 'PConsumos' | 'TPruebas') {
+    if (type === 'PConsumos') {
+      if (page < 1 || page > this.totalPages('PConsumos')) {
+        return;
+      }
+      this.currentPagePConsumo = page;
+    } else {
+      if (page < 1 || page > this.totalPages('TPruebas')) {
+        return;
+      }
+      this.currentPageTPrueba = page;
+    }
+    this.updatePagedItems(type);
   }
 
+  totalPages(type: 'PConsumos' | 'TPruebas'): number {
+    return Math.ceil((type === 'PConsumos' ? this.PConsumos.length : this.TPruebas.length) / this.itemsPerPage);
+  }
+
+  nextPage(type: 'PConsumos' | 'TPruebas') {
+    if (type === 'PConsumos') {
+      if (this.currentPagePConsumo < this.totalPages('PConsumos')) {
+        this.setPage(this.currentPagePConsumo + 1, 'PConsumos');
+      }
+    } else {
+      if (this.currentPageTPrueba < this.totalPages('TPruebas')) {
+        this.setPage(this.currentPageTPrueba + 1, 'TPruebas');
+      }
+    }
+  }
+
+  prevPage(type: 'PConsumos' | 'TPruebas') {
+    if (type === 'PConsumos') {
+      if (this.currentPagePConsumo > 1) {
+        this.setPage(this.currentPagePConsumo - 1, 'PConsumos');
+      }
+    } else {
+      if (this.currentPageTPrueba > 1) {
+        this.setPage(this.currentPageTPrueba - 1, 'TPruebas');
+      }
+    }
+  }
+
+  firstPage(type: 'PConsumos' | 'TPruebas') {
+    this.setPage(1, type);
+  }
+
+  lastPage(type: 'PConsumos' | 'TPruebas') {
+    this.setPage(this.totalPages(type), type);
+  }
+
+  private updatePagedItems(type: 'PConsumos' | 'TPruebas') {
+    const currentPage = type === 'PConsumos' ? this.currentPagePConsumo : this.currentPageTPrueba;
+    const items = type === 'PConsumos' ? this.PConsumos : this.TPruebas;
+    const pagedItems = items.slice((currentPage - 1) * this.itemsPerPage, currentPage * this.itemsPerPage);
+
+    if (type === 'PConsumos') {
+      this.pagedPConsumos = pagedItems as PruebaConsumoLocal[];
+    } else {
+      this.pagedTPruebas = pagedItems as TipoPruebaLocal[];
+    }
+  }
 
   selectedTPrueba(tPrueba: any, indice: number) {
     this.selected_TPrueba = tPrueba;
