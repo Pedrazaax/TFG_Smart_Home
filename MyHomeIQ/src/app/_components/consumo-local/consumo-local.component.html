@@ -286,7 +286,7 @@
         </table>
         
         <!-- Controles de Paginación -->
-        <div *ngIf="PConsumos && PConsumos.length > itemsPerPage" class="flex justify-center mt-4">
+        <div *ngIf="PConsumos" class="flex justify-center mt-4">
           <button (click)="firstPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
           <button (click)="prevPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
           <span class="px-2 py-1 mx-1">Página {{currentPagePConsumo}} de {{totalPages('PConsumos')}}</span>
@@ -423,7 +423,7 @@
           </tbody>
         </table>
         <!-- Controles de Paginación -->
-        <div *ngIf="TPruebas && TPruebas.length > itemsPerPage" class="flex justify-center mt-4">
+        <div *ngIf="TPruebas" class="flex justify-center mt-4">
           <button (click)="firstPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
           <button (click)="prevPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
           <span class="px-2 py-1 mx-1">Página {{currentPageTPrueba}} de {{totalPages('TPruebas')}}</span>
