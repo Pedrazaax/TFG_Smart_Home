@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from '../app.config';
-import { KeysAPI } from '../_models/keysAPI';
 
 @Injectable({
   providedIn: 'root'
