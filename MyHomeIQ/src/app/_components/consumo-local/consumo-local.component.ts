@@ -41,9 +41,11 @@ export class ConsumoLocalComponent {
   selected_PConsumo!: PruebaConsumoLocal;
   selectedRowPConsumo!: number;
 
-  currentPage = 1;
-  itemsPerPage = 10;
-  pagedItems: PruebaConsumoLocal[] = [];
+  currentPagePConsumo = 1;
+  currentPageTPrueba = 1;
+  itemsPerPage = 2;
+  pagedPConsumos: PruebaConsumoLocal[] = [];
+  pagedTPruebas: TipoPruebaLocal[] = [];
 
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
@@ -305,10 +307,10 @@ export class ConsumoLocalComponent {
   }
 
   getTPrueba() {
-    // Obtenemos el tipo de prueba del backend
     this.controlLocalService.getTPrueba().subscribe(
       (response: any) => {
         this.TPruebas = response;
+        this.updatePagedItems('TPruebas');
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
@@ -317,12 +319,10 @@ export class ConsumoLocalComponent {
   }
 
   getPConsumo() {
-    // Obtenemos la prueba de consumo del backend
     this.controlLocalService.getPConsumo().subscribe(
       (response: any) => {
         this.PConsumos = response;
-        console.log(response);
-        this.updatePagedItems(); // Actualiza la paginación con los nuevos datos
+        this.updatePagedItems('PConsumos');
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
@@ -330,43 +330,68 @@ export class ConsumoLocalComponent {
     );
   }  
 
-  setPage(page: number) {
-    if (page < 1 || page > this.totalPages()) {
-      return;
+  setPage(page: number, type: 'PConsumos' | 'TPruebas') {
+    if (type === 'PConsumos') {
+      if (page < 1 || page > this.totalPages('PConsumos')) {
+        return;
+      }
+      this.currentPagePConsumo = page;
+    } else {
+      if (page < 1 || page > this.totalPages('TPruebas')) {
+        return;
+      }
+      this.currentPageTPrueba = page;
     }
-    this.currentPage = page;
-    this.updatePagedItems(); // Actualiza la paginación con los nuevos datos
-  }  
-
-  totalPages(): number {
-    return Math.ceil(this.PConsumos.length / this.itemsPerPage);
+    this.updatePagedItems(type);
   }
 
-  nextPage() {
-    if (this.currentPage < this.totalPages()) {
-      this.setPage(this.currentPage + 1);
+  totalPages(type: 'PConsumos' | 'TPruebas'): number {
+    return Math.ceil((type === 'PConsumos' ? this.PConsumos.length : this.TPruebas.length) / this.itemsPerPage);
+  }
+
+  nextPage(type: 'PConsumos' | 'TPruebas') {
+    if (type === 'PConsumos') {
+      if (this.currentPagePConsumo < this.totalPages('PConsumos')) {
+        this.setPage(this.currentPagePConsumo + 1, 'PConsumos');
+      }
+    } else {
+      if (this.currentPageTPrueba < this.totalPages('TPruebas')) {
+        this.setPage(this.currentPageTPrueba + 1, 'TPruebas');
+      }
     }
   }
 
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.setPage(this.currentPage - 1);
+  prevPage(type: 'PConsumos' | 'TPruebas') {
+    if (type === 'PConsumos') {
+      if (this.currentPagePConsumo > 1) {
+        this.setPage(this.currentPagePConsumo - 1, 'PConsumos');
+      }
+    } else {
+      if (this.currentPageTPrueba > 1) {
+        this.setPage(this.currentPageTPrueba - 1, 'TPruebas');
+      }
     }
   }
-  
-  firstPage() {
-    this.setPage(1);
+
+  firstPage(type: 'PConsumos' | 'TPruebas') {
+    this.setPage(1, type);
   }
 
-  lastPage() {
-    this.setPage(this.totalPages());
+  lastPage(type: 'PConsumos' | 'TPruebas') {
+    this.setPage(this.totalPages(type), type);
   }
 
-  private updatePagedItems() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.pagedItems = this.PConsumos.slice(startIndex, endIndex);
-  }  
+  private updatePagedItems(type: 'PConsumos' | 'TPruebas') {
+    const currentPage = type === 'PConsumos' ? this.currentPagePConsumo : this.currentPageTPrueba;
+    const items = type === 'PConsumos' ? this.PConsumos : this.TPruebas;
+    const pagedItems = items.slice((currentPage - 1) * this.itemsPerPage, currentPage * this.itemsPerPage);
+
+    if (type === 'PConsumos') {
+      this.pagedPConsumos = pagedItems as PruebaConsumoLocal[];
+    } else {
+      this.pagedTPruebas = pagedItems as TipoPruebaLocal[];
+    }
+  }
 
   selectedTPrueba(tPrueba: any, indice: number) {
     this.selected_TPrueba = tPrueba;

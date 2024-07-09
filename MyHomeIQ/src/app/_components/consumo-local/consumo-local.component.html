@@ -266,10 +266,10 @@
             </tr>
           </thead>
           <tbody class="rounded-md border-b-2">
-            <tr *ngFor="let pConsumo of pagedItems; index as i" (click)="selectedPConsumo(pConsumo, i)"
+            <tr *ngFor="let pConsumo of pagedPConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
                 [ngClass]="{'bg-blue-200': selectedRow === i}"
                 class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
-              <th class="font-medium">{{(currentPage - 1) * itemsPerPage + i + 1}}</th>
+              <th class="font-medium">{{(currentPagePConsumo - 1) * itemsPerPage + i + 1}}</th>
               <th>{{pConsumo.name}}</th>
               <th>{{pConsumo.category}}</th>
               <th>{{pConsumo.tipoPrueba.name}}</th>
@@ -287,11 +287,11 @@
         
         <!-- Controles de Paginación -->
         <div *ngIf="PConsumos && PConsumos.length > itemsPerPage" class="flex justify-center mt-4">
-          <button (click)="firstPage()" [disabled]="currentPage === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
-          <button (click)="prevPage()" [disabled]="currentPage === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
-          <span class="px-2 py-1 mx-1">Página {{currentPage}} de {{totalPages()}}</span>
-          <button (click)="nextPage()" [disabled]="currentPage === totalPages()" class="px-2 py-1 mx-1 bg-gray-200 rounded">Siguiente</button>
-          <button (click)="lastPage()" [disabled]="currentPage === totalPages()" class="px-2 py-1 mx-1 bg-gray-200 rounded">Última</button>
+          <button (click)="firstPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
+          <button (click)="prevPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
+          <span class="px-2 py-1 mx-1">Página {{currentPagePConsumo}} de {{totalPages('PConsumos')}}</span>
+          <button (click)="nextPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Siguiente</button>
+          <button (click)="lastPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Última</button>
         </div>
         
       <ng-template #PConsumoEmpty>
