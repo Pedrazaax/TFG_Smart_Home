@@ -43,7 +43,7 @@ export class ConsumoLocalComponent {
 
   currentPagePConsumo = 1;
   currentPageTPrueba = 1;
-  itemsPerPage = 2;
+  itemsPerPage = 10;
   pagedPConsumos: PruebaConsumoLocal[] = [];
   pagedTPruebas: TipoPruebaLocal[] = [];
 
