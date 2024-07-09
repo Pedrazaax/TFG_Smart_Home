@@ -232,7 +232,7 @@
 
   <section *ngIf="flagHA; else homeAssistantIU">
     <div class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2">
-      <div class="ml-6">
+      <div class="ml-4">
         <button type="button"
           class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
             text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 
@@ -269,7 +269,7 @@
       
       <div class="relative w-full items-start flex flex-col md:flex-row">
         <div *ngIf="PConsumos; else PConsumoEmpty" class="grid content-end">
-          <table>
+          <table class="ml-2">
             <thead class="border-b-2 bg-neutral-800 font-medium text-white"> 
               <tr class="[&>th]:px-2">
                 <th scope="col">#</th>
@@ -302,6 +302,15 @@
             </tbody>
           </table>
         </div>
+      </div>
+
+      <!-- Controles de Paginación -->
+      <div *ngIf="PConsumos" class="flex mt-4">
+        <button (click)="firstPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
+        <button (click)="prevPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
+        <span class="px-2 py-1 mx-1">Página {{currentPagePConsumo}} de {{totalPages('PConsumos')}}</span>
+        <button (click)="nextPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Siguiente</button>
+        <button (click)="lastPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Última</button>
       </div>
 
       <ng-template #PConsumoEmpty>
@@ -433,7 +442,7 @@
           </tbody>
         </table>
         <!-- Controles de Paginación -->
-        <div *ngIf="TPruebas" class="flex justify-center mt-4">
+        <div *ngIf="TPruebas" class="flex ml-4 mt-4">
           <button (click)="firstPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
           <button (click)="prevPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
           <span class="px-2 py-1 mx-1">Página {{currentPageTPrueba}} de {{totalPages('TPruebas')}}</span>
