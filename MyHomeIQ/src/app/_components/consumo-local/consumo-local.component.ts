@@ -41,6 +41,10 @@ export class ConsumoLocalComponent {
   selected_PConsumo!: PruebaConsumoLocal;
   selectedRowPConsumo!: number;
 
+  currentPage = 1;
+  itemsPerPage = 10;
+  pagedItems: PruebaConsumoLocal[] = [];
+
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
     this.intervalosGuardados = [];
@@ -66,18 +70,17 @@ export class ConsumoLocalComponent {
       time0: new FormControl('', [Validators.required]),
       script0: new FormControl('', [Validators.required]),
     });
-
   }
-
+  
   ngOnInit() {
     this.modalPrueba = new Modal(document.getElementById('iniciarprueba'));
     this.modalTipoP = new Modal(document.getElementById('creartipoprueba'));
-
+  
     this.flagHA = this.getHA();
     this.getAll();
     this.getTPrueba();
     this.getPConsumo();
-  }
+  }  
 
   saveHA() {
     // Guardamos el atributo homeAssistant en el backend
@@ -319,13 +322,51 @@ export class ConsumoLocalComponent {
       (response: any) => {
         this.PConsumos = response;
         console.log(response);
+        this.updatePagedItems(); // Actualiza la paginación con los nuevos datos
       },
       (error: any) => {
         this.toastr.error(error.error.detail, 'Error');
       }
     );
+  }  
+
+  setPage(page: number) {
+    if (page < 1 || page > this.totalPages()) {
+      return;
+    }
+    this.currentPage = page;
+    this.updatePagedItems(); // Actualiza la paginación con los nuevos datos
+  }  
+
+  totalPages(): number {
+    return Math.ceil(this.PConsumos.length / this.itemsPerPage);
   }
 
+  nextPage() {
+    if (this.currentPage < this.totalPages()) {
+      this.setPage(this.currentPage + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.setPage(this.currentPage - 1);
+    }
+  }
+  
+  firstPage() {
+    this.setPage(1);
+  }
+
+  lastPage() {
+    this.setPage(this.totalPages());
+  }
+
+  private updatePagedItems() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedItems = this.PConsumos.slice(startIndex, endIndex);
+  }  
 
   selectedTPrueba(tPrueba: any, indice: number) {
     this.selected_TPrueba = tPrueba;
