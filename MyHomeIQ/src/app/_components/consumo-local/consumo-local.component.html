@@ -253,6 +253,14 @@
           (click)="toggleTipoP()">
           CREAR TIPO DE PRUEBA
         </button>
+
+        <div>
+          <label for="categorySelect">Filtrar por Categoría: </label>
+          <select id="categorySelect" (change)="filterByCategory($event)">
+            <option value="">Todas</option>
+            <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+          </select>
+        </div>
         
         <table *ngIf="PConsumos; else PConsumoEmpty" class="grid content-end">
           <thead class="border-b-2 bg-neutral-800 font-medium text-white">

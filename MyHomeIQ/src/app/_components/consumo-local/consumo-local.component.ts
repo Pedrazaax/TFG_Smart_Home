@@ -38,6 +38,7 @@ export class ConsumoLocalComponent {
   selectedRow!: number;
 
   PConsumos!: PruebaConsumoLocal[];
+  filteredPConsumos!: PruebaConsumoLocal[];
   selected_PConsumo!: PruebaConsumoLocal;
   selectedRowPConsumo!: number;
 
@@ -322,6 +323,7 @@ export class ConsumoLocalComponent {
     this.controlLocalService.getPConsumo().subscribe(
       (response: any) => {
         this.PConsumos = response;
+        this.filteredPConsumos = [...this.PConsumos];
         this.updatePagedItems('PConsumos');
       },
       (error: any) => {
@@ -383,7 +385,7 @@ export class ConsumoLocalComponent {
 
   private updatePagedItems(type: 'PConsumos' | 'TPruebas') {
     const currentPage = type === 'PConsumos' ? this.currentPagePConsumo : this.currentPageTPrueba;
-    const items = type === 'PConsumos' ? this.PConsumos : this.TPruebas;
+    const items = type === 'PConsumos' ? this.filteredPConsumos : this.TPruebas;
     const pagedItems = items.slice((currentPage - 1) * this.itemsPerPage, currentPage * this.itemsPerPage);
 
     if (type === 'PConsumos') {
@@ -396,5 +398,19 @@ export class ConsumoLocalComponent {
   selectedTPrueba(tPrueba: any, indice: number) {
     this.selected_TPrueba = tPrueba;
     this.selectedRow = indice;
+  }
+
+  filterByCategory(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedCategory = selectElement.value;
+
+    if (selectedCategory) {
+      this.filteredPConsumos = this.PConsumos.filter(pConsumo => pConsumo.category === selectedCategory);
+    } else {
+      this.filteredPConsumos = [...this.PConsumos];
+    }
+
+    this.currentPagePConsumo = 1;
+    this.updatePagedItems('PConsumos');
   }
 }
