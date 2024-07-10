@@ -255,8 +255,8 @@
         </button>
 
         <div>
-          <label for="categorySelect">Filtrar por Categoría: </label>
-          <select id="categorySelect" (change)="filterByCategory($event)">
+          <label for="categorySelectPConsumo">Filtrar por Categoría: </label>
+          <select class="ml-4 px-4" id="categorySelectPConsumo" (change)="filterByCategory('PConsumos', $event)">
             <option value="">Todas</option>
             <option *ngFor="let category of categories" [value]="category">{{category}}</option>
           </select>
@@ -398,8 +398,17 @@
         </table>
       </ng-template>
     </div>
-    <div class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 mt-4">
+    <div class="w-full flex flex-col items-start md:flex-row [&>div]:md:w-1/2 mt-4">
       <div *ngIf="TPruebas; else TPruebasEmpty" class="grid content-end">
+
+        <div class="ml-6">
+          <label for="categorySelectTPrueba">Filtrar por Categoría: </label>
+          <select class="ml-4 px-4" id="categorySelectTPrueba" (change)="filterByCategory('TPruebas', $event)">
+            <option value="">Todas</option>
+            <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+          </select>
+        </div>
+
         <table class="ml-6">
           <thead class="border-b-2 bg-neutral-800 font-medium text-white">
             <tr>

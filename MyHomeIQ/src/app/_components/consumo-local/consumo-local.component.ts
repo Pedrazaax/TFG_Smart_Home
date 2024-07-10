@@ -34,6 +34,7 @@ export class ConsumoLocalComponent {
   intervalosGuardados: boolean[];
 
   TPruebas!: TipoPruebaLocal[];
+  filteredTPruebas!: TipoPruebaLocal[];
   selected_TPrueba!: TipoPruebaLocal;
   selectedRow!: number;
 
@@ -311,6 +312,7 @@ export class ConsumoLocalComponent {
     this.controlLocalService.getTPrueba().subscribe(
       (response: any) => {
         this.TPruebas = response;
+        this.filteredTPruebas = [...this.TPruebas];
         this.updatePagedItems('TPruebas');
       },
       (error: any) => {
@@ -385,7 +387,7 @@ export class ConsumoLocalComponent {
 
   private updatePagedItems(type: 'PConsumos' | 'TPruebas') {
     const currentPage = type === 'PConsumos' ? this.currentPagePConsumo : this.currentPageTPrueba;
-    const items = type === 'PConsumos' ? this.filteredPConsumos : this.TPruebas;
+    const items = type === 'PConsumos' ? this.filteredPConsumos : this.filteredTPruebas;
     const pagedItems = items.slice((currentPage - 1) * this.itemsPerPage, currentPage * this.itemsPerPage);
 
     if (type === 'PConsumos') {
@@ -400,17 +402,19 @@ export class ConsumoLocalComponent {
     this.selectedRow = indice;
   }
 
-  filterByCategory(event: Event) {
+  filterByCategory(type: 'PConsumos' | 'TPruebas', event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedCategory = selectElement.value;
 
-    if (selectedCategory) {
-      this.filteredPConsumos = this.PConsumos.filter(pConsumo => pConsumo.category === selectedCategory);
-    } else {
-      this.filteredPConsumos = [...this.PConsumos];
+    if (type === 'PConsumos') {
+      this.filteredPConsumos = selectedCategory ? this.PConsumos.filter(pConsumo => pConsumo.category === selectedCategory) : [...this.PConsumos];
+      this.currentPagePConsumo = 1;
+      this.updatePagedItems('PConsumos');
+    } else if (type === 'TPruebas') {
+      this.filteredTPruebas = selectedCategory ? this.TPruebas.filter(tPrueba => tPrueba.category === selectedCategory) : [...this.TPruebas];
+      this.currentPageTPrueba = 1;
+      this.updatePagedItems('TPruebas');
     }
-
-    this.currentPagePConsumo = 1;
-    this.updatePagedItems('PConsumos');
   }
+
 }
