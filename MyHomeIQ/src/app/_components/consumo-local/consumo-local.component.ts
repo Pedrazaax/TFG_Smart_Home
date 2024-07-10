@@ -49,6 +49,8 @@ export class ConsumoLocalComponent {
   pagedPConsumos: PruebaConsumoLocal[] = [];
   pagedTPruebas: TipoPruebaLocal[] = [];
 
+  grafico: any;
+
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
     this.intervalosGuardados = [];
@@ -158,6 +160,34 @@ export class ConsumoLocalComponent {
   selectedPConsumo(pConsumo: PruebaConsumoLocal, indice: number) {
     this.selected_PConsumo = pConsumo;
     this.selectedRowPConsumo = indice;
+    this.createGrafic();
+    //Eliminar mas tarde
+    console.log(this.selected_PConsumo);
+  }
+
+  createGrafic() {
+    let intervalos = this.selected_PConsumo?.tipoPrueba.intervalos.map(inter => inter.script);
+    let consumos = this.selected_PConsumo?.tipoPrueba.intervalos.map(inter => inter.consumo);
+
+    let dataBar = {
+      type: 'bar',
+      data: {
+        labels: intervalos,
+        datasets: [
+          {
+            label: 'Intervalos de consumo',
+            data: consumos,
+          },
+        ],
+      },
+    };
+    
+    // Si el gráfico existe se borra la instancia.
+    if(this.grafico != undefined){
+      this.grafico.update(dataBar.data)
+    } else {
+      this.grafico = new Chart(document.getElementById('bar-chart') as HTMLCanvasElement, dataBar);
+    }
   }
 
   togglePrueba() {
