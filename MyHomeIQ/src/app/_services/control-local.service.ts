@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from '../app.config';
-import { KeysAPI } from '../_models/keysAPI';
 
 @Injectable({
   providedIn: 'root'
@@ -48,14 +47,12 @@ export class ControlLocalService {
   }
 
   deleteTPrueba(name: string){
-    console.log(name);
     const url = `${this.config.apiUrl}/localDevices/deleteTPrueba/${name}`;
 
     return this.httpClient.delete(url, { headers: this.getHeaders() });
   }
 
   deletePConsumo(name: string){
-    console.log(name);
     const url = `${this.config.apiUrl}/localDevices/deletePConsumo/${name}`;
 
     return this.httpClient.delete(url, { headers: this.getHeaders() });
