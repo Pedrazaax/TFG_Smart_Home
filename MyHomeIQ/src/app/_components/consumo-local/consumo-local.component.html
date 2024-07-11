@@ -254,29 +254,6 @@
           CREAR TIPO DE PRUEBA
         </button>
 
-<<<<<<< HEAD
-        <div>
-          <label for="categorySelectPConsumo">Filtrar por Categoría: </label>
-          <select class="ml-4 px-4" id="categorySelectPConsumo" (change)="filterByCategory('PConsumos', $event)">
-            <option value="">Todas</option>
-            <option *ngFor="let category of categories" [value]="category">{{category}}</option>
-          </select>
-        </div>
-        
-        <table *ngIf="PConsumos; else PConsumoEmpty" class="grid content-end">
-          <thead class="border-b-2 bg-neutral-800 font-medium text-white">
-            <tr class="[&>th]:px-2">
-              <th scope="col">#</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Categoría</th>
-              <th scope="col">Tipo de prueba</th>
-              <th scope="col">Fecha</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody class="rounded-md border-b-2">
-            <tr *ngFor="let pConsumo of pagedPConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
-=======
       <!-- Indicador de carga de prueba de consumo -->
       <div *ngIf="isTestRunning" class="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-75 z-50">
         <div class="text-center p-6 bg-white rounded-lg shadow-lg">
@@ -305,7 +282,6 @@
             </thead>
             <tbody class="rounded-md border-b-2">
               <tr *ngFor="let pConsumo of PConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
->>>>>>> develop
                 [ngClass]="{'bg-blue-200': selectedRow === i}"
                 class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
                 <th class="font-medium">{{i + 1}}</th>
@@ -436,11 +412,7 @@
         <canvas id="bar-chart"></canvas>
       </section>
     </div>
-<<<<<<< HEAD
-    <div class="w-full flex flex-col items-start md:flex-row [&>div]:md:w-1/2 mt-4">
-=======
     <div class="w-full items-start flex flex-col md:flex-row [&>div]:md:w-1/2 mt-4">
->>>>>>> develop
       <div *ngIf="TPruebas; else TPruebasEmpty" class="grid content-end">
 
         <div class="ml-6">

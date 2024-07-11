@@ -49,11 +49,8 @@ export class ConsumoLocalComponent {
   pagedPConsumos: PruebaConsumoLocal[] = [];
   pagedTPruebas: TipoPruebaLocal[] = [];
 
-<<<<<<< HEAD
   grafico: any;
-=======
   isTestRunning: boolean = false;
->>>>>>> develop
 
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
