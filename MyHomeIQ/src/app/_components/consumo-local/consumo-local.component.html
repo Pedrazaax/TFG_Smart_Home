@@ -281,10 +281,10 @@
               </tr>
             </thead>
             <tbody class="rounded-md border-b-2">
-              <tr *ngFor="let pConsumo of PConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
+              <tr *ngFor="let pConsumo of pagedPConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
                 [ngClass]="{'bg-blue-200': selectedRow === i}"
                 class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
-                <th class="font-medium">{{i + 1}}</th>
+                <th class="font-medium">{{(currentPagePConsumo - 1) * itemsPerPage + i + 1}}</th>
                 <th>{{pConsumo.name}}</th>
                 <th>{{pConsumo.category}}</th>
                 <th>{{pConsumo.tipoPrueba.name}}</th>
