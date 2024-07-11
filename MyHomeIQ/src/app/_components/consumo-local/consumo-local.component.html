@@ -269,6 +269,15 @@
       
       <div class="relative w-full items-start flex flex-col md:flex-row">
         <div *ngIf="PConsumos; else PConsumoEmpty" class="grid content-end">
+
+          <div>
+            <label for="categorySelectPConsumo">Filtrar por Categoría: </label>
+            <select class="ml-4 px-4" id="categorySelectPConsumo" (change)="filterByCategory('PConsumos', $event)">
+              <option value="">Todas</option>
+              <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+            </select>
+          </div>
+
           <table class="ml-2">
             <thead class="border-b-2 bg-neutral-800 font-medium text-white"> 
               <tr class="[&>th]:px-2">
@@ -281,7 +290,7 @@
               </tr>
             </thead>
             <tbody class="rounded-md border-b-2">
-              <tr *ngFor="let pConsumo of PConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
+              <tr *ngFor="let pConsumo of pagedPConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
                 [ngClass]="{'bg-blue-200': selectedRow === i}"
                 class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
                 <th class="font-medium">{{i + 1}}</th>

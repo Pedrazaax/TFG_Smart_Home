@@ -162,12 +162,9 @@ export class ConsumoLocalComponent {
     this.selected_PConsumo = pConsumo;
     this.selectedRowPConsumo = indice;
     this.createGrafic();
-    //Eliminar mas tarde
-    console.log(this.selected_PConsumo);
   }
   
   createGrafic() {
-    console.log("Nueva selección: ", this.selected_PConsumo);
     let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
     let consumos = intervalos.map(inter => inter.consumo);
     let labels = intervalos.map((_, index) => `Intervalo ${index + 1}`);
@@ -184,9 +181,6 @@ export class ConsumoLocalComponent {
         ],
       },
     };
-  
-    console.log("Datos: ", dataBar.data);
-    console.log("Gráfico: ", this.grafico);
   
     // Si el gráfico existe, eliminar el canvas y crear uno nuevo
   const canvasContainer = document.getElementById('canvas-container');
