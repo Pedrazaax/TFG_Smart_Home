@@ -49,7 +49,7 @@ export class ConsumoLocalComponent {
   pagedPConsumos: PruebaConsumoLocal[] = [];
   pagedTPruebas: TipoPruebaLocal[] = [];
 
-  grafico: any;
+  grafico!: any;
   isTestRunning: boolean = false;
 
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
@@ -165,15 +165,17 @@ export class ConsumoLocalComponent {
     //Eliminar mas tarde
     console.log(this.selected_PConsumo);
   }
-
+  
   createGrafic() {
-    let intervalos = this.selected_PConsumo?.tipoPrueba.intervalos.map(inter => inter.script);
-    let consumos = this.selected_PConsumo?.tipoPrueba.intervalos.map(inter => inter.consumo);
-
+    console.log("Nueva selección: ", this.selected_PConsumo);
+    let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
+    let consumos = intervalos.map(inter => inter.consumo);
+    let labels = intervalos.map((_, index) => `Intervalo ${index + 1}`);
+  
     let dataBar = {
       type: 'bar',
       data: {
-        labels: intervalos,
+        labels: labels,
         datasets: [
           {
             label: 'Intervalos de consumo',
@@ -182,13 +184,20 @@ export class ConsumoLocalComponent {
         ],
       },
     };
-    
-    // Si el gráfico existe se borra la instancia.
-    if(this.grafico != undefined){
-      this.grafico.update(dataBar.data)
-    } else {
-      this.grafico = new Chart(document.getElementById('bar-chart') as HTMLCanvasElement, dataBar);
+  
+    console.log("Datos: ", dataBar.data);
+    console.log("Gráfico: ", this.grafico);
+  
+    // Si el gráfico existe, eliminar el canvas y crear uno nuevo
+  const canvasContainer = document.getElementById('canvas-container');
+  if (this.grafico) {
+    if (canvasContainer) {
+      canvasContainer.innerHTML = '<canvas id="bar-chart"></canvas>';
     }
+  }
+  
+    // Crea un nuevo gráfico
+    this.grafico = new Chart(document.getElementById('bar-chart') as HTMLCanvasElement, dataBar);
   }
 
   togglePrueba() {
