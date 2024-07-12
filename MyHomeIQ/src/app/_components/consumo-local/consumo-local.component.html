@@ -357,11 +357,11 @@
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Consumo medio (kWh):</th>
-            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.consumoMedio}}</td>
+            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.consumoMedio  | number:'1.2-4'}}</td>
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Intensidad media (A):</th>
-            <td class="border border-gray-300 px-4 py-2">{{intensidadMediaTotal}}</td>
+            <td class="border border-gray-300 px-4 py-2">{{intensidadMediaTotal  | number:'1.2-4'}}</td>
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
