@@ -356,8 +356,12 @@
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.dateTime}}</td>
           </tr>
           <tr>
-            <th class="border border-gray-300 px-4 py-2">Consumo medio:</th>
+            <th class="border border-gray-300 px-4 py-2">Consumo medio (kWh):</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.consumoMedio}}</td>
+          </tr>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Intensidad media (A):</th>
+            <td class="border border-gray-300 px-4 py-2">{{intensidadMediaTotal}}</td>
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
@@ -370,10 +374,14 @@
                 <tr>
                   <th class="border border-gray-300 px-4 py-2">Time</th>
                   <th class="border border-gray-300 px-4 py-2">Script</th>
+                  <th class="border border-gray-300 px-4 py-2">Consumo (kWh)</th>
+                  <th class="border border-gray-300 px-4 py-2">Intensidad (A)</th>
                 </tr>
                 <tr *ngFor="let intervalo of selected_PConsumo.tipoPrueba.intervalos; let i = index">
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.time}}</td>
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.script}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{intervalo.consumo | number:'1.2-4'}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{intensidadMediaDeIntervalos[i] | number:'1.2-4'}}</td>
                 </tr>
               </table>
             </td>
@@ -417,9 +425,6 @@
           </tr>
         </table>
       </ng-template>
-      <section id="canvas-container" class="w-96 overflow-hidden items-center justify-center flex mr-10">
-        <canvas id="bar-chart"></canvas>
-      </section>
     </div>
     <div class="w-full items-start flex flex-col md:flex-row [&>div]:md:w-1/2 mt-4">
       <div *ngIf="TPruebas; else TPruebasEmpty" class="grid content-end">
@@ -548,6 +553,11 @@
         </ng-template>
 
       </div>
+    </div>
+    <div>
+      <section id="canvas-container-consumo" class="w-96 overflow-hidden items-center justify-center flex mr-10">
+        <canvas id="bar-chart-consumo"></canvas>
+      </section>
     </div>
   </section>
 

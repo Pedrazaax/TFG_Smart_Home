@@ -52,6 +52,13 @@ export class ConsumoLocalComponent {
   grafico!: any;
   isTestRunning: boolean = false;
 
+  intensidadMediaDeIntervalos!: number[];
+  intensidadMediaTotal!: number;
+  potenciaMediaDeIntervalos!: number[];
+  potenciaMediaTotal!: number;
+  VoltajeMedioDeIntervalos!: number[];
+  voltajeMedioTotal!: number;
+
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
     this.intervalosGuardados = [];
@@ -161,7 +168,52 @@ export class ConsumoLocalComponent {
   selectedPConsumo(pConsumo: PruebaConsumoLocal, indice: number) {
     this.selected_PConsumo = pConsumo;
     this.selectedRowPConsumo = indice;
+    console.log(this.selected_PConsumo)
+    this.getIntensidadMediaTotal()
     this.createGrafic();
+  }
+
+  private getIntensidadMediaTotal() {
+    this.intensidadMediaTotal = 0;
+    this.intensidadMediaDeIntervalos = [];
+    let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
+    console.log(intervalos);
+    let intensidadesDeIntervalos = intervalos?.map(inter => inter.current);
+    intensidadesDeIntervalos.forEach(intensidadesPorIntervalos => {
+      console.log(intensidadesPorIntervalos);
+      if(intensidadesPorIntervalos === undefined || intensidadesPorIntervalos.length === 0) throw new Error("Array de energía vacío");
+      else {
+        let intensidadMediaDeIntervalo = this.calcularMediana(intensidadesPorIntervalos);
+        this.intensidadMediaDeIntervalos.push(intensidadMediaDeIntervalo);
+      }
+      this.intensidadMediaTotal = this.calcularMediana(this.intensidadMediaDeIntervalos);
+    });
+  }
+
+  private getPotenciaMedia() {
+
+  }
+
+  private getVoltajeMedio() {
+
+  }
+
+  private calcularMediana(valores: number[]): number {
+    const sortedValues = valores.sort((a, b) => a - b);
+    
+    // Obtener la longitud del array
+    const length = sortedValues.length;
+    
+    // Calcular la mediana
+    if (length % 2 === 0) {
+        // Si el array tiene un número par de elementos, se promedian los dos centrales
+        const mid1 = sortedValues[length / 2 - 1];
+        const mid2 = sortedValues[length / 2];
+        return (mid1 + mid2) / 2;
+    } else {
+        // Si el array tiene un número impar de elementos, se toma el central
+        return sortedValues[(length - 1) / 2];
+    }
   }
   
   createGrafic() {
@@ -183,15 +235,15 @@ export class ConsumoLocalComponent {
     };
   
     // Si el gráfico existe, eliminar el canvas y crear uno nuevo
-  const canvasContainer = document.getElementById('canvas-container');
+  const canvasContainer = document.getElementById('canvas-container-consumo');
   if (this.grafico) {
     if (canvasContainer) {
-      canvasContainer.innerHTML = '<canvas id="bar-chart"></canvas>';
+      canvasContainer.innerHTML = '<canvas id="bar-chart-consumo"></canvas>';
     }
   }
   
     // Crea un nuevo gráfico
-    this.grafico = new Chart(document.getElementById('bar-chart') as HTMLCanvasElement, dataBar);
+    this.grafico = new Chart(document.getElementById('bar-chart-consumo') as HTMLCanvasElement, dataBar);
   }
 
   togglePrueba() {
