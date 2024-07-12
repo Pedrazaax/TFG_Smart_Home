@@ -270,7 +270,7 @@
       <div class="relative w-full items-start flex flex-col md:flex-row">
         <div *ngIf="PConsumos; else PConsumoEmpty" class="grid content-end">
 
-          <div>
+          <div class="ml-2">
             <label for="categorySelectPConsumo">Filtrar por Categoría: </label>
             <select class="ml-4 px-4" id="categorySelectPConsumo" (change)="filterByCategory('PConsumos', $event)">
               <option value="">Todas</option>
