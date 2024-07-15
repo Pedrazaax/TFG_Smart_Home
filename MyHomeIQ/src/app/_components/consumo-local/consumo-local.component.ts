@@ -49,7 +49,8 @@ export class ConsumoLocalComponent {
   pagedPConsumos: PruebaConsumoLocal[] = [];
   pagedTPruebas: TipoPruebaLocal[] = [];
 
-  grafico!: any;
+  graficoConsumo!: any;
+  graficoIntensidad!: any;
   isTestRunning: boolean = false;
 
   intensidadMediaDeIntervalos!: number[];
@@ -219,9 +220,10 @@ export class ConsumoLocalComponent {
   createGrafic() {
     let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
     let consumos = intervalos.map(inter => inter.consumo);
+    let intensidades = this.intensidadMediaDeIntervalos;
     let labels = intervalos.map((_, index) => `Intervalo ${index + 1}`);
   
-    let dataBar = {
+    let dataBarConsumo = {
       type: 'bar',
       data: {
         labels: labels,
@@ -233,17 +235,30 @@ export class ConsumoLocalComponent {
         ],
       },
     };
+
+    let dataBarIntensidades = {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Intervalos de intensidad',
+            data: intensidades,
+          },
+        ],
+      },
+    };
   
     // Si el gráfico existe, eliminar el canvas y crear uno nuevo
-  const canvasContainer = document.getElementById('canvas-container-consumo');
-  if (this.grafico) {
-    if (canvasContainer) {
-      canvasContainer.innerHTML = '<canvas id="bar-chart-consumo"></canvas>';
-    }
+  const canvasContainerConsumo = document.getElementById('canvas-container-consumo');
+  const canvasContainerIntensidad = document.getElementById('canvas-container-intensidad');
+  if (canvasContainerConsumo && canvasContainerIntensidad) {
+    canvasContainerConsumo.innerHTML = '<h2 class="text-center mb-4 text-xl">Consumo</h2><section class="w-full"><canvas id="bar-chart-consumo"></canvas></section>';
+    canvasContainerIntensidad.innerHTML = '<h2 class="text-center mb-4 text-xl">Intensidad</h2><section class="w-full"><canvas id="bar-chart-intensidad"></canvas></section>';
   }
-  
     // Crea un nuevo gráfico
-    this.grafico = new Chart(document.getElementById('bar-chart-consumo') as HTMLCanvasElement, dataBar);
+    this.graficoConsumo = new Chart(document.getElementById('bar-chart-consumo') as HTMLCanvasElement, dataBarConsumo);
+    this.graficoIntensidad = new Chart(document.getElementById('bar-chart-intensidad') as HTMLCanvasElement, dataBarIntensidades);
   }
 
   togglePrueba() {
