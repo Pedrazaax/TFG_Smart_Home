@@ -51,6 +51,7 @@ export class ConsumoLocalComponent {
 
   graficoConsumo!: any;
   graficoIntensidad!: any;
+  graficoPotencia!: any;
   isTestRunning: boolean = false;
 
   intensidadMediaDeIntervalos!: number[];
@@ -169,8 +170,9 @@ export class ConsumoLocalComponent {
   selectedPConsumo(pConsumo: PruebaConsumoLocal, indice: number) {
     this.selected_PConsumo = pConsumo;
     this.selectedRowPConsumo = indice;
-    console.log(this.selected_PConsumo)
-    this.getIntensidadMediaTotal()
+    console.log(this.selected_PConsumo);
+    this.getIntensidadMediaTotal();
+    this.getPotenciaMediaTotal();
     this.createGrafic();
   }
 
@@ -181,7 +183,6 @@ export class ConsumoLocalComponent {
     console.log(intervalos);
     let intensidadesDeIntervalos = intervalos?.map(inter => inter.current);
     intensidadesDeIntervalos.forEach(intensidadesPorIntervalos => {
-      console.log(intensidadesPorIntervalos);
       if(intensidadesPorIntervalos === undefined || intensidadesPorIntervalos.length === 0) throw new Error("Array de energía vacío");
       else {
         let intensidadMediaDeIntervalo = this.calcularMediana(intensidadesPorIntervalos);
@@ -191,11 +192,22 @@ export class ConsumoLocalComponent {
     });
   }
 
-  private getPotenciaMedia() {
-
+  private getPotenciaMediaTotal() {
+    this.potenciaMediaTotal= 0;
+    this.potenciaMediaDeIntervalos = [];
+    let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
+    let potenciasDeIntervalos = intervalos?.map(inter => inter.power);
+    potenciasDeIntervalos.forEach(potenciasPorIntervalos => {
+      if(potenciasPorIntervalos === undefined || potenciasPorIntervalos.length === 0) throw new Error("Array de potencia vacío");
+      else {
+        let potenciaMediaDeIntervalo = this.calcularMediana(potenciasPorIntervalos);
+        this.potenciaMediaDeIntervalos.push(potenciaMediaDeIntervalo);
+      }
+      this.potenciaMediaTotal = this.calcularMediana(this.potenciaMediaDeIntervalos);
+    })
   }
 
-  private getVoltajeMedio() {
+  private getVoltajeMedioTotal() {
 
   }
 
@@ -221,6 +233,7 @@ export class ConsumoLocalComponent {
     let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
     let consumos = intervalos.map(inter => inter.consumo);
     let intensidades = this.intensidadMediaDeIntervalos;
+    let potencias = this.potenciaMediaDeIntervalos;
     let labels = intervalos.map((_, index) => `Intervalo ${index + 1}`);
   
     let dataBarConsumo = {
@@ -248,17 +261,33 @@ export class ConsumoLocalComponent {
         ],
       },
     };
+
+    let dataBarPotencia = {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Intervalos de potencia',
+            data: potencias,
+          },
+        ],
+      },
+    };
   
     // Si el gráfico existe, eliminar el canvas y crear uno nuevo
   const canvasContainerConsumo = document.getElementById('canvas-container-consumo');
   const canvasContainerIntensidad = document.getElementById('canvas-container-intensidad');
-  if (canvasContainerConsumo && canvasContainerIntensidad) {
-    canvasContainerConsumo.innerHTML = '<h2 class="text-center mb-4 text-xl">Consumo</h2><section class="w-full"><canvas id="bar-chart-consumo"></canvas></section>';
-    canvasContainerIntensidad.innerHTML = '<h2 class="text-center mb-4 text-xl">Intensidad</h2><section class="w-full"><canvas id="bar-chart-intensidad"></canvas></section>';
+  const canvasContainerPotencia = document.getElementById('canvas-container-potencia');
+  if (canvasContainerConsumo && canvasContainerIntensidad && canvasContainerPotencia) {
+    canvasContainerConsumo.innerHTML = '<h2 class="text-center mb-4 text-xl">Consumo (kWh)</h2><section class="w-full"><canvas id="bar-chart-consumo"></canvas></section>';
+    canvasContainerIntensidad.innerHTML = '<h2 class="text-center mb-4 text-xl">Intensidad (A)</h2><section class="w-full"><canvas id="bar-chart-intensidad"></canvas></section>';
+    canvasContainerPotencia.innerHTML = '<h2 class="text-center mb-4 text-xl">Potencia (W)</h2><section class="w-full"><canvas id="bar-chart-potencia"></canvas></section>';
   }
     // Crea un nuevo gráfico
     this.graficoConsumo = new Chart(document.getElementById('bar-chart-consumo') as HTMLCanvasElement, dataBarConsumo);
     this.graficoIntensidad = new Chart(document.getElementById('bar-chart-intensidad') as HTMLCanvasElement, dataBarIntensidades);
+    this.graficoPotencia = new Chart(document.getElementById('bar-chart-potencia') as HTMLCanvasElement, dataBarPotencia);
   }
 
   togglePrueba() {
