@@ -368,6 +368,10 @@
             <td class="border border-gray-300 px-4 py-2">{{potenciaMediaTotal  | number:'1.2-4'}}</td>
           </tr>
           <tr>
+            <th class="border border-gray-300 px-4 py-2">Voltaje medio (V):</th>
+            <td class="border border-gray-300 px-4 py-2">{{voltajeMedioTotal  | number:'1.2-4'}}</td>
+          </tr>
+          <tr>
             <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.timeTotal}}</td>
           </tr>
@@ -381,6 +385,7 @@
                   <th class="border border-gray-300 px-4 py-2">Consumo (kWh)</th>
                   <th class="border border-gray-300 px-4 py-2">Intensidad (A)</th>
                   <th class="border border-gray-300 px-4 py-2">Potencia (W)</th>
+                  <th class="border border-gray-300 px-4 py-2">Voltaje (V)</th>
                 </tr>
                 <tr *ngFor="let intervalo of selected_PConsumo.tipoPrueba.intervalos; let i = index">
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.time}}</td>
@@ -388,6 +393,7 @@
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.consumo | number:'1.2-4'}}</td>
                   <td class="border border-gray-300 px-4 py-2">{{intensidadMediaDeIntervalos[i] | number:'1.2-4'}}</td>
                   <td class="border border-gray-300 px-4 py-2">{{potenciaMediaDeIntervalos[i] | number:'1.2-4'}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{voltajeMedioDeIntervalos[i] | number:'1.2-4'}}</td>
                 </tr>
               </table>
             </td>
@@ -560,10 +566,11 @@
 
       </div>
     </div>
-    <div class="my-5 mx-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      <div id="canvas-container-consumo" class="w-96 overflow-hidden flex flex-col items-center justify-center mr-10"></div>
-      <div id="canvas-container-intensidad" class="w-96 overflow-hidden flex flex-col items-center justify-center mr-10"></div>
-      <div id="canvas-container-potencia" class="w-96 overflow-hidden flex flex-col items-center justify-center mr-10"></div>
+    <div class="my-5 mx-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-center">
+      <div id="canvas-container-consumo" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
+      <div id="canvas-container-intensidad" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
+      <div id="canvas-container-potencia" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
+      <div id="canvas-container-voltaje" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
     </div>
   </section>
 
