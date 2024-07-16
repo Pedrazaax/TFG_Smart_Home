@@ -53,6 +53,7 @@ export class ConsumoLocalComponent {
   graficoIntensidad!: any;
   graficoPotencia!: any;
   graficoVoltaje!: any;
+  graficoPrueba!: any;
   isTestRunning: boolean = false;
 
   intensidadMediaDeIntervalos!: number[];
@@ -324,6 +325,31 @@ export class ConsumoLocalComponent {
     this.graficoVoltaje = new Chart(document.getElementById('bar-chart-voltaje') as HTMLCanvasElement, dataBarVoltaje);
   }
 
+  private createGraficPrueba() {
+    let intervalos: IntervaloLocal[] = this.selected_TPrueba?.intervalos!;
+    let tiempos = intervalos.map(inter => inter.time);
+    let scripts = intervalos.map(inter => inter.script)
+
+    let dataBarTiempos = {
+      type: 'bar',
+      data: {
+        labels: scripts,
+        datasets: [
+          {
+            label: 'Tiempo de medición del script (Segundos)',
+            data: tiempos,
+            backgroundColor: 'rgba(147, 112, 219, 0.7)',
+          },
+        ],
+      },
+    };
+
+    const canvasContainerPrueba = document.getElementById('canvas-container-prueba');
+    if(canvasContainerPrueba) canvasContainerPrueba.innerHTML = '<section class="w-1/2"><canvas id="bar-chart-prueba"></canvas></section>';
+    this.graficoPrueba = new Chart(document.getElementById('bar-chart-prueba') as HTMLCanvasElement, dataBarTiempos);
+
+  }
+
   togglePrueba() {
     this.modalPrueba.toggle();
   }
@@ -568,6 +594,7 @@ export class ConsumoLocalComponent {
   selectedTPrueba(tPrueba: any, indice: number) {
     this.selected_TPrueba = tPrueba;
     this.selectedRow = indice;
+    this.createGraficPrueba();
   }
 
   filterByCategory(type: 'PConsumos' | 'TPruebas', event: Event) {
