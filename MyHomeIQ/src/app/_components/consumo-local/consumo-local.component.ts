@@ -188,10 +188,10 @@ export class ConsumoLocalComponent {
     intensidadesDeIntervalos.forEach(intensidadesPorIntervalos => {
       if(intensidadesPorIntervalos === undefined || intensidadesPorIntervalos.length === 0) throw new Error("Array de energía vacío");
       else {
-        let intensidadMediaDeIntervalo = this.calcularMediana(intensidadesPorIntervalos);
+        let intensidadMediaDeIntervalo = this.calcularMedia(intensidadesPorIntervalos);
         this.intensidadMediaDeIntervalos.push(intensidadMediaDeIntervalo);
       }
-      this.intensidadMediaTotal = this.calcularMediana(this.intensidadMediaDeIntervalos);
+      this.intensidadMediaTotal = this.calcularMedia(this.intensidadMediaDeIntervalos);
     });
   }
 
@@ -203,10 +203,10 @@ export class ConsumoLocalComponent {
     potenciasDeIntervalos.forEach(potenciasPorIntervalos => {
       if(potenciasPorIntervalos === undefined || potenciasPorIntervalos.length === 0) throw new Error("Array de potencia vacío");
       else {
-        let potenciaMediaDeIntervalo = this.calcularMediana(potenciasPorIntervalos);
+        let potenciaMediaDeIntervalo = this.calcularMedia(potenciasPorIntervalos);
         this.potenciaMediaDeIntervalos.push(potenciaMediaDeIntervalo);
       }
-      this.potenciaMediaTotal = this.calcularMediana(this.potenciaMediaDeIntervalos);
+      this.potenciaMediaTotal = this.calcularMedia(this.potenciaMediaDeIntervalos);
     })
   }
 
@@ -218,30 +218,23 @@ export class ConsumoLocalComponent {
     voltajesDeIntervalos.forEach(voltajesPorIntervalos => {
       if(voltajesPorIntervalos === undefined || voltajesPorIntervalos.length === 0) throw new Error("Array de voltajes vacío");
       else {
-        let voltajeMedioDeIntervalo = this.calcularMediana(voltajesPorIntervalos);
+        let voltajeMedioDeIntervalo = this.calcularMedia(voltajesPorIntervalos);
         this.voltajeMedioDeIntervalos.push(voltajeMedioDeIntervalo);
       }
-      this.voltajeMedioTotal = this.calcularMediana(this.voltajeMedioDeIntervalos);
+      this.voltajeMedioTotal = this.calcularMedia(this.voltajeMedioDeIntervalos);
     })
   }
 
-  private calcularMediana(valores: number[]): number {
-    const sortedValues = valores.sort((a, b) => a - b);
+  private calcularMedia(valores: number[]): number {
+    // Sumar todos los valores del array
+    const suma = valores.reduce((acumulador, valor) => acumulador + valor, 0);
     
     // Obtener la longitud del array
-    const length = sortedValues.length;
+    const longitud = valores.length;
     
-    // Calcular la mediana
-    if (length % 2 === 0) {
-        // Si el array tiene un número par de elementos, se promedian los dos centrales
-        const mid1 = sortedValues[length / 2 - 1];
-        const mid2 = sortedValues[length / 2];
-        return (mid1 + mid2) / 2;
-    } else {
-        // Si el array tiene un número impar de elementos, se toma el central
-        return sortedValues[(length - 1) / 2];
-    }
-  }
+    // Calcular la media
+    return suma / longitud;
+}
   
   createGrafic() {
     let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
