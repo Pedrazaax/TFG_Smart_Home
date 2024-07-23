@@ -400,6 +400,10 @@ export class ConsumoLocalComponent {
     const todosGuardados = this.intervalosGuardados.every(v => v);
     return todosGuardados;
   }
+
+  onInputChange(index: number) {
+    this.intervalosGuardados[index] = false;
+  }
   
 
   savePConsumo() {

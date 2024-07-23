@@ -189,22 +189,29 @@
 
             <div class="mb-4 ml-2" *ngFor="let intervalo of intervalos; let i = index">
               <label for="time{{i}}" class="block mb-2">Tiempo:</label>
-              <input class="w-full block border py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="number" id="time{{i}}" name="time{{i}}" formControlName="time{{i}}" required />
+              <input
+                class="w-full block border py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="number" id="time{{i}}" name="time{{i}}" formControlName="time{{i}}"
+                required (input)="onInputChange(i)" />
             
               <label for="script{{i}}" class="block mb-2">Script:</label>
               <select id="script{{i}}" name="script{{i}}"
                 class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
-                formControlName="script{{i}}">
+                formControlName="script{{i}}" (change)="onInputChange(i)">
                 <option *ngFor="let script of scripts" value="{{script.entity_id}}">{{script.attributes.friendly_name}}</option>
               </select>
             
-              <a id="{{i}}" 
-              [ngClass]="{
-                'rounded-full bg-green-600 text-white mt-2 px-4 py-2 hover:bg-green-300 text-xs ml-2': true,
-                'opacity-50 cursor-pointer': !intervalosGuardados[i]
-              }"
-              (click)="setIntervalo(i, formTPrueba.get('time' + i)!.value, formTPrueba.get('script' + i)!.value)">Guardar intervalo</a>
+              <ng-container *ngIf="intervalosGuardados[i]; else guardarBoton">
+                <span class="inline-block rounded-full bg-green-600 text-white mt-2 px-4 py-2 text-xs ml-2">&#10003; Guardado</span>
+              </ng-container>
+              <ng-template #guardarBoton>
+                <a id="{{i}}"
+                  class="inline-block rounded-full bg-blue-600 text-white mt-2 px-4 py-2 hover:bg-blue-300 text-xs ml-2 cursor-pointer"
+                  (click)="setIntervalo(i, formTPrueba.get('time' + i)!.value, formTPrueba.get('script' + i)!.value)">Guardar
+                  intervalo</a>
+              </ng-template>
             </div>
+            
 
           </div>
 
