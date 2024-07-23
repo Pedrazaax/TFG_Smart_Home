@@ -49,8 +49,19 @@ export class ConsumoLocalComponent {
   pagedPConsumos: PruebaConsumoLocal[] = [];
   pagedTPruebas: TipoPruebaLocal[] = [];
 
-  grafico!: any;
+  graficoConsumo!: any;
+  graficoIntensidad!: any;
+  graficoPotencia!: any;
+  graficoVoltaje!: any;
+  graficoPrueba!: any;
   isTestRunning: boolean = false;
+
+  intensidadMediaDeIntervalos!: number[];
+  intensidadMediaTotal!: number;
+  potenciaMediaDeIntervalos!: number[];
+  potenciaMediaTotal!: number;
+  voltajeMedioDeIntervalos!: number[];
+  voltajeMedioTotal!: number;
 
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
@@ -161,15 +172,79 @@ export class ConsumoLocalComponent {
   selectedPConsumo(pConsumo: PruebaConsumoLocal, indice: number) {
     this.selected_PConsumo = pConsumo;
     this.selectedRowPConsumo = indice;
+    console.log(this.selected_PConsumo);
+    this.getIntensidadMediaTotal();
+    this.getPotenciaMediaTotal();
+    this.getVoltajeMedioTotal();
     this.createGrafic();
   }
+
+  private getIntensidadMediaTotal() {
+    this.intensidadMediaTotal = 0;
+    this.intensidadMediaDeIntervalos = [];
+    let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
+    console.log(intervalos);
+    let intensidadesDeIntervalos = intervalos?.map(inter => inter.current);
+    intensidadesDeIntervalos.forEach(intensidadesPorIntervalos => {
+      if(intensidadesPorIntervalos === undefined || intensidadesPorIntervalos.length === 0) throw new Error("Array de energía vacío");
+      else {
+        let intensidadMediaDeIntervalo = this.calcularMedia(intensidadesPorIntervalos);
+        this.intensidadMediaDeIntervalos.push(intensidadMediaDeIntervalo);
+      }
+      this.intensidadMediaTotal = this.calcularMedia(this.intensidadMediaDeIntervalos);
+    });
+  }
+
+  private getPotenciaMediaTotal() {
+    this.potenciaMediaTotal = 0;
+    this.potenciaMediaDeIntervalos = [];
+    let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
+    let potenciasDeIntervalos = intervalos?.map(inter => inter.power);
+    potenciasDeIntervalos.forEach(potenciasPorIntervalos => {
+      if(potenciasPorIntervalos === undefined || potenciasPorIntervalos.length === 0) throw new Error("Array de potencia vacío");
+      else {
+        let potenciaMediaDeIntervalo = this.calcularMedia(potenciasPorIntervalos);
+        this.potenciaMediaDeIntervalos.push(potenciaMediaDeIntervalo);
+      }
+      this.potenciaMediaTotal = this.calcularMedia(this.potenciaMediaDeIntervalos);
+    })
+  }
+
+  private getVoltajeMedioTotal() {
+    this.voltajeMedioTotal = 0;
+    this.voltajeMedioDeIntervalos = [];
+    let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
+    let voltajesDeIntervalos = intervalos?.map(inter => inter.voltage);
+    voltajesDeIntervalos.forEach(voltajesPorIntervalos => {
+      if(voltajesPorIntervalos === undefined || voltajesPorIntervalos.length === 0) throw new Error("Array de voltajes vacío");
+      else {
+        let voltajeMedioDeIntervalo = this.calcularMedia(voltajesPorIntervalos);
+        this.voltajeMedioDeIntervalos.push(voltajeMedioDeIntervalo);
+      }
+      this.voltajeMedioTotal = this.calcularMedia(this.voltajeMedioDeIntervalos);
+    })
+  }
+
+  private calcularMedia(valores: number[]): number {
+    // Sumar todos los valores del array
+    const suma = valores.reduce((acumulador, valor) => acumulador + valor, 0);
+    
+    // Obtener la longitud del array
+    const longitud = valores.length;
+    
+    // Calcular la media
+    return suma / longitud;
+}
   
   createGrafic() {
     let intervalos: IntervaloLocal[] = this.selected_PConsumo?.tipoPrueba.intervalos!;
     let consumos = intervalos.map(inter => inter.consumo);
+    let intensidades = this.intensidadMediaDeIntervalos;
+    let potencias = this.potenciaMediaDeIntervalos;
+    let voltajes = this.voltajeMedioDeIntervalos;
     let labels = intervalos.map((_, index) => `Intervalo ${index + 1}`);
   
-    let dataBar = {
+    let dataBarConsumo = {
       type: 'bar',
       data: {
         labels: labels,
@@ -177,21 +252,95 @@ export class ConsumoLocalComponent {
           {
             label: 'Intervalos de consumo',
             data: consumos,
+            backgroundColor: 'rgba(255, 0, 0, 0.7)',
+          },
+        ],
+      },
+    };
+
+    let dataBarIntensidades = {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Intervalos de intensidad',
+            data: intensidades,
+            backgroundColor: 'rgba(255, 255, 0, 0.7)',
+          },
+        ],
+      },
+    };
+
+    let dataBarPotencia = {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Intervalos de potencia',
+            data: potencias,
+            backgroundColor: 'rgba(0, 0, 255, 0.7)',
+          },
+        ],
+      },
+    };
+
+    let dataBarVoltaje = {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Intervalos de voltaje',
+            data: voltajes,
+            backgroundColor: 'rgba(0, 128, 0, 0.7)',
           },
         ],
       },
     };
   
     // Si el gráfico existe, eliminar el canvas y crear uno nuevo
-  const canvasContainer = document.getElementById('canvas-container');
-  if (this.grafico) {
-    if (canvasContainer) {
-      canvasContainer.innerHTML = '<canvas id="bar-chart"></canvas>';
-    }
+  const canvasContainerConsumo = document.getElementById('canvas-container-consumo');
+  const canvasContainerIntensidad = document.getElementById('canvas-container-intensidad');
+  const canvasContainerPotencia = document.getElementById('canvas-container-potencia');
+  const canvasContainerVoltaje = document.getElementById('canvas-container-voltaje');
+  if (canvasContainerConsumo && canvasContainerIntensidad && canvasContainerPotencia && canvasContainerVoltaje) {
+    canvasContainerConsumo.innerHTML = '<h2 class="text-center mb-4 text-xl">Consumo (kWh)</h2><section class="w-full"><canvas id="bar-chart-consumo"></canvas></section>';
+    canvasContainerIntensidad.innerHTML = '<h2 class="text-center mb-4 text-xl">Intensidad (A)</h2><section class="w-full"><canvas id="bar-chart-intensidad"></canvas></section>';
+    canvasContainerPotencia.innerHTML = '<h2 class="text-center mb-4 text-xl">Potencia (W)</h2><section class="w-full"><canvas id="bar-chart-potencia"></canvas></section>';
+    canvasContainerVoltaje.innerHTML = '<h2 class="text-center mb-4 text-xl">Voltaje (V)</h2><section class="w-full"><canvas id="bar-chart-voltaje"></canvas></section>';
   }
-  
     // Crea un nuevo gráfico
-    this.grafico = new Chart(document.getElementById('bar-chart') as HTMLCanvasElement, dataBar);
+    this.graficoConsumo = new Chart(document.getElementById('bar-chart-consumo') as HTMLCanvasElement, dataBarConsumo);
+    this.graficoIntensidad = new Chart(document.getElementById('bar-chart-intensidad') as HTMLCanvasElement, dataBarIntensidades);
+    this.graficoPotencia = new Chart(document.getElementById('bar-chart-potencia') as HTMLCanvasElement, dataBarPotencia);
+    this.graficoVoltaje = new Chart(document.getElementById('bar-chart-voltaje') as HTMLCanvasElement, dataBarVoltaje);
+  }
+
+  private createGraficPrueba() {
+    let intervalos: IntervaloLocal[] = this.selected_TPrueba?.intervalos!;
+    let tiempos = intervalos.map(inter => inter.time);
+    let scripts = intervalos.map(inter => inter.script)
+
+    let dataBarTiempos = {
+      type: 'bar',
+      data: {
+        labels: scripts,
+        datasets: [
+          {
+            label: 'Tiempo de medición del script (Segundos)',
+            data: tiempos,
+            backgroundColor: 'rgba(147, 112, 219, 0.7)',
+          },
+        ],
+      },
+    };
+
+    const canvasContainerPrueba = document.getElementById('canvas-container-prueba');
+    if(canvasContainerPrueba) canvasContainerPrueba.innerHTML = '<section class="w-1/2"><canvas id="bar-chart-prueba"></canvas></section>';
+    this.graficoPrueba = new Chart(document.getElementById('bar-chart-prueba') as HTMLCanvasElement, dataBarTiempos);
+
   }
 
   togglePrueba() {
@@ -438,6 +587,7 @@ export class ConsumoLocalComponent {
   selectedTPrueba(tPrueba: any, indice: number) {
     this.selected_TPrueba = tPrueba;
     this.selectedRow = indice;
+    this.createGraficPrueba();
   }
 
   filterByCategory(type: 'PConsumos' | 'TPruebas', event: Event) {

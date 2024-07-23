@@ -231,9 +231,8 @@
 
 
   <section *ngIf="flagHA; else homeAssistantIU">
-    <div class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2">
-      <div class="ml-4">
-        <button type="button"
+    <div class="ml-2">
+      <button type="button"
           class="ml-2 mb-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
             text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 
             hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 
@@ -253,7 +252,9 @@
           (click)="toggleTipoP()">
           CREAR TIPO DE PRUEBA
         </button>
-
+    </div>
+    <div class="w-full items-start flex flex-col md:flex-row [&>div]:md:w-1/2">
+      <div class="ml-4 mr-1">
       <!-- Indicador de carga de prueba de consumo -->
       <div *ngIf="isTestRunning" class="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-75 z-50">
         <div class="text-center p-6 bg-white rounded-lg shadow-lg">
@@ -267,7 +268,7 @@
         </div>
       </div>
       
-      <div class="relative w-full items-start flex flex-col md:flex-row">
+      <div class="grid content-end">
         <div *ngIf="PConsumos; else PConsumoEmpty" class="grid content-end">
 
           <div class="ml-2">
@@ -278,7 +279,7 @@
             </select>
           </div>
 
-          <table class="ml-2">
+          <table>
             <thead class="border-b-2 bg-neutral-800 font-medium text-white"> 
               <tr class="[&>th]:px-2">
                 <th scope="col">#</th>
@@ -291,7 +292,7 @@
             </thead>
             <tbody class="rounded-md border-b-2">
               <tr *ngFor="let pConsumo of pagedPConsumos; index as i" (click)="selectedPConsumo(pConsumo, i)"
-                [ngClass]="{'bg-blue-200': selectedRow === i}"
+                [ngClass]="{'bg-blue-200': selectedRowPConsumo === i}"
                 class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
                 <th class="font-medium">{{(currentPagePConsumo - 1) * itemsPerPage + i + 1}}</th>
                 <th>{{pConsumo.name}}</th>
@@ -313,15 +314,6 @@
         </div>
       </div>
 
-      <!-- Controles de Paginación -->
-      <div *ngIf="PConsumos" class="flex mt-4">
-        <button (click)="firstPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
-        <button (click)="prevPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
-        <span class="px-2 py-1 mx-1">Página {{currentPagePConsumo}} de {{totalPages('PConsumos')}}</span>
-        <button (click)="nextPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Siguiente</button>
-        <button (click)="lastPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Última</button>
-      </div>
-
       <ng-template #PConsumoEmpty>
         <div class="ml-2">
           <p class="text-xl text-red-500">No hay pruebas de consumo</p>
@@ -329,7 +321,90 @@
       </ng-template>
 
       </div>
-      <div *ngIf="selected_PConsumo; else infoEmpty" class="ml-6">
+
+      <div *ngIf="TPruebas; else TPruebasEmpty" class="grid content-end ml-1 mr-4">
+        
+        <div>
+          <label for="categorySelectTPrueba">Filtrar por Categoría: </label>
+          <select class="ml-4 px-4" id="categorySelectTPrueba" (change)="filterByCategory('TPruebas', $event)">
+            <option value="">Todas</option>
+            <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+          </select>
+        </div>
+
+        <table>
+          <thead class="border-b-2 bg-neutral-800 font-medium text-white">
+            <tr class="[&>th]:px-2">
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Categoría</th>
+              <th scope="col">Nª intervalos</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody class="rounded-md border-b-2">
+            <tr *ngFor="let tPrueba of pagedTPruebas; let i = index" (click)="selectedTPrueba(tPrueba, i)"
+              [ngClass]="{'bg-blue-200': selectedRow === i}"
+              class="hover:bg-blue-200 hover:cursor-pointer [&>th]:font-normal [&>th]:px-2 [&>th]:border-b-2">
+              <th>{{ (currentPageTPrueba - 1) * itemsPerPage + i + 1 }}</th>
+              <th>{{ tPrueba.name }}</th>
+              <th>{{ tPrueba.category }}</th>
+              <th>{{ tPrueba.intervalos.length }}</th>
+              <th>
+                <svg (click)="delete(tPrueba, 'tprueba')" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                  fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                  <path
+                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                  <path
+                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                </svg>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <ng-template #TPruebasEmpty>
+        <div class="ml-6">
+          <p>No hay tipos de prueba</p>
+        </div>
+      </ng-template>
+
+    </div>
+
+    <div class="my-3">
+       <div class="w-full flex flex-col md:flex-row [&>div]:md:w-1/2 mx-2">
+        <!-- Controles de Paginación PConsumo -->
+        <div class="flex justify-center items-center">
+          <div *ngIf="PConsumos">
+            <button (click)="firstPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
+            <button (click)="prevPage('PConsumos')" [disabled]="currentPagePConsumo === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
+            <span class="px-2 py-1 mx-1">Página {{currentPagePConsumo}} de {{totalPages('PConsumos')}}</span>
+            <button (click)="nextPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Siguiente</button>
+            <button (click)="lastPage('PConsumos')" [disabled]="currentPagePConsumo === totalPages('PConsumos')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Última</button>
+          </div>
+        </div>
+        <!-- Controles de Paginación TPruebas -->
+        <div class="flex justify-center items-center">
+          <div *ngIf="TPruebas">
+            <button (click)="firstPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
+            <button (click)="prevPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
+            <span class="px-2 py-1 mx-1">Página {{currentPageTPrueba}} de {{totalPages('TPruebas')}}</span>
+            <button (click)="nextPage('TPruebas')" [disabled]="currentPageTPrueba === totalPages('TPruebas')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Siguiente</button>
+            <button (click)="lastPage('TPruebas')" [disabled]="currentPageTPrueba === totalPages('TPruebas')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Última</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-1 mx-4">
+      <hr/>
+    </div>
+
+    <div class="w-full items-start flex flex-col md:flex-row [&>div]:md:w-1/2 mt-3 mx-2">
+
+      <div *ngIf="selected_PConsumo; else infoEmpty">
         <table class="mx-auto">
           <tr>
             <th class="border border-gray-300 px-4 py-2">Nombre:</th>
@@ -356,8 +431,20 @@
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.dateTime}}</td>
           </tr>
           <tr>
-            <th class="border border-gray-300 px-4 py-2">Consumo medio:</th>
-            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.consumoMedio}}</td>
+            <th class="border border-gray-300 px-4 py-2">Consumo medio (kWh):</th>
+            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.consumoMedio  | number:'1.2-4'}}</td>
+          </tr>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Intensidad media (A):</th>
+            <td class="border border-gray-300 px-4 py-2">{{intensidadMediaTotal  | number:'1.2-4'}}</td>
+          </tr>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Potencia media (W):</th>
+            <td class="border border-gray-300 px-4 py-2">{{potenciaMediaTotal  | number:'1.2-4'}}</td>
+          </tr>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Voltaje medio (V):</th>
+            <td class="border border-gray-300 px-4 py-2">{{voltajeMedioTotal  | number:'1.2-4'}}</td>
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
@@ -370,10 +457,18 @@
                 <tr>
                   <th class="border border-gray-300 px-4 py-2">Time</th>
                   <th class="border border-gray-300 px-4 py-2">Script</th>
+                  <th class="border border-gray-300 px-4 py-2">Consumo (kWh)</th>
+                  <th class="border border-gray-300 px-4 py-2">Intensidad (A)</th>
+                  <th class="border border-gray-300 px-4 py-2">Potencia (W)</th>
+                  <th class="border border-gray-300 px-4 py-2">Voltaje (V)</th>
                 </tr>
                 <tr *ngFor="let intervalo of selected_PConsumo.tipoPrueba.intervalos; let i = index">
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.time}}</td>
                   <td class="border border-gray-300 px-4 py-2">{{intervalo.script}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{intervalo.consumo | number:'1.2-4'}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{intensidadMediaDeIntervalos[i] | number:'1.2-4'}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{potenciaMediaDeIntervalos[i] | number:'1.2-4'}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{voltajeMedioDeIntervalos[i] | number:'1.2-4'}}</td>
                 </tr>
               </table>
             </td>
@@ -416,66 +511,6 @@
             <td class="border border-gray-300 px-4 py-2 text-red-400">Selecciona una fila de prueba de consumo</td>
           </tr>
         </table>
-      </ng-template>
-      <section id="canvas-container" class="w-96 overflow-hidden items-center justify-center flex mr-10">
-        <canvas id="bar-chart"></canvas>
-      </section>
-    </div>
-    <div class="w-full items-start flex flex-col md:flex-row [&>div]:md:w-1/2 mt-4">
-      <div *ngIf="TPruebas; else TPruebasEmpty" class="grid content-end">
-
-        <div class="ml-6">
-          <label for="categorySelectTPrueba">Filtrar por Categoría: </label>
-          <select class="ml-4 px-4" id="categorySelectTPrueba" (change)="filterByCategory('TPruebas', $event)">
-            <option value="">Todas</option>
-            <option *ngFor="let category of categories" [value]="category">{{category}}</option>
-          </select>
-        </div>
-
-        <table class="ml-6">
-          <thead class="border-b-2 bg-neutral-800 font-medium text-white">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Categoría</th>
-              <th scope="col">Nª intervalos</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody class="rounded-md border-b-2">
-            <tr *ngFor="let tPrueba of pagedTPruebas; let i = index" (click)="selectedTPrueba(tPrueba, i)"
-              [ngClass]="{'bg-blue-200': selectedRow === i}"
-              class="hover:bg-blue-200 hover:cursor-pointer">
-              <td>{{ (currentPageTPrueba - 1) * itemsPerPage + i + 1 }}</td>
-              <td>{{ tPrueba.name }}</td>
-              <td>{{ tPrueba.category }}</td>
-              <td>{{ tPrueba.intervalos.length }}</td>
-              <td>
-                <svg (click)="delete(tPrueba, 'tprueba')" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                  fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                  <path
-                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                  <path
-                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                </svg>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <!-- Controles de Paginación -->
-        <div *ngIf="TPruebas" class="flex ml-4 mt-4">
-          <button (click)="firstPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Primera</button>
-          <button (click)="prevPage('TPruebas')" [disabled]="currentPageTPrueba === 1" class="px-2 py-1 mx-1 bg-gray-200 rounded">Anterior</button>
-          <span class="px-2 py-1 mx-1">Página {{currentPageTPrueba}} de {{totalPages('TPruebas')}}</span>
-          <button (click)="nextPage('TPruebas')" [disabled]="currentPageTPrueba === totalPages('TPruebas')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Siguiente</button>
-          <button (click)="lastPage('TPruebas')" [disabled]="currentPageTPrueba === totalPages('TPruebas')" class="px-2 py-1 mx-1 bg-gray-200 rounded">Última</button>
-        </div>
-      </div>
-
-      <ng-template #TPruebasEmpty>
-        <div class="ml-6">
-          <p>No hay tipos de prueba</p>
-        </div>
       </ng-template>
 
       <div>
@@ -547,7 +582,17 @@
           </table>
         </ng-template>
 
+        <div class="mt-2">
+          <div id="canvas-container-prueba" class="overflow-hidden flex flex-col items-center justify-center"></div>
+        </div>
+
       </div>
+    </div>
+    <div class="my-5 mx-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-center">
+      <div id="canvas-container-consumo" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
+      <div id="canvas-container-intensidad" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
+      <div id="canvas-container-potencia" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
+      <div id="canvas-container-voltaje" class="overflow-hidden flex flex-col items-center justify-center mr-10"></div>
     </div>
   </section>
 
