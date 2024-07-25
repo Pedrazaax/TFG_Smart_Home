@@ -451,6 +451,8 @@ export class ConsumoLocalComponent {
       intervalo.consumo = 0.0;
       intervalo.current = [0.0];
       intervalo.voltage = [0.0];
+      intervalo.power = [0.0];
+      intervalo.energy = [0.0];
     });
 
 
