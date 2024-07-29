@@ -424,10 +424,10 @@ export class ConsumoLocalComponent {
         console.log(response);
       },
       (error: any) => {
+        this.isTestRunning = false;
         this.toastr.error(error.error.detail, 'Error');
       }
     );
-    
   }
 
   saveTPrueba() {
