@@ -75,6 +75,7 @@ export class ConsumoLocalComponent {
     this.formPConsumo = new FormGroup({
       name: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
+      hub: new FormControl('', [Validators.required]),
       device: new FormControl('', [Validators.required]),
       tipoPrueba: new FormControl('', [Validators.required]),
       socket: new FormControl('', [Validators.required]),
@@ -83,6 +84,7 @@ export class ConsumoLocalComponent {
     this.formTPrueba = new FormGroup({
       name: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
+      hub: new FormControl('', [Validators.required]),
       device: new FormControl('', [Validators.required]),
       nIntervalos: new FormControl('', [Validators.required]),
       time0: new FormControl('', [Validators.required]),

@@ -62,6 +62,16 @@
             </div>
 
             <div class="mb-4">
+              <label for="hub" class="block text-gray-700 font-bold mb-2">Hub:</label>
+              <select name="hub" id="hub"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="hub">
+                <option value="True">Si</option>
+                <option selected value="False">No</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
               <label for="device" class="block text-gray-700 font-bold mb-2">Elige el dispositivo: </label>
               <select name="device" id="device"
                 class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
@@ -420,6 +430,10 @@
           <tr>
             <th class="border border-gray-300 px-4 py-2">Categoría:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.category}}</td>
+          </tr> 
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Hub:</th>
+            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub}}</td>
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Tipo de prueba:</th>
