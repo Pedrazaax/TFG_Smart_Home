@@ -17,6 +17,7 @@ import { FormAPIComponent } from './_components/form-api/form-api.component';
 import { AuthGuard } from './app.guard';
 import { SensorComponent } from './_components/sensor/sensor.component';
 import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local.component';
+import { SimuladorConsumosComponent } from './_components/simulador-consumos/simulador-consumos.component';
 
 const routes: Routes = [
   {path : 'login',component:LoginComponent},
@@ -34,7 +35,8 @@ const routes: Routes = [
   {path : 'consumo',component:ConsumoComponent, canActivate: [AuthGuard]},
   {path : 'api',component:FormAPIComponent, canActivate: [AuthGuard]},
   {path : 'sensor', component:SensorComponent, canActivate: [AuthGuard]},
-  {path : 'consumo-local', component:ConsumoLocalComponent, canActivate: [AuthGuard]}
+  {path : 'consumo-local', component:ConsumoLocalComponent, canActivate: [AuthGuard]},
+  {path : 'simulador-consumos', component:SimuladorConsumosComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
