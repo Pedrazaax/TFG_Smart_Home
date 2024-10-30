@@ -63,6 +63,9 @@ export class ConsumoLocalComponent {
   voltajeMedioDeIntervalos!: number[];
   voltajeMedioTotal!: number;
 
+  // HUB
+  hubDataVisible = false;
+
   constructor(private controlLocalService: ControlLocalService, private toastr: ToastrService) {
 
     this.intervalosGuardados = [];
@@ -75,16 +78,28 @@ export class ConsumoLocalComponent {
     this.formPConsumo = new FormGroup({
       name: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
-      hub: new FormControl('', [Validators.required]),
-      device: new FormControl('', [Validators.required]),
-      tipoPrueba: new FormControl('', [Validators.required]),
-      socket: new FormControl('', [Validators.required]),
+      hub: new FormGroup({
+        be: new FormControl('', [Validators.required]),
+        pulgadas: new FormControl('',),
+        rel_ancho: new FormControl('',),
+        rel_alto: new FormControl('',),
+        t_pantalla: new FormControl('',),
+      }),
+      device: new FormControl('',),
+      tipoPrueba: new FormControl('',),
+      socket: new FormControl('',),
     });
-
+    
     this.formTPrueba = new FormGroup({
       name: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
-      hub: new FormControl('', [Validators.required]),
+      hub: new FormGroup({
+        be: new FormControl('', [Validators.required]),
+        pulgadas: new FormControl('',),
+        rel_ancho: new FormControl('',),
+        rel_alto: new FormControl('',),
+        t_pantalla: new FormControl('',),
+      }),
       device: new FormControl('', [Validators.required]),
       nIntervalos: new FormControl('', [Validators.required]),
       time0: new FormControl('', [Validators.required]),
@@ -181,6 +196,15 @@ export class ConsumoLocalComponent {
     this.createGrafic();
   }
 
+  // Info del HUB
+// Info del HUB
+  onHubChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const beValue = selectElement.value === 'True';
+    this.formPConsumo.get('hub.be')?.setValue(beValue);
+    this.hubDataVisible = beValue;
+  }
+  
   private getIntensidadMediaTotal() {
     this.intensidadMediaTotal = 0;
     this.intensidadMediaDeIntervalos = [];
