@@ -6,6 +6,7 @@ import {Component} from '@angular/core';
     styleUrls: ['./simulador-consumos.component.css']
 })
 export class SimuladorConsumosComponent {
+    dispositivos!: any[]
     constructor() {}
     ngOnInit() {}
 }
