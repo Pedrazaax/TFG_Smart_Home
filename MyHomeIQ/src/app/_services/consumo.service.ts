@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PruebaConsumo, TipoPrueba } from '../_models/prueba-consumo';
+import { PruebaConsumo, TipoPrueba, SimuladorDispositivo } from '../_models/prueba-consumo';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
 import { ControlService } from './control.service';
@@ -39,6 +39,12 @@ export class ConsumoService {
     const url = `${this.config.apiUrl}/consumo/deleteTipoPrueba/${id}`;
 
     return this.httpClient.delete(url, {headers: this.header.getHeaders()});
+  }
+
+  getSimuladorDispositivos() {
+    const url = `${this.config.apiUrl}/consumo/getDispositivosSimulador`;
+
+    return this.httpClient.get<SimuladorDispositivo[]>(url, {headers: this.header.getHeaders()})
   }
 
 }

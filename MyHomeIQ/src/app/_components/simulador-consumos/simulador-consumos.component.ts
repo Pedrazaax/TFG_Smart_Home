@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import { SimuladorDispositivo } from 'src/app/_models/prueba-consumo';
 
 @Component({
     selector: 'app-simulador-consumos',
@@ -6,7 +7,7 @@ import {Component} from '@angular/core';
     styleUrls: ['./simulador-consumos.component.css']
 })
 export class SimuladorConsumosComponent {
-    dispositivos!: any[]
+    consumoDispositivos!: SimuladorDispositivo[]
     constructor() {}
     ngOnInit() {}
 }
