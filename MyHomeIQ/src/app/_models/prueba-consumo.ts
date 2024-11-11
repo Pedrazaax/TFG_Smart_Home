@@ -111,3 +111,23 @@ export interface Status {
     code: string;
     value: any;
 }
+export class SimuladorDispositivo {
+    deviceID: string;
+    device: string;
+    estado: string;
+    consumoMedio: string;
+    potenciaMedia: string;
+    intensidadMedia: string;
+    etiqueta: string;
+
+    constructor(deviceID: string, device: string, estado: string, consumoMedio: string, potenciaMedia: string, intensidadMedia: string, etiqueta: string) {
+        this.deviceID = deviceID;
+        this.device = device;
+        this.estado = estado;
+        this.consumoMedio = consumoMedio;
+        this.potenciaMedia = potenciaMedia;
+        this.intensidadMedia = intensidadMedia;
+        this.etiqueta = etiqueta;
+    }
+
+}
