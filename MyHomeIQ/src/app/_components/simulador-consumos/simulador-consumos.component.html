@@ -9,18 +9,37 @@
                 <!-- Texto para la etiqueta de consumo general -->
                 Etiqueta de Consumo
             </div>
-            <div id="medición-consumos-general" class="py-4 flex justify-center space-x-4 mt-4">
+            <div id="medición-consumos-general" class="py-3 flex justify-center space-x-4 mt-4">
                 <div id="consumo-diario-general" class="text-center">
-                    <!-- Texto para el consumo diario -->
-                    Consumo Diario (Kw)
+                    Consumo Diario (Kw): {{ consumoDiario | number: '1.3-3' }}
                 </div>
                 <div id="consumo-mensual-general" class="text-center">
-                    <!-- Texto para el consumo mensual -->
-                    Consumo Mensual (Kw)
+                    Consumo Mensual (Kw): {{ consumoMensual | number: '1.3-3' }}
                 </div>
                 <div id="consumo-anual-general" class="text-center">
-                    <!-- Texto para el consumo anual -->
-                    Consumo Anual ()Kw
+                    Consumo Anual (Kw): {{ consumoAnual | number: '1.3-3' }}
+                </div>                
+            </div>
+            <div id="medición-potencia-general" class="py-3 flex justify-center space-x-4">
+                <div id="potencia-diaria-general" class="text-center">
+                    Potencia Diario (Kw): {{ potenciaDiaria | number: '1.3-3' }}
+                </div>
+                <div id="potencia-mensual-general" class="text-center">
+                    Potencia Mensual (Kw): {{ potenciaMensual | number: '1.3-3' }}
+                </div>
+                <div id="potencia-anual-general" class="text-center">
+                    Potencia Anual (Kw): {{ potenciaAnual | number: '1.3-3' }}
+                </div>
+            </div>
+            <div id="medición-intensidad-general" class="py-3 flex justify-center space-x-4">
+                <div id="intensidad-diaria-general" class="text-center">
+                    Intensidad Diaria (Kw): {{ intensidadDiaria | number: '1.3-3' }}
+                </div>
+                <div id="potencia-mensual-general" class="text-center">
+                    Intensidad Mensual (Kw): {{ intensidadMensual | number: '1.3-3' }}
+                </div>
+                <div id="potencia-anual-general" class="text-center">
+                    Intensidad Anual (Kw): {{ intensidadAnual | number: '1.3-3' }}
                 </div>
             </div>
         </div>
