@@ -1,54 +1,66 @@
 <main class="w-screen">
-    <div id="inf-general" class="mx-4">
-        <div id="cabecera-consumo-general" class="bg-blue-500 w-full p-8 text-white font-bold text-3xl text-center">
-            <!-- Texto para la cabecera de consumo -->
-            Consumo General
+    <div id="inf-general" class="mx-4 flex justify-start">
+        <div class="w-1/2">
+            <table class="border-collapse border-spacing-0 bg-white shadow-lg p-4">
+                <!-- Cabecera de consumo general -->
+                <tr>
+                    <th colspan="2" id="cabecera-consumo-general" class="bg-blue-500 py-4 px-6 text-white font-bold text-3xl text-center border-b-2">
+                        Consumo General
+                    </th>
+                </tr>
+    
+                <!-- Fila de etiqueta de consumo general -->
+                <tr>
+                    <td colspan="2" id="etiqueta-consumo-general" class="py-4 px-6 text-5xl font-bold text-center border-b-2">
+                        {{ etiquetaGlobal || 'Etiqueta de Consumo' }}
+                    </td>
+                </tr>
+                
+                <!-- Sección de consumo general -->
+                <tr class="bg-blue-500">
+                    <td class="py-2 px-6 text-lg font-medium text-white border-b">Consumo Diario (Kw)</td>
+                    <td class="py-2 px-6 text-lg text-white border-b">{{ consumoDiario | number: '1.3-3' }}</td>
+                </tr>
+                <tr class="bg-blue-500">
+                    <td class="py-2 px-6 text-lg font-medium text-white border-b">Consumo Mensual (Kw)</td>
+                    <td class="py-2 px-6 text-lg text-white border-b">{{ consumoMensual | number: '1.3-3' }}</td>
+                </tr>
+                <tr class="bg-blue-500">
+                    <td class="py-2 px-6 text-lg font-medium text-white border-b">Consumo Anual (Kw)</td>
+                    <td class="py-2 px-6 text-lg text-white border-b">{{ consumoAnual | number: '1.3-3' }}</td>
+                </tr>
+    
+                <!-- Sección de potencia general -->
+                <tr class="bg-blue-400">
+                    <td class="py-2 px-6 text-lg font-medium text-white border-b">Potencia Diario (W)</td>
+                    <td class="py-2 px-6 text-lg text-white border-b">{{ potenciaDiaria | number: '1.3-3' }}</td>
+                </tr>
+                <tr class="bg-blue-400">
+                    <td class="py-2 px-6 text-lg font-medium text-white border-b">Potencia Mensual (W)</td>
+                    <td class="py-2 px-6 text-lg text-white border-b">{{ potenciaMensual | number: '1.3-3' }}</td>
+                </tr>
+                <tr class="bg-blue-400">
+                    <td class="py-2 px-6 text-lg font-medium text-white border-b">Potencia Anual (W)</td>
+                    <td class="py-2 px-6 text-lg text-white border-b">{{ potenciaAnual | number: '1.3-3' }}</td>
+                </tr>
+    
+                <!-- Sección de intensidad general -->
+                <tr class="bg-blue-300">
+                    <td class="py-2 px-6 text-lg font-medium text-gray-900 border-b">Intensidad Diario (A)</td>
+                    <td class="py-2 px-6 text-lg text-gray-900 border-b">{{ intensidadDiaria | number: '1.3-3' }}</td>
+                </tr>
+                <tr class="bg-blue-300">
+                    <td class="py-2 px-6 text-lg font-medium text-gray-900 border-b">Intensidad Mensual (A)</td>
+                    <td class="py-2 px-6 text-lg text-gray-900 border-b">{{ intensidadMensual | number: '1.3-3' }}</td>
+                </tr>
+                <tr class="bg-blue-300">
+                    <td class="py-2 px-6 text-lg font-medium text-gray-900">Intensidad Anual (A)</td>
+                    <td class="py-2 px-6 text-lg text-gray-900">{{ intensidadAnual | number: '1.3-3' }}</td>
+                </tr>
+            </table>
         </div>
-        <div id="info-consumo-general" class="flex flex-col items-center mt-4">
-            <div id="etiqueta-consumo-general" class="py-10 text-8xl font-bold text-center">
-                <!-- Texto para la etiqueta de consumo general -->
-                Etiqueta de Consumo
-            </div>
-            <div id="medición-consumos-general" class="py-3 flex justify-center space-x-4 mt-4">
-                <div id="consumo-diario-general" class="text-center">
-                    Consumo Diario (Kw): {{ consumoDiario | number: '1.3-3' }}
-                </div>
-                <div id="consumo-mensual-general" class="text-center">
-                    Consumo Mensual (Kw): {{ consumoMensual | number: '1.3-3' }}
-                </div>
-                <div id="consumo-anual-general" class="text-center">
-                    Consumo Anual (Kw): {{ consumoAnual | number: '1.3-3' }}
-                </div>                
-            </div>
-            <div id="medición-potencia-general" class="py-3 flex justify-center space-x-4">
-                <div id="potencia-diaria-general" class="text-center">
-                    Potencia Diario (Kw): {{ potenciaDiaria | number: '1.3-3' }}
-                </div>
-                <div id="potencia-mensual-general" class="text-center">
-                    Potencia Mensual (Kw): {{ potenciaMensual | number: '1.3-3' }}
-                </div>
-                <div id="potencia-anual-general" class="text-center">
-                    Potencia Anual (Kw): {{ potenciaAnual | number: '1.3-3' }}
-                </div>
-            </div>
-            <div id="medición-intensidad-general" class="py-3 flex justify-center space-x-4">
-                <div id="intensidad-diaria-general" class="text-center">
-                    Intensidad Diaria (Kw): {{ intensidadDiaria | number: '1.3-3' }}
-                </div>
-                <div id="potencia-mensual-general" class="text-center">
-                    Intensidad Mensual (Kw): {{ intensidadMensual | number: '1.3-3' }}
-                </div>
-                <div id="potencia-anual-general" class="text-center">
-                    Intensidad Anual (Kw): {{ intensidadAnual | number: '1.3-3' }}
-                </div>
-            </div>
-        </div>
-        <div id="add-dispositivo-cabecera" class="bg-gray-500 w-full p-4 text-white font-bold text-lg relative">
-            <span class="ml-4">Agregar Dispositivo</span>
-            <hr class="absolute bottom-0 left-4 right-0 border-t border-white mt-2">
-        </div>        
-        <div id="add-dispositivos-general"></div>
     </div>
+    
     <div id="sim-consumos">
         
     </div>
