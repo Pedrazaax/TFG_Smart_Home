@@ -27,7 +27,6 @@ export class SimuladorConsumosComponent {
     }
     ngOnInit() {
         this.get_dispositivosSimulador();
-        
     }
 
     get_dispositivosSimulador() {
@@ -35,6 +34,7 @@ export class SimuladorConsumosComponent {
             (response: any) => {
                 this.consumoDispositivos = response
                 this.get_consumosGlobales();
+                this.get_etiquetaGlobal();
                 console.log(this.consumoDispositivos)
             },
             (error: any) => {
@@ -66,11 +66,28 @@ export class SimuladorConsumosComponent {
         console.log("Potencia diaria: " + this.potenciaDiaria + " // Potencia mensual: " + this.potenciaMensual + " // Potencia anual. " + this.potenciaAnual)
     }
 
+    get_etiquetaGlobal() {
+        const etiquetaValores: { [key: string]: number } = { A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7 };
+        const etiquetas = this.consumoDispositivos.map(d => etiquetaValores[d.etiqueta]);
+    
+        const mediaNumerica = etiquetas.reduce((a, b) => a + b, 0) / etiquetas.length;
+        const valorRedondeado = Math.round(mediaNumerica);
+    
+        // Invertimos el objeto para obtener la etiqueta correspondiente al valor redondeado
+        const valorEtiquetas = Object.keys(etiquetaValores).find(key => etiquetaValores[key] === valorRedondeado);
+        this.etiquetaGlobal = valorEtiquetas || 'Error'; // En caso de error, asignamos 'G' por defecto
+      }
+
+      getEtiquetaClase(etiqueta: string): string {
+        return `etiqueta-${etiqueta}`;
+      }
+
     update_consumos() {
         this.consumoService.updateSimuladorDispositivos().subscribe(
             (response) => {
                 this.consumoDispositivos = response
                 this.get_consumosGlobales()
+                this.get_etiquetaGlobal()
             },
             (error: any) => {
                 this.toastr.error(error.error.detail, 'Error');

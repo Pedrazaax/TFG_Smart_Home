@@ -16,7 +16,7 @@
     
                 <!-- Fila de etiqueta de consumo general -->
                 <tr>
-                    <td colspan="2" id="etiqueta-consumo-general" class="py-4 px-6 text-5xl font-bold text-center border-b-2">
+                    <td colspan="2" id="etiqueta-consumo-general" [ngClass]="getEtiquetaClase(etiquetaGlobal)" class="py-4 px-6 text-5xl font-bold text-center border-b-2">
                         {{ etiquetaGlobal || 'Etiqueta de Consumo' }}
                     </td>
                 </tr>
