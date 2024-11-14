@@ -65,4 +65,17 @@ export class SimuladorConsumosComponent {
         console.log("Intensidad diaria: " + this.intensidadDiaria + " // Intensidad mensual: " + this.intensidadMensual + " // Intensidad anual. " + this.intensidadAnual)
         console.log("Potencia diaria: " + this.potenciaDiaria + " // Potencia mensual: " + this.potenciaMensual + " // Potencia anual. " + this.potenciaAnual)
     }
+
+    update_consumos() {
+        this.consumoService.updateSimuladorDispositivos().subscribe(
+            (response) => {
+                this.consumoDispositivos = response
+                this.get_consumosGlobales()
+            },
+            (error: any) => {
+                this.toastr.error(error.error.detail, 'Error');
+                console.log(error);
+              }
+        )
+    }
 }

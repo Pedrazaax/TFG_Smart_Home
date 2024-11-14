@@ -47,4 +47,10 @@ export class ConsumoService {
     return this.httpClient.get<SimuladorDispositivo[]>(url, {headers: this.header.getHeaders()})
   }
 
+  updateSimuladorDispositivos() {
+    const url = `${this.config.apiUrl}/localMeasures/updateMeasurementsConsumption`;
+
+    return this.httpClient.get<SimuladorDispositivo[]>(url, {headers: this.header.getHeaders()})
+  }
+
 }
