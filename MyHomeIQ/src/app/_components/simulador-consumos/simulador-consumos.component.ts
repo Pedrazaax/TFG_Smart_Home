@@ -21,6 +21,7 @@ export class SimuladorConsumosComponent {
     potenciaMensual!: number
     potenciaAnual!: number
     etiquetaGlobal!: string
+    dispositivoSeleccionado!: SimuladorDispositivo;
 
     constructor(private consumoService: ConsumoService, private toastr: ToastrService) {
 
@@ -94,5 +95,12 @@ export class SimuladorConsumosComponent {
                 console.log(error);
               }
         )
+    }
+    addDispositivo() {
+        if (this.dispositivoSeleccionado) {
+          console.log('Dispositivo seleccionado:', this.dispositivoSeleccionado.device);
+        } else {
+          console.log('No se ha seleccionado ningún dispositivo');
+        }
     }
 }
