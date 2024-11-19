@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { SimuladorDispositivo } from 'src/app/_models/prueba-consumo';
 import { ConsumoService } from 'src/app/_services/consumo.service';
+import { NvdapiService } from 'src/app/_services/nvdapi.service';
 
 @Component({
     selector: 'app-simulador-consumos',
@@ -33,12 +34,17 @@ export class SimuladorConsumosComponent {
     simuladorPotenciaMensual!: number;
     simuladorPotenciaAnual!: number;
 
+    responseNVD!: any;
+    vulnerabilities!: any;
 
-    constructor(private consumoService: ConsumoService, private toastr: ToastrService) {
+
+
+    constructor(private consumoService: ConsumoService, private toastr: ToastrService, private nvdapiService: NvdapiService) {
 
     }
     ngOnInit() {
         this.get_dispositivosSimulador();
+        this.getSecurity();
     }
 
     get_dispositivosSimulador() {
@@ -173,5 +179,23 @@ export class SimuladorConsumosComponent {
         this.simuladorPotenciaAnual = this.simuladorPotenciaMensual * 12;
     
         this.toastr.success('Cálculo basado en simulador realizado con éxito.');
-    }    
+    }
+
+    getSecurity() {
+        // climate.tuya_thermostat 
+        // light.smart_bulb_tuya_1
+        console.log("Buscando vulnerabilidades")
+        this.nvdapiService.searchVulnerabilities('light').subscribe(
+            (respuesta : any) => {
+              console.log(respuesta);
+              this.responseNVD = respuesta;
+              this.vulnerabilities = this.responseNVD.vulnerabilities;
+              console.log(this.vulnerabilities);
+            },
+            (error) => {
+                this.toastr.error('Error al buscar vulnerabilidades', 'Error');
+            }
+        );
+
+    }
 }
