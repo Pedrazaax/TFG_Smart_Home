@@ -22,6 +22,17 @@ export class SimuladorConsumosComponent {
     potenciaAnual!: number
     etiquetaGlobal!: string
     dispositivoSeleccionado!: SimuladorDispositivo;
+    dispositivosSeleccionados: { device: string; estados: string[]; estado: string; duracion: number }[] = [];
+    simuladorConsumoDiario!: number;
+    simuladorConsumoMensual!: number;
+    simuladorConsumoAnual!: number;
+    simuladorIntensidadDiaria!: number;
+    simuladorIntensidadMensual!: number;
+    simuladorIntensidadAnual!: number;
+    simuladorPotenciaDiaria!: number;
+    simuladorPotenciaMensual!: number;
+    simuladorPotenciaAnual!: number;
+
 
     constructor(private consumoService: ConsumoService, private toastr: ToastrService) {
 
@@ -53,13 +64,13 @@ export class SimuladorConsumosComponent {
             intensidadGlobal += parseFloat(dispositivo.intensidadMedia)
             potenciaGlobal += parseFloat(dispositivo.potenciaMedia)
         }
-        this.consumoDiario = consumoGlogal;
+        this.consumoDiario = consumoGlogal * 24
         this.consumoMensual = this.consumoDiario * 31
         this.consumoAnual = this.consumoMensual * 12
-        this.intensidadDiaria = intensidadGlobal;
+        this.intensidadDiaria = intensidadGlobal * 24
         this.intensidadMensual = this.intensidadDiaria * 31
         this.intensidadAnual = this.intensidadMensual * 12
-        this.potenciaDiaria = potenciaGlobal
+        this.potenciaDiaria = potenciaGlobal * 24
         this.potenciaMensual = this.potenciaDiaria * 31
         this.potenciaAnual = this.potenciaMensual * 12
         console.log("Consumo diario: " + this.consumoDiario + " // Consumo mensual: " + this.consumoMensual + " // Consumo anual. " + this.consumoAnual)
@@ -96,11 +107,71 @@ export class SimuladorConsumosComponent {
               }
         )
     }
+
     addDispositivo() {
         if (this.dispositivoSeleccionado) {
-          console.log('Dispositivo seleccionado:', this.dispositivoSeleccionado.device);
+            const estado = Array.isArray(this.dispositivoSeleccionado.estado)
+                ? this.dispositivoSeleccionado.estado
+                : [this.dispositivoSeleccionado.estado]; // Convertir a array si es string
+    
+            this.dispositivosSeleccionados.push({
+                device: this.dispositivoSeleccionado.device,
+                estados: estado, // Aseguramos que siempre sea un array
+                estado: estado[0], // Estado inicial seleccionado
+                duracion: 0 // El usuario lo llenará manualmente
+            });
+    
+            this.dispositivoSeleccionado = undefined!; // Limpiamos la selección actual
         } else {
-          console.log('No se ha seleccionado ningún dispositivo');
+            this.toastr.warning('Por favor, selecciona un dispositivo antes de añadirlo.');
         }
+    }    
+
+    limpiarDispositivos() {
+        this.dispositivosSeleccionados = [];
     }
+
+    calcularConsumosSimulador() {
+        if (this.dispositivosSeleccionados.length === 0) {
+            this.toastr.warning('No hay dispositivos añadidos para calcular.');
+            return;
+        }
+    
+        // Variables para acumulación de consumos
+        let consumoTotal = 0;
+        let intensidadTotal = 0;
+        let potenciaTotal = 0;
+    
+        // Iterar sobre los dispositivos seleccionados
+        this.dispositivosSeleccionados.forEach((dispositivo) => {
+            const duracion = dispositivo.duracion || 0; // Horas al día
+            const dispositivoData = this.consumoDispositivos.find(d => d.device === dispositivo.device);
+    
+            if (dispositivoData) {
+                const consumoMedio = parseFloat(dispositivoData.consumoMedio || '0'); // Consumo medio por hora
+                const intensidadMedia = parseFloat(dispositivoData.intensidadMedia || '0'); // Intensidad media por hora
+                const potenciaMedia = parseFloat(dispositivoData.potenciaMedia || '0'); // Potencia media por hora
+    
+                // Acumular los valores multiplicados por la duración (horas/día)
+                consumoTotal += consumoMedio * duracion;
+                intensidadTotal += intensidadMedia * duracion;
+                potenciaTotal += potenciaMedia * duracion;
+            }
+        });
+    
+        // Calcular valores diarios, mensuales y anuales
+        this.simuladorConsumoDiario = consumoTotal;
+        this.simuladorConsumoMensual = consumoTotal * 31;
+        this.simuladorConsumoAnual = this.simuladorConsumoMensual * 12;
+    
+        this.simuladorIntensidadDiaria = intensidadTotal;
+        this.simuladorIntensidadMensual = intensidadTotal * 31;
+        this.simuladorIntensidadAnual = this.simuladorIntensidadMensual * 12;
+    
+        this.simuladorPotenciaDiaria = potenciaTotal;
+        this.simuladorPotenciaMensual = potenciaTotal * 31;
+        this.simuladorPotenciaAnual = this.simuladorPotenciaMensual * 12;
+    
+        this.toastr.success('Cálculo basado en simulador realizado con éxito.');
+    }    
 }

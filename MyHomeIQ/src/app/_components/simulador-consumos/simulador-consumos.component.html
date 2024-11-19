@@ -83,7 +83,96 @@
                     class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Añadir dispositivo
             </button>
+
+             <!-- Tabla de dispositivos añadidos -->
+            <table *ngIf="dispositivosSeleccionados.length > 0" class="mt-6 border-collapse border border-gray-300 w-3/4">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border border-gray-300 px-4 py-2 text-left">Dispositivo</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Estado</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Duración (horas/día)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let dispositivo of dispositivosSeleccionados">
+                        <td class="border border-gray-300 px-4 py-2">{{ dispositivo.device }}</td>
+                    <td class="border border-gray-300 px-4 py-2">
+                            <select [(ngModel)]="dispositivo.estado" class="border border-gray-300 p-2 rounded-md">
+                                <option *ngFor="let estado of dispositivo.estados">{{ estado }}</option>
+                            </select>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <input type="number" [(ngModel)]="dispositivo.duracion" class="border border-gray-300 p-2 rounded-md w-full" min="0" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+             <!-- Botones Limpiar y Calcular -->
+            <div *ngIf="dispositivosSeleccionados.length > 0" class="mt-4 flex space-x-4">
+                <button (click)="limpiarDispositivos()" 
+                        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                    Limpiar dispositivos
+                </button>
+                <button (click)="calcularConsumosSimulador()" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                    Calcular consumo
+                </button>
             </div>
+
+            <table *ngIf="simuladorConsumoDiario" class="mt-6 border-collapse border border-gray-300 w-3/4">
+                <thead>
+                    <tr class="bg-green-500">
+                        <th colspan="2" class="py-4 px-6 text-white font-bold text-3xl text-center border-b">
+                            Resultados del Simulador
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Consumo -->
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Consumo Diario (Kw)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorConsumoDiario | number: '1.3-3' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Consumo Mensual (Kw)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorConsumoMensual | number: '1.3-3' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Consumo Anual (Kw)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorConsumoAnual | number: '1.3-3' }}</td>
+                    </tr>
+                    
+                    <!-- Potencia -->
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Potencia Diaria (W)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorPotenciaDiaria | number: '1.3-3' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Potencia Mensual (W)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorPotenciaMensual | number: '1.3-3' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Potencia Anual (W)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorPotenciaAnual | number: '1.3-3' }}</td>
+                    </tr>
+            
+                    <!-- Intensidad -->
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Intensidad Diaria (A)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorIntensidadDiaria | number: '1.3-3' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Intensidad Mensual (A)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorIntensidadMensual | number: '1.3-3' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2 font-medium">Intensidad Anual (A)</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ simuladorIntensidadAnual | number: '1.3-3' }}</td>
+                    </tr>
+                </tbody>
+            </table>  
+
+        </div>          
         </div>
     </div>
 </main>
