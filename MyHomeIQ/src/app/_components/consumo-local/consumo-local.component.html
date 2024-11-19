@@ -467,6 +467,8 @@
             <th class="border border-gray-300 px-4 py-2">Categoría:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.category}}</td>
           </tr>
+
+          <!--
           <tr>
             <th class="border border-gray-300 px-4 py-2">Hub:</th>
             <td class="border border-gray-300 px-4 py-2">
@@ -488,6 +490,8 @@
               </table>
             </td>
           </tr>
+          -->
+          
 
           <tr>
             <th class="border border-gray-300 px-4 py-2">Tipo de prueba:</th>
@@ -503,7 +507,7 @@
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Fecha:</th>
-            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.dateTime}}</td>
+            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.dateTime | date:'dd/MM/yyyy HH:mm'}}</td>
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Consumo medio (kWh):</th>
@@ -522,9 +526,11 @@
             <td class="border border-gray-300 px-4 py-2">{{voltajeMedioTotal  | number:'1.2-4'}}</td>
           </tr>
           <tr>
-            <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
+            <th class="border border-gray-300 px-4 py-2">Tiempo total (s):</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.timeTotal}}</td>
           </tr>
+
+          <!--
           <tr>
             <th class="border border-gray-300 px-4 py-2">Intervalos:</th>
             <td class="border border-gray-300 px-4 py-2">
@@ -548,6 +554,8 @@
               </table>
             </td>
           </tr>
+          -->
+          
         </table>
       </div>
 
@@ -582,7 +590,7 @@
             <td class="border border-gray-300 px-4 py-2 text-red-400">Selecciona una fila de prueba de consumo</td>
           </tr>
           <tr>
-            <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
+            <th class="border border-gray-300 px-4 py-2">Tiempo total (s):</th>
             <td class="border border-gray-300 px-4 py-2 text-red-400">Selecciona una fila de prueba de consumo</td>
           </tr>
         </table>

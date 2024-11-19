@@ -617,6 +617,7 @@ export class ConsumoLocalComponent {
 
   selectedTPrueba(tPrueba: any, indice: number) {
     this.selected_TPrueba = tPrueba;
+    console.log(this.selected_TPrueba);
     this.selectedRow = indice;
     this.createGraficPrueba();
   }
