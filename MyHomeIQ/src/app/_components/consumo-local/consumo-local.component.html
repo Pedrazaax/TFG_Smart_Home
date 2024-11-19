@@ -466,11 +466,29 @@
           <tr>
             <th class="border border-gray-300 px-4 py-2">Categoría:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.category}}</td>
-          </tr> 
+          </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Hub:</th>
-            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub}}</td>
+            <td class="border border-gray-300 px-4 py-2">
+            <table class="border-collapse">
+                <tr>
+                  <th class="border border-gray-300 px-4 py-2">hub</th>
+                  <th class="border border-gray-300 px-4 py-2">pulgadas</th>
+                  <th class="border border-gray-300 px-4 py-2">rel_alto</th>
+                  <th class="border border-gray-300 px-4 py-2">rel_ancho</th>
+                  <th class="border border-gray-300 px-4 py-2">t_pantalla</th>
+                </tr>
+                <tr>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.be}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.pulgadas}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.rel_alto}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.rel_ancho}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.t_pantalla}}</td>
+                </tr>
+              </table>
+            </td>
           </tr>
+
           <tr>
             <th class="border border-gray-300 px-4 py-2">Tipo de prueba:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.tipoPrueba.name}}</td>

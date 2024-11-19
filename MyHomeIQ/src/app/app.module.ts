@@ -29,6 +29,7 @@ import { FormAPIComponent } from './_components/form-api/form-api.component';
 import { AlarmComponent } from './_components/alarm/alarm.component';
 import { SensorComponent } from './_components/sensor/sensor.component';
 import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local.component';
+import { HistoryLogComponent } from './_components/history-log/history-log.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local
     AlarmComponent,
     SensorComponent,
     ConsumoLocalComponent,
+    HistoryLogComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,7 @@ import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    ColorPickerModule,
+    ColorPickerModule
   ],
   providers: [AppConfig],
   bootstrap: [AppComponent]

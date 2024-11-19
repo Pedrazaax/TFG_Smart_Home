@@ -197,14 +197,13 @@ export class ConsumoLocalComponent {
   }
 
   // Info del HUB
-// Info del HUB
   onHubChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const beValue = selectElement.value === 'True';
     this.formPConsumo.get('hub.be')?.setValue(beValue);
     this.hubDataVisible = beValue;
   }
-  
+
   private getIntensidadMediaTotal() {
     this.intensidadMediaTotal = 0;
     this.intensidadMediaDeIntervalos = [];
