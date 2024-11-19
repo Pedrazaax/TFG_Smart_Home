@@ -1,0 +1,94 @@
+<!-- src/app/components/history-log/history-log.component.html -->
+<div class="history-log container mx-auto p-4">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Cambios de Estado</h2>
+
+  <!-- Selectores de fecha y hora -->
+  <div class="mb-6">
+    <label for="startDate" class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
+    <input type="datetime-local" id="startDate" [(ngModel)]="startDate" (change)="handleDateChange()"
+      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+  </div>
+  <div class="mb-6">
+    <label for="endDate" class="block text-sm font-medium text-gray-700">Fecha de fin</label>
+    <input type="datetime-local" id="endDate" [(ngModel)]="endDate" (change)="handleDateChange()"
+      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+  </div>
+
+  <!-- Tabla de Cambios de Estado 
+  <div class="mb-8">
+    <h3 class="text-xl font-medium text-gray-700 mb-2">Cambios de Estado</h3>
+    <table class="min-w-full border border-gray-300 rounded-md">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="px-4 py-2 border-b border-gray-300 text-left text-sm font-medium text-gray-600">Entidad</th>
+          <th class="px-4 py-2 border-b border-gray-300 text-left text-sm font-medium text-gray-600">Estado</th>
+          <th class="px-4 py-2 border-b border-gray-300 text-left text-sm font-medium text-gray-600">Último Cambio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of historyLogs" class="odd:bg-white even:bg-gray-50">
+          <td class="px-4 py-2 border-b border-gray-200 text-sm text-gray-800">{{ log.entity_id }}</td>
+          <td class="px-4 py-2 border-b border-gray-200 text-sm text-gray-800">{{ log.state }}</td>
+          <td class="px-4 py-2 border-b border-gray-200 text-sm text-gray-800">{{ log.last_changed | date:'short' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+-->
+
+  <!-- Tabla de Entradas del Logbook -->
+  <div class="mb-8">
+    <h3 class="text-xl font-medium text-gray-700 mb-4">Entradas del Logbook</h3>
+
+    <!-- Filtro por Nombre -->
+    <div class="mb-4">
+      <label for="nameFilter" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Dispositivo</label>
+      <select id="nameFilter" [(ngModel)]="selectedNameFilter" (change)="filterLogbookEntries()"
+        class="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        <option value="">Todos</option>
+        <option *ngFor="let name of availableNames" [value]="name">
+          {{ name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="overflow-y-auto max-h-96">
+      <table class="min-w-full border border-gray-300 rounded-md shadow-sm">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="px-4 py-2 border-b border-gray-300 text-left text-sm font-medium text-gray-600">
+              Dispositivo
+            </th>
+            <th class="px-4 py-2 border-b border-gray-300 text-left text-sm font-medium text-gray-600">
+              Estado
+            </th>
+            <th class="px-4 py-2 border-b border-gray-300 text-left text-sm font-medium text-gray-600">
+              Última Actualización
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of filteredLogbookEntries" class="odd:bg-white even:bg-gray-50">
+            <td class="px-4 py-2 border-b border-gray-200 text-sm text-gray-800">
+              {{ entry.name || entry.entity_id }}
+            </td>
+            <td class="px-4 py-2 border-b border-gray-200 text-sm text-gray-800 capitalize">
+              {{ entry.state }}
+            </td>
+            <td class="px-4 py-2 border-b border-gray-200 text-sm text-gray-800">
+              {{ entry.when | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <div id="canvas-container-entries-under"></div>
+      <div id="canvas-container-entries-over"></div>
+    </div>
+    
+  </div>
+  
+</div>

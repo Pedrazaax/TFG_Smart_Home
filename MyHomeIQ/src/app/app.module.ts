@@ -30,6 +30,7 @@ import { AlarmComponent } from './_components/alarm/alarm.component';
 import { SensorComponent } from './_components/sensor/sensor.component';
 import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local.component';
 import { SimuladorConsumosComponent } from './_components/simulador-consumos/simulador-consumos.component';
+import { HistoryLogComponent } from './_components/history-log/history-log.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { SimuladorConsumosComponent } from './_components/simulador-consumos/sim
     SensorComponent,
     ConsumoLocalComponent,
     SimuladorConsumosComponent,
+    HistoryLogComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,7 +66,7 @@ import { SimuladorConsumosComponent } from './_components/simulador-consumos/sim
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
-    ColorPickerModule,
+    ColorPickerModule
   ],
   providers: [AppConfig],
   bootstrap: [AppComponent]

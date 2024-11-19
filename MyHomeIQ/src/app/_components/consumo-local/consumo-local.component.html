@@ -61,6 +61,52 @@
               </select>
             </div>
 
+            <div class="mb-4" formGroupName="hub">
+              <label for="be" class="block text-gray-700 font-bold mb-2">Hub:</label>
+              <select name="be" id="be"
+                class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                formControlName="be" (change)="onHubChange($event)">
+                <option value="True">Si</option>
+                <option selected value="False">No</option>
+              </select>
+            </div>
+
+            <!--
+            Hub data:
+            "hub": {
+              "be": true,
+              "pulgadas": 7,
+              "rel_ancho": 16,
+              "rel_alto": 9,
+              "t_pantalla": "LCD"
+            }
+            -->
+
+            <div *ngIf="hubDataVisible" class="hub-data-container border border-gray-300 rounded p-4 mt-4">
+              <div formGroupName="hub">
+                <div class="mb-4">
+                  <label for="pulgadas" class="block text-gray-700 font-bold mb-2"><strong>pulgadas:</strong></label>
+                  <input id="pulgadas" formControlName="pulgadas" type="number"
+                    class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500" />
+                </div>
+                <div class="mb-4">
+                  <label for="rel_ancho" class="block text-gray-700 font-bold mb-2"><strong>rel_ancho:</strong></label>
+                  <input id="rel_ancho" formControlName="rel_ancho" type="number"
+                    class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500" />
+                </div>
+                <div class="mb-4">
+                  <label for="rel_alto" class="block text-gray-700 font-bold mb-2"><strong>rel_alto:</strong></label>
+                  <input id="rel_alto" formControlName="rel_alto" type="number"
+                    class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500" />
+                </div>
+                <div class="mb-4">
+                  <label for="t_pantalla" class="block text-gray-700 font-bold mb-2"><strong>t_pantalla:</strong></label>
+                  <input id="t_pantalla" formControlName="t_pantalla" type="text"
+                    class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500" />
+                </div>
+              </div>
+            </div>
+
             <div class="mb-4">
               <label for="device" class="block text-gray-700 font-bold mb-2">Elige el dispositivo: </label>
               <select name="device" id="device"
@@ -421,6 +467,32 @@
             <th class="border border-gray-300 px-4 py-2">Categoría:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.category}}</td>
           </tr>
+
+          <!--
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Hub:</th>
+            <td class="border border-gray-300 px-4 py-2">
+            <table class="border-collapse">
+                <tr>
+                  <th class="border border-gray-300 px-4 py-2">hub</th>
+                  <th class="border border-gray-300 px-4 py-2">pulgadas</th>
+                  <th class="border border-gray-300 px-4 py-2">rel_alto</th>
+                  <th class="border border-gray-300 px-4 py-2">rel_ancho</th>
+                  <th class="border border-gray-300 px-4 py-2">t_pantalla</th>
+                </tr>
+                <tr>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.be}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.pulgadas}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.rel_alto}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.rel_ancho}}</td>
+                  <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.hub.t_pantalla}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          -->
+          
+
           <tr>
             <th class="border border-gray-300 px-4 py-2">Tipo de prueba:</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.tipoPrueba.name}}</td>
@@ -435,7 +507,7 @@
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Fecha:</th>
-            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.dateTime}}</td>
+            <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.dateTime | date:'dd/MM/yyyy HH:mm'}}</td>
           </tr>
           <tr>
             <th class="border border-gray-300 px-4 py-2">Consumo medio (kWh):</th>
@@ -454,9 +526,11 @@
             <td class="border border-gray-300 px-4 py-2">{{voltajeMedioTotal  | number:'1.2-4'}}</td>
           </tr>
           <tr>
-            <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
+            <th class="border border-gray-300 px-4 py-2">Tiempo total (s):</th>
             <td class="border border-gray-300 px-4 py-2">{{selected_PConsumo.timeTotal}}</td>
           </tr>
+
+          <!--
           <tr>
             <th class="border border-gray-300 px-4 py-2">Intervalos:</th>
             <td class="border border-gray-300 px-4 py-2">
@@ -480,6 +554,8 @@
               </table>
             </td>
           </tr>
+          -->
+          
         </table>
       </div>
 
@@ -514,7 +590,7 @@
             <td class="border border-gray-300 px-4 py-2 text-red-400">Selecciona una fila de prueba de consumo</td>
           </tr>
           <tr>
-            <th class="border border-gray-300 px-4 py-2">Tiempo total:</th>
+            <th class="border border-gray-300 px-4 py-2">Tiempo total (s):</th>
             <td class="border border-gray-300 px-4 py-2 text-red-400">Selecciona una fila de prueba de consumo</td>
           </tr>
         </table>

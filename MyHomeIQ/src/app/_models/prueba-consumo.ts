@@ -76,18 +76,26 @@ export class PruebaConsumoLocal {
     name: string;
     category: string;
     device: string;
+    hub: {
+        be: boolean;
+        pulgadas: number;
+        rel_ancho: number;
+        rel_alto: number;
+        t_pantalla: string;
+    };
     tipoPrueba: TipoPruebaLocal;
     socket: string;
     timeTotal: number;
     consumoMedio: number;
     dateTime: string;
 
-    constructor(userName: string, name: string, category: string, device: string,
+    constructor(userName: string, name: string, category: string, hub: { be: boolean; pulgadas: number; rel_ancho: number; rel_alto: number; t_pantalla: string; }, device: string,
          tipoPrueba: TipoPruebaLocal, socket: string, timeTotal: number,
           consumoMedio: number, dateTime: string){
         this.userName = userName;
         this.name = name;
         this.category = category;
+        this.hub = hub;
         this.device = device;
         this.tipoPrueba = tipoPrueba;
         this.socket = socket;
