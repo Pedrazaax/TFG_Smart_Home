@@ -1,0 +1,11 @@
+{
+    "/api/nvd": {
+      "target": "https://services.nvd.nist.gov",
+      "secure": true,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api/nvd": ""
+      }
+    }
+  }
+  

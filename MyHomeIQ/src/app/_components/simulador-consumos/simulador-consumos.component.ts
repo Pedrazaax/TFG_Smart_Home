@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { catchError, retry, throwError, forkJoin } from 'rxjs';
 import { SimuladorDispositivo } from 'src/app/_models/prueba-consumo';
 import { ConsumoService } from 'src/app/_services/consumo.service';
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
@@ -22,6 +23,7 @@ export class SimuladorConsumosComponent {
     potenciaMensual!: number
     potenciaAnual!: number
     etiquetaGlobal!: string
+    etiquetaSeguridad!: string;
     dispositivoSeleccionado!: SimuladorDispositivo;
     dispositivosSeleccionados: { device: string; estados: string[]; estado: string; duracion: number }[] = [];
     simuladorConsumoDiario!: number;
@@ -37,14 +39,21 @@ export class SimuladorConsumosComponent {
     responseNVD!: any;
     vulnerabilities!: any;
 
-
-
     constructor(private consumoService: ConsumoService, private toastr: ToastrService, private nvdapiService: NvdapiService) {
 
     }
     ngOnInit() {
         this.get_dispositivosSimulador();
-        this.getSecurity();
+        const storedResumenSeguridad = localStorage.getItem('resumenSeguridad');
+        const storedEtiquetaSeguridad = localStorage.getItem('etiquetaSeguridad');
+
+        if (storedResumenSeguridad) {
+            this.resumenSeguridad = JSON.parse(storedResumenSeguridad);
+        }
+
+        if (storedEtiquetaSeguridad) {
+            this.etiquetaSeguridad = storedEtiquetaSeguridad;
+        }
     }
 
     get_dispositivosSimulador() {
@@ -53,7 +62,7 @@ export class SimuladorConsumosComponent {
                 this.consumoDispositivos = response
                 this.get_consumosGlobales();
                 this.get_etiquetaGlobal();
-                console.log(this.consumoDispositivos)
+                console.log("Dispositivos: ", this.consumoDispositivos)
             },
             (error: any) => {
                 this.toastr.error(error.error.detail, "Error")
@@ -182,20 +191,98 @@ export class SimuladorConsumosComponent {
     }
 
     getSecurity() {
-        // climate.tuya_thermostat 
-        // light.smart_bulb_tuya_1
-        console.log("Buscando vulnerabilidades")
-        this.nvdapiService.searchVulnerabilities('light').subscribe(
-            (respuesta : any) => {
-              console.log(respuesta);
-              this.responseNVD = respuesta;
-              this.vulnerabilities = this.responseNVD.vulnerabilities;
-              console.log(this.vulnerabilities);
+        console.log("Buscando vulnerabilidades de dispositivos...");
+
+        const criticidadValores: { [key: string]: number } = { Critical: 5, High: 4, Medium: 3, Low: 2, None: 1 };
+        let criticidadTotal = 0;
+
+        const solicitudes = this.consumoDispositivos.map((dispositivo) => {
+            const categoriaDispositivo = dispositivo.device.split('.')[0];
+            console.log(`Buscando vulnerabilidades para ${categoriaDispositivo}...`);
+            return this.nvdapiService.searchVulnerabilities(categoriaDispositivo).pipe(
+                retry(3), // Reintentar hasta 3 veces en caso de error
+                catchError((error: any) => {
+                    console.error(`Error al buscar vulnerabilidades para ${categoriaDispositivo}`, error);
+                    this.toastr.error(`Error al buscar vulnerabilidades para ${categoriaDispositivo}`, "Error");
+                    return throwError(() => error); // Propagar el error para que forkJoin lo maneje
+                })
+            );
+        });
+
+        forkJoin(solicitudes).subscribe(
+            (respuestas: any[]) => {
+                const resumenVulnerabilidades: { categoria: string; totalVulnerabilidades: number; criticidadAlta: number; criticidadMedia: number }[] = [];
+
+                respuestas.forEach((respuesta, index) => {
+                    const categoriaDispositivo = this.consumoDispositivos[index].device.split('.')[0];
+                    const vulnerabilidades = Array.isArray(respuesta.vulnerabilities) ? respuesta.vulnerabilities : [];
+
+                    let criticidadAlta = 0;
+                    let criticidadMedia = 0;
+
+                    if (respuesta.totalResults > 0) {
+                        vulnerabilidades.forEach((vuln: any) => {
+                            const criticidad = vuln.cve.metrics?.cvssMetricV2?.[0]?.baseSeverity?.toUpperCase() ||
+                                vuln.cve.metrics?.cvssMetricV31?.[0]?.cvssData?.baseSeverity?.toUpperCase() ||
+                                'None';
+
+                            console.log("Vulnerabilidad: ", vuln);
+                            console.log("Criticidad: ", vuln.cve.metrics?.cvssMetricV2?.[0]?.baseSeverity || vuln.cve.metrics?.cvssMetricV31?.[0]?.cvssData?.baseSeverity);
+
+                            if (criticidad === 'HIGH') {
+                                criticidadAlta++;
+                            }
+
+                            if (criticidad === 'MEDIUM' || criticidad === 'LOW') {
+                                criticidadMedia++;
+                            }
+
+                            // Sumar la criticidad según el nivel
+                            criticidadTotal += criticidadValores[criticidad] || 1;
+                        });
+                    }
+
+                    // Añadir al resumen
+                    resumenVulnerabilidades.push({
+                        categoria: categoriaDispositivo,
+                        totalVulnerabilidades: vulnerabilidades.length,
+                        criticidadAlta,
+                        criticidadMedia
+                    });
+                });
+
+                // Calcular la etiqueta global
+                const criticidadMedia = criticidadTotal / this.consumoDispositivos.length;
+                this.etiquetaSeguridad = this.obtenerEtiquetaSeguridad(criticidadMedia);
+                // Filtrar categorías duplicadas
+                this.resumenSeguridad = resumenVulnerabilidades.filter((v, index, self) =>
+                    index === self.findIndex((t) => t.categoria === v.categoria)
+                );
+
+                // Guardar los datos en localStorage
+                localStorage.setItem('resumenSeguridad', JSON.stringify(this.resumenSeguridad));
+                localStorage.setItem('etiquetaSeguridad', this.etiquetaSeguridad);
+
+                console.log("Etiqueta de seguridad global:", this.etiquetaSeguridad);
             },
             (error) => {
-                this.toastr.error('Error al buscar vulnerabilidades', 'Error');
+                console.error("Error al procesar las solicitudes de vulnerabilidades", error);
+                this.toastr.error("Error al procesar las vulnerabilidades", "Error");
             }
         );
-
     }
+    
+    // Nueva variable para almacenar el resumen de seguridad
+    resumenSeguridad: { categoria: string; totalVulnerabilidades: number; criticidadAlta: number, criticidadMedia: number }[] = [];
+    
+    
+    // Método para calcular la etiqueta de seguridad
+    obtenerEtiquetaSeguridad(criticidadMedia: number): string {
+        if (criticidadMedia >= 4.5) return "Critical";
+        if (criticidadMedia >= 3.5) return "High";
+        if (criticidadMedia >= 2.5) return "Medium";
+        if (criticidadMedia >= 1.5) return "Low";
+        return "None";
+    }    
+    
 }
