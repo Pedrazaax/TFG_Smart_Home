@@ -1,16 +1,8 @@
 <main class="w-screen bg-gray-100 py-8">
-    <!-- Botón Actualizar -->
-    <div id="actualizar-datos" class="flex justify-center my-5">
-        <button (click)="update_consumos()" class="bg-blue-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-600">
-            Actualizar datos de consumos
-        </button>
-    </div>
-
-    <div id="inf-general" class="max-w-screen-lg mx-auto px-4 my-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Tabla de Consumo General -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden w-full">
+    <!-- Sección Superior: Consumo General -->
+    <div class="max-w-screen-lg mx-auto p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <table class="w-full text-left">
-                <!-- Cabecera -->
                 <thead>
                     <tr>
                         <th colspan="2" class="bg-blue-500 py-4 text-white font-bold text-2xl text-center">
@@ -19,14 +11,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Etiqueta -->
                     <tr>
-                        <td colspan="2" [ngClass]="getEtiquetaClase(etiquetaGlobal)" class="py-6 text-center text-4xl font-bold border-b">
+                        <td colspan="2" [ngClass]="getEtiquetaClase(etiquetaGlobal)"
+                            class="py-6 text-center text-4xl font-bold border-b">
                             {{ etiquetaGlobal || 'Etiqueta de Consumo' }}
                         </td>
                     </tr>
-    
-                    <!-- Consumos -->
                     <tr class="bg-blue-100">
                         <td class="py-3 px-4 font-medium">Consumo Diario (Kw)</td>
                         <td class="py-3 px-4 text-right">{{ consumoDiario | number: '1.3-3' }}</td>
@@ -39,8 +29,6 @@
                         <td class="py-3 px-4 font-medium">Consumo Anual (Kw)</td>
                         <td class="py-3 px-4 text-right">{{ consumoAnual | number: '1.3-3' }}</td>
                     </tr>
-    
-                    <!-- Potencia -->
                     <tr class="bg-blue-50">
                         <td class="py-3 px-4 font-medium">Potencia Diaria (W)</td>
                         <td class="py-3 px-4 text-right">{{ potenciaDiaria | number: '1.3-3' }}</td>
@@ -53,8 +41,6 @@
                         <td class="py-3 px-4 font-medium">Potencia Anual (W)</td>
                         <td class="py-3 px-4 text-right">{{ potenciaAnual | number: '1.3-3' }}</td>
                     </tr>
-    
-                    <!-- Intensidad -->
                     <tr class="bg-blue-100">
                         <td class="py-3 px-4 font-medium">Intensidad Diaria (A)</td>
                         <td class="py-3 px-4 text-right">{{ intensidadDiaria | number: '1.3-3' }}</td>
@@ -70,60 +56,11 @@
                 </tbody>
             </table>
         </div>
-    
-        <!-- Tabla de Seguridad -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden w-full">
-            <table class="w-full text-left">
-                <!-- Cabecera -->
-                <thead>
-                    <tr>
-                        <th colspan="4" class="bg-red-500 py-4 text-white font-bold text-2xl text-center">
-                            Seguridad de la Casa
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Etiqueta -->
-                    <tr>
-                        <td colspan="4" class="py-6 text-center text-4xl font-bold border-b">
-                            {{ etiquetaSeguridad || 'Etiqueta de Seguridad' }}
-                        </td>
-                    </tr>
-    
-                    <!-- Vulnerabilidades -->
-                    <tr class="bg-gray-100">
-                        <th class="py-3 px-4">Categoría</th>
-                        <th class="py-3 px-4 text-center">Total</th>
-                        <th class="py-3 px-4 text-center">Altas</th>
-                        <th class="py-3 px-4 text-center">Medias/Bajas</th>
-                    </tr>
-                    <tr *ngFor="let item of resumenSeguridad" class="hover:bg-gray-50">
-                        <td class="py-3 px-4 w-1/4">{{ item.categoria }}</td>
-                        <td class="py-3 px-4 text-center w-1/4">{{ item.totalVulnerabilidades }}</td>
-                        <td class="py-3 px-4 text-center w-1/4">{{ item.criticidadAlta }}</td>
-                        <td class="py-3 px-4 text-center w-1/4">{{ item.criticidadMedia }}</td>
-                    </tr>
-                    <tr *ngIf="resumenSeguridad.length === 0">
-                        <td colspan="4" class="py-4 text-center text-gray-500">
-                            No se encontraron vulnerabilidades para los dispositivos.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="py-4 text-center">
-                            <button (click)="getSecurity()" class="bg-blue-500 text-white font-bold py-2 px-6 rounded shadow-md hover:bg-blue-600">
-                                Actualizar etiqueta de seguridad
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
-    
-    
+
     <!-- Simulador de Consumos -->
-    <div class="mt-6 bg-white shadow-md rounded-lg p-6 mx-auto max-w-xl">
-        <div class="bg-blue-500 text-white font-bold text-xl text-center py-3 rounded">
+    <div class="bg-white shadow-md rounded-lg p-8 mx-8 mt-8 mb-8">
+        <div class="text-2xl font-bold text-blue-500 mb-6">
             Simulador de Consumos
         </div>
         <div class="mt-6 flex items-center gap-4">
@@ -132,16 +69,13 @@
                     {{ dispositivo.device }}
                 </option>
             </select>
-            <button (click)="addDispositivo()" 
-                    class="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600">
+            <button (click)="addDispositivo()" class="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600">
                 Añadir
             </button>
         </div>
-    
-        <!-- Tabla de dispositivos añadidos -->
+
         <div *ngIf="dispositivosSeleccionados.length > 0" class="mt-6 overflow-x-auto">
-            <table *ngIf="dispositivosSeleccionados.length > 0" 
-                    class="mt-6 border-collapse border border-gray-300 w-full">
+            <table class="mt-6 border-collapse border border-gray-300 w-full">
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="border border-gray-300 px-4 py-2 text-left">Dispositivo</th>
@@ -158,25 +92,189 @@
                             </select>
                         </td>
                         <td class="border border-gray-300 px-4 py-2">
-                            <input type="number" [(ngModel)]="dispositivo.duracion" 
-                                    class="border border-gray-300 p-2 rounded-md w-full" min="0" />
+                            <input type="number" [(ngModel)]="dispositivo.duracion"
+                                class="border border-gray-300 p-2 rounded-md w-full" min="0" />
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        
-        <!-- Botones Limpiar y Calcular -->
+
         <div *ngIf="dispositivosSeleccionados.length > 0" class="mt-4 flex justify-between">
-            <button (click)="limpiarDispositivos()" 
-                    class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+            <button (click)="limpiarDispositivos()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
                 Limpiar dispositivos
             </button>
-            <button (click)="calcularConsumosSimulador()" 
-                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+            <button (click)="calcularConsumosSimulador()"
+                class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
                 Calcular consumo
             </button>
         </div>
     </div>
-    
+
+    <!-- Sección de Seguridad -->
+    <div class="bg-red-50 p-8 rounded-lg shadow-md mx-8 mt-8">
+        <h2 class="text-2xl font-bold text-red-700 mb-6">Seguridad de la Casa</h2>
+
+        <!-- Botón de actualización -->
+        <div class="text-center mb-6">
+            <button (click)="getSecurity()"
+                class="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                    </path>
+                </svg>
+                Actualizar análisis de seguridad
+            </button>
+        </div>
+
+        <!-- Resumen por Categorías -->
+        <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Resumen por Categorías</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" *ngIf="resumenSeguridad.length > 0">
+                <div *ngFor="let resumen of resumenSeguridad"
+                    class="p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                    <h4 class="text-lg font-medium text-gray-700 mb-4">{{ resumen.categoria }}</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Altas:</span>
+                            <span class="text-red-500 font-medium">{{ resumen.criticidadAlta }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Medias:</span>
+                            <span class="text-orange-500 font-medium">{{ resumen.criticidadMedia }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Bajas:</span>
+                            <span class="text-green-500 font-medium">{{ resumen.criticidadBaja }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+            <div class="flex items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-800">Estado de Seguridad Actual</h3>
+                <h1 class="ml-2 px-4 py-2 text-4xl rounded-md font-bold z-10 bg-red-500">{{ etiquetaSeguridad || 'Sin
+                    clasificar' }}</h1>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <select [(ngModel)]="filtroCriticidad"
+                        (click)="updatePaginatedVulnerabilities()"
+                        class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 appearance-none bg-white">
+                        <option value="">Filtrar por criticidades</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Listado de CVE -->
+        <div *ngFor="let vuln of paginatedVulnerabilities"
+            class="bg-white p-6 rounded-lg shadow-sm mb-4 hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
+                        </svg>
+                        {{ vuln.id }}
+                    </h3>
+                    <div class="mt-2 space-y-1">
+                        <p class="text-sm text-gray-500 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            Publicado: {{ vuln.published | date:'dd/MM/yyyy' }}
+                        </p>
+                        <p class="text-sm text-gray-500 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Última modificación: {{ vuln.lastModified | date:'dd/MM/yyyy' }}
+                        </p>
+                    </div>
+                </div>
+                <span [ngClass]="{
+                    'bg-red-600': vuln.severity === 'Critical',
+                    'bg-orange-500': vuln.severity === 'High',
+                    'bg-yellow-400': vuln.severity === 'Medium',
+                    'bg-green-500': vuln.severity === 'Low'
+                }" class="px-4 py-2 rounded-full font-bold text-sm">
+                    {{ vuln.severity }}
+                </span>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <p class="text-gray-600">
+                    {{ vuln.description }}
+                </p>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex space-x-2">
+                    <span class="text-sm text-gray-500">
+                        Referencias: {{ vuln.references?.length || 0 }}
+                    </span>
+                </div>
+                <button (click)="verDetalleCVE(vuln.id)"
+                    class="inline-flex items-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Ver Detalles Completo
+                </button>
+            </div>
+        </div>
+
+        <!-- Paginación -->
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    Mostrando {{currentPage * itemsPerPage + 1}} a
+                    {{Math.min((currentPage + 1) * itemsPerPage, vulnerabilities.length)}} de
+                    {{vulnerabilities.length}} registros
+                </div>
+
+                <div class="flex gap-3">
+                    <button (click)="previousPage()" [disabled]="currentPage === 0"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50/80 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
+                        Anterior
+                    </button>
+                    <button (click)="nextPage()" [disabled]="(currentPage + 1) * itemsPerPage >= vulnerabilities.length"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50/80 transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Mensaje cuando no hay resultados -->
+        <div *ngIf="vulnerabilities.length === 0" class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">No se encontraron vulnerabilidades</h3>
+                <p class="mt-1 text-sm text-gray-500">Intenta ajustar los filtros o actualizar la información</p>
+            </div>
+        </div>
+
+    </div>
 </main>

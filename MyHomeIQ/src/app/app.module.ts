@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NvdapiService } from './_services/nvdapi.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -31,6 +32,8 @@ import { SensorComponent } from './_components/sensor/sensor.component';
 import { ConsumoLocalComponent } from './_components/consumo-local/consumo-local.component';
 import { SimuladorConsumosComponent } from './_components/simulador-consumos/simulador-consumos.component';
 import { HistoryLogComponent } from './_components/history-log/history-log.component';
+import { TruncatePipe } from './_pipes/truncate.pipe';
+import { VulnerabilitiesListComponent } from './vulnerabilities-list/vulnerabilities-list.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +60,8 @@ import { HistoryLogComponent } from './_components/history-log/history-log.compo
     ConsumoLocalComponent,
     SimuladorConsumosComponent,
     HistoryLogComponent,
+    TruncatePipe,
+    VulnerabilitiesListComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,7 +73,7 @@ import { HistoryLogComponent } from './_components/history-log/history-log.compo
     BrowserAnimationsModule,
     ColorPickerModule
   ],
-  providers: [AppConfig],
+  providers: [AppConfig, NvdapiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
