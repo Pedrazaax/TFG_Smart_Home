@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError, retry, forkJoin, of } from 'rxjs';
 import { SimuladorDispositivo } from 'src/app/_models/prueba-consumo';
 import { ConsumoService } from 'src/app/_services/consumo.service';
+import { ControlLocalService } from 'src/app/_services/control-local.service';
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
 
 @Component({
@@ -46,10 +47,121 @@ export class SimuladorConsumosComponent {
     itemsPerPage: number = 5;
     paginatedVulnerabilities: any[] = [];
 
-    constructor(private consumoService: ConsumoService, private toastr: ToastrService, private nvdapiService: NvdapiService) {
+    // Propiedades de paginación dispositivos
+    currentPageDisp: number = 0;
+    itemsPerPageDisp: number = 10;
+    paginatedDispositivos: { device: string; estados: string[]; estado: string; duracion: number }[] = [];
+
+    // Filtros de búsqueda
+    filtroDispositivo: string = "";
+
+    // Scritps
+    allStatus!: any[];
+    categories: string[] = ["light", "switch"];
+    scripts!: any[];
+    sockets!: any[];
+
+    // Información de los dispositivos y su estado
+    dispositivos: { dispositivo: string; script: string; estado: string; nombreDispositivo: string }[] = [
+        { dispositivo: "Bombilla", script: "EB1", estado: "Temperatura mínimo - Brillo máximo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB2", estado: "Temperatura mínimo - Brillo medio", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB3", estado: "Temperatura mínimo - Brillo mínimo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB4", estado: "Temperatura media - Brillo máximo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB5", estado: "Temperatura media - Brillo medio", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB6", estado: "Temperatura media - Brillo mínimo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB7", estado: "Temperatura máximo - Brillo máximo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB8", estado: "Temperatura máximo - Brillo medio", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB9", estado: "Temperatura máximo - Brillo mínimo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB10", estado: "Rojo(255,0,0) - Brillo máximo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB11", estado: "Rojo(255,0,0) - Brillo medio", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB12", estado: "Rojo(255,0,0) - Brillo mínimo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB13", estado: "Amarillo(255,255,0) - Brillo máximo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB14", estado: "Amarillo(255,255,0) - Brillo medio", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB15", estado: "Amarillo(255,255,0) - Brillo mínimo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB16", estado: "Azul(0,0,255) - Brillo máximo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB17", estado: "Azul(0,0,255) - Brillo medio", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB18", estado: "Azul(0,0,255) - Brillo mínimo", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB19", estado: "Apagado", nombreDispositivo: "-" },
+        { dispositivo: "Bombilla", script: "EB20", estado: "Temperatura mínimo - Brillo máximo", nombreDispositivo: "Bulb2" },
+        
+        { dispositivo: "Termostato", script: "TS1", estado: "Encender -> Temperatura por debajo", nombreDispositivo: "Termostato Wifi" },
+        { dispositivo: "Termostato", script: "TS2", estado: "Temperatura por encima", nombreDispositivo: "Termostato Wifi" },
+        { dispositivo: "Termostato", script: "TS3", estado: "Apagar", nombreDispositivo: "Termostato Wifi" },
+        { dispositivo: "Termostato", script: "TS4", estado: "Encender -> Temperatura por debajo", nombreDispositivo: "Termostato Zigbee" },
+        { dispositivo: "Termostato", script: "TS5", estado: "Temperatura por encima", nombreDispositivo: "Termostato Zigbee" },
+        { dispositivo: "Termostato", script: "TS6", estado: "Apagar", nombreDispositivo: "Termostato Zigbee" },
+        { dispositivo: "Termostato", script: "TS7", estado: "Apagar", nombreDispositivo: "Ambos" },
+    
+        { dispositivo: "AlexaEchoDot", script: "EAD1", estado: "Encender dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoDot", script: "EAD2", estado: "Apagar dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoDot", script: "EAD3", estado: "Iniciar música", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoDot", script: "EAD4", estado: "Encender dispositivos - VOZ", nombreDispositivo: "-" },
+    
+        { dispositivo: "AlexaEchoShow", script: "EAS1", estado: "Panel home", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS2", estado: "Panel scripts", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS3", estado: "Encender dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS4", estado: "Apagar dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS5", estado: "Iniciar música", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS6", estado: "Iniciar multimedia (video)", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS7", estado: "Ver cámara", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS8", estado: "Panel home - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS9", estado: "Panel sensores - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS10", estado: "Encender dispositivos - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS11", estado: "Apagar dispositivos - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS12", estado: "Iniciar música - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS13", estado: "Iniciar multimedia (video) - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "AlexaEchoShow", script: "EAS14", estado: "Ver cámara - VOZ", nombreDispositivo: "-" },
+    
+        { dispositivo: "Cámara", script: "SC1", estado: "Encender cámaras", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC2", estado: "Habilitar alarma de seguimiento", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC3", estado: "Tomar varias instantáneas", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC4", estado: "Transmitir video cámara 1", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC5", estado: "Transmitir video cámara 2", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC6", estado: "Habilitar grabación de video", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC7", estado: "Habilitar indicador led", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC8", estado: "Habilitar marca de agua de tiempo", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC9", estado: "Habilitar modo privado", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC10", estado: "Habilitar sensibilidad de movimiento baja", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC11", estado: "Habilitar sensibilidad de movimiento media", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC12", estado: "Habilitar sensibilidad de movimiento alta", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC13", estado: "Habilitar visión nocturna automática", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC14", estado: "Habilitar visión nocturna activada", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC15", estado: "Habilitar seguimiento de movimiento", nombreDispositivo: "-" },
+        { dispositivo: "Cámara", script: "SC16", estado: "Apagar cámaras", nombreDispositivo: "-" },
+        
+        { dispositivo: "GoogleHub", script: "EGH1", estado: "Panel home", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH2", estado: "Panel sensores", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH3", estado: "Encender dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH4", estado: "Apagar dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH5", estado: "Iniciar música", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH6", estado: "Iniciar multimedia (video)", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH7", estado: "Ver cámara", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH8", estado: "Panel home - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH9", estado: "Panel sensores - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH10", estado: "Encender dispositivos - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH11", estado: "Apagar dispositivos - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH12", estado: "Iniciar música - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH13", estado: "Iniciar multimedia (video) - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleHub", script: "EGH14", estado: "Ver cámara - VOZ", nombreDispositivo: "-" },
+    
+        { dispositivo: "GoogleNest", script: "EGN1", estado: "Encender dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "GoogleNest", script: "EGN2", estado: "Apagar dispositivos", nombreDispositivo: "-" },
+        { dispositivo: "GoogleNest", script: "EGN3", estado: "Iniciar música", nombreDispositivo: "-" },
+        { dispositivo: "GoogleNest", script: "EGN4", estado: "Iniciar multimedia (video)", nombreDispositivo: "-" },
+        { dispositivo: "GoogleNest", script: "EGN5", estado: "Encender dispositivos - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleNest", script: "EGN6", estado: "Apagar dispositivos - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleNest", script: "EGN7", estado: "Iniciar música - VOZ", nombreDispositivo: "-" },
+        { dispositivo: "GoogleNest", script: "EGN8", estado: "Iniciar multimedia (video) - VOZ", nombreDispositivo: "-" }
+    ];
+      
+    // Extrae los dispositivos únicos para el filtro
+    dispositivosUnicos = [...new Set(this.dispositivos.map(d => d.dispositivo))];
+
+    constructor(private consumoService: ConsumoService, private toastr: ToastrService, private nvdapiService: NvdapiService, private controlLocalService: ControlLocalService) {
 
     }
     ngOnInit() {
+        this.getScripts();
         this.get_dispositivosSimulador();
         const storedResumenSeguridad = localStorage.getItem('resumenSeguridad');
         const storedEtiquetaSeguridad = localStorage.getItem('etiquetaSeguridad');
@@ -86,6 +198,40 @@ export class SimuladorConsumosComponent {
                 this.toastr.error(error.error.detail, "Error")
             }
         );
+    }
+
+    async getScripts() {
+        // Obtenemos los scripts del backend
+        this.controlLocalService.getAll().subscribe(
+          (response: any) => {
+            this.initialArrays(response);
+    
+          },
+          (error: any) => {
+            this.toastr.error(error.error.detail, 'Error');
+          }
+        );
+    }
+
+    private initialArrays(response: any) {
+    this.allStatus = response;
+    this.categories = response.map((item: any) => item.entity_id.split('.')[0]);
+    // Eliminamos las categorías duplicadas
+    this.categories = this.categories.filter((item, index) => this.categories.indexOf(item) === index);
+    this.scripts = response.map((item: any) => {
+        if (item.entity_id.split('.')[0] === 'script') {
+        return item;
+        }
+    });
+    // Eliminamos los scripts undefined
+    this.scripts = this.scripts.filter((item) => item !== undefined);
+    this.sockets = response.map((item: any) => {
+        if (item.entity_id.split('.')[0] === 'switch') {
+        return item;
+        }
+    });
+    // Eliminamos los sockets undefined
+    this.sockets = this.sockets.filter((item) => item !== undefined);
     }
 
     get_consumosGlobales() {
@@ -325,7 +471,7 @@ export class SimuladorConsumosComponent {
         );
     }
     
-    // Nueva variable para almacenar el resumen de seguridad
+    // Almacenar el resumen de seguridad
     filtroCriticidad: string = '';
     
     // Métodos de paginación
@@ -335,6 +481,31 @@ export class SimuladorConsumosComponent {
             this.updatePaginatedVulnerabilities();
         }
     }
+
+    // Método para obtener los dispositivos filtrados
+    get dispositivosFiltrados() {
+        return this.filtroDispositivo
+        ? this.dispositivos.filter(d => d.dispositivo === this.filtroDispositivo)
+        : this.dispositivos;
+    }
+
+    // Método para filtrar dispositivos y resetear la paginación
+    filtrarDispositivos() {
+        this.currentPageDisp = 0; // Reinicia la paginación cuando se cambia el filtro
+    }
+
+    previousPageDisp() {
+        if (this.currentPageDisp > 0) {
+          this.currentPageDisp--;
+        }
+      }
+      
+    nextPageDisp() {
+    if ((this.currentPageDisp + 1) * this.itemsPerPageDisp < this.dispositivosFiltrados.length) {
+        this.currentPageDisp++;
+    }
+    }
+      
 
     previousPage() {
         if (this.currentPage > 0) {

@@ -81,6 +81,7 @@
                         <th class="border border-gray-300 px-4 py-2 text-left">Dispositivo</th>
                         <th class="border border-gray-300 px-4 py-2 text-left">Estado</th>
                         <th class="border border-gray-300 px-4 py-2 text-left">Duración (horas/día)</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Script</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,6 +96,13 @@
                             <input type="number" [(ngModel)]="dispositivo.duracion"
                                 class="border border-gray-300 p-2 rounded-md w-full" min="0" />
                         </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <select id="script" name="script"
+                                class="border border-gray-300 p-2 rounded-md"
+                                formControlName="script">
+                                <option *ngFor="let script of scripts" value="{{script.entity_id}}">{{script.attributes.friendly_name}}</option>
+                            </select>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -108,6 +116,72 @@
                 class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
                 Calcular consumo
             </button>
+        </div>
+    </div>
+
+    <!-- Estados de los dispositivos -->
+
+    <div class="bg-white shadow-md rounded-lg p-8 mx-8 mt-8 mb-8">
+        <div class="text-2xl font-bold text-green-500 mb-6 mt-2">
+            Estado de dispositivos
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-white rounded-lg mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <select [(ngModel)]="filtroDispositivo"
+                        (change)="filtrarDispositivos()"
+                        class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 appearance-none bg-white">
+                        <option value="">Mostrar todos los dispositivos</option>
+                        <option *ngFor="let dispositivo of dispositivosUnicos" [value]="dispositivo">
+                            {{ dispositivo }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="py-2 px-4 border-b">Tipo dispositivo</th>
+                        <th class="py-2 px-4 border-b">Script</th>
+                        <th class="py-2 px-4 border-b">Estado</th>
+                        <th class="py-2 px-4 border-b">Nombre dispositivo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b" *ngFor="let item of dispositivosFiltrados | slice:(currentPageDisp * itemsPerPageDisp):((currentPageDisp + 1) * itemsPerPageDisp)">
+                        <td class="py-2 px-4">{{ item.dispositivo }}</td>
+                        <td class="py-2 px-4">{{ item.script }}</td>
+                        <td class="py-2 px-4">{{ item.estado }}</td>
+                        <td class="py-2 px-4">{{ item.nombreDispositivo || '-' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 mt-4">
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    Mostrando {{ currentPageDisp * itemsPerPageDisp + 1 }} a
+                    {{ Math.min((currentPageDisp + 1) * itemsPerPageDisp, dispositivosFiltrados.length) }} de
+                    {{ dispositivosFiltrados.length }} registros
+                </div>
+                <div class="flex gap-3">
+                    <button (click)="previousPageDisp()" [disabled]="currentPageDisp === 0"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        Anterior
+                    </button>
+                    <button (click)="nextPageDisp()" [disabled]="(currentPageDisp + 1) * itemsPerPageDisp >= dispositivosFiltrados.length"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
