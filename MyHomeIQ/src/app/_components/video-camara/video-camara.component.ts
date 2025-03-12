@@ -10,6 +10,7 @@ import { Jso } from 'src/app/_models/jso';
 import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
 import { Room } from 'src/app/_models/room';
 import { RoomService } from 'src/app/_services/room.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-video-camara',
@@ -60,7 +61,8 @@ export class VideoCamaraComponent {
 
   constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, 
     private toastr: ToastrService, private sanitizer: DomSanitizer, 
-    private deviceFilter: DeviceFilterService, private roomService: RoomService) {
+    private deviceFilter: DeviceFilterService,
+    private roomService: RoomService, private router: Router) {
 
   }
 
@@ -118,6 +120,7 @@ export class VideoCamaraComponent {
       this.updateStates();
     },
       (error: any) => {
+        this.router.navigate(['/intro'])
         this.toastr.error(error.error.detail, "Error")
       }
     )

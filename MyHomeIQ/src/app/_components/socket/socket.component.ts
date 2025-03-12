@@ -8,6 +8,7 @@ import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
 import { DispositivoService } from 'src/app/_services/dispositivo.service';
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
 import { RoomService } from 'src/app/_services/room.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-socket',
@@ -44,7 +45,7 @@ export class SocketComponent {
 
   constructor(private deviceService: DispositivoService, private nvdService: NvdapiService, 
     private toastr: ToastrService, private deviceFilter: DeviceFilterService, 
-    private roomService: RoomService) {
+    private roomService: RoomService, private router: Router) {
 
   }
 
@@ -71,6 +72,7 @@ export class SocketComponent {
       this.updateStates();
     },
       (error: any) => {
+        this.router.navigate(['/intro'])
         alert("Error" + error.error.message)
       }
     )

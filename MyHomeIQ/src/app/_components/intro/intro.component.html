@@ -1,27 +1,119 @@
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-sm-4">
-            <h2>MyHomeIQ</h2>
-            <p>Aplicación web para controlar tu Smart Home con dispositivos IoT, diseñada para garantizar la seguridad
-                de tus dispositivos IoT, almacenar y procesar datos en tiempo real con inteligencia artificial.</p>
-            <h3 class="mt-4">Dispositivos</h3>
-            <p>Selecciona la categoría de tus dispositivos IoT.</p>
-            
-            <app-bulb></app-bulb>
-            
-            <hr class="d-sm-none">
-        </div>
-        <div class="col-sm-8">
-            <h2>Gestión de usuarios</h2>
-            <h5>Utilidades y herramientas para el rol administrador</h5>
-            <p>Gestión de usuarios para el rol administrador. <br> - Ver listado de usuarios y administradores <br> -
-                Crear usuarios y administradores <br> - Modificar usuarios y administradores <br> - Eliminar usuarios y
-                administradores</p>
-            <h2 class="mt-6">Gestión de dispositivos</h2>
-            <h5>Utilidades y herramientas para el rol administrador y usuario</h5>
-            <p> Gestión de tu Smart Home <br> - Añadir dispositivos <br> - Ver estado de los
-                dispositivos <br> - Gestionar el estado de los dispositivos <br> - Ayuda con inteligencia artificial
-                <br> - Ver alertas e informes sobre el estado de tu Smart Home </p>
-        </div>
+<div class="min-h-screen bg-gray-100 text-black flex flex-col items-center justify-center p-6">
+    <div class="max-w-7xl w-full bg-white bg-opacity-90 rounded-2xl shadow-xl p-8 space-y-8 animate__animated animate__fadeIn">
+        <!-- Sección de Introducción -->
+        <header class="bg-gray-200 rounded-xl p-6 shadow-md text-center animate__animated animate__fadeInDown">
+            <h2 class="text-3xl font-bold text-indigo-600">MyHomeIQ</h2>
+            <p class="mt-3 text-gray-700">
+                Aplicación web para gestionar tu Smart Home con dispositivos IoT. Seguridad garantizada, almacenamiento en la nube y procesamiento en tiempo real con inteligencia artificial.
+            </p>
+            <h3 class="mt-6 text-xl font-semibold text-indigo-500">Dispositivos</h3>
+            <p class="text-gray-700">Selecciona la categoría de dispositivos IoT.</p>
+            <ul class="mt-3 space-y-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <li class="flex items-center space-x-3 bg-gray-300 p-3 rounded-lg hover:bg-gray-400 transition duration-300">
+                    <i class="fas fa-thermometer-half text-yellow-600"></i>
+                    <span>Termostatos</span>
+                </li>
+                <li class="flex items-center space-x-3 bg-gray-300 p-3 rounded-lg hover:bg-gray-400 transition duration-300">
+                    <i class="fas fa-lightbulb text-yellow-500"></i>
+                    <span>Luces</span>
+                </li>
+                <li class="flex items-center space-x-3 bg-gray-300 p-3 rounded-lg hover:bg-gray-400 transition duration-300">
+                    <i class="fas fa-video text-blue-500"></i>
+                    <span>Cámaras</span>
+                </li>
+                <li class="flex items-center space-x-3 bg-gray-300 p-3 rounded-lg hover:bg-gray-400 transition duration-300">
+                    <i class="fas fa-door-open text-red-600"></i>
+                    <span>Alarma</span>
+                </li>
+            </ul>
+        </header>
+
+        <!-- Sección Principal -->
+        <main class="space-y-8 w-full">
+            <!-- Gestión de Usuarios -->
+            <section class="bg-gray-200 rounded-xl p-6 shadow-md animate__animated animate__fadeInLeft">
+                <h2 class="text-2xl font-bold text-indigo-600">Gestión de Usuarios</h2>
+                <h5 class="text-gray-700">Herramientas para administradores</h5>
+                <ul class="mt-3 space-y-2">
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-users text-green-600"></i>
+                        <span>Ver listado de usuarios</span>
+                    </li>
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-user-plus text-blue-600"></i>
+                        <span>Crear usuarios</span>
+                    </li>
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-user-edit text-yellow-600"></i>
+                        <span>Modificar usuarios</span>
+                    </li>
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-user-times text-red-600"></i>
+                        <span>Eliminar usuarios</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Gestión de Dispositivos -->
+            <section class="bg-gray-200 rounded-xl p-6 shadow-md animate__animated animate__fadeInRight">
+                <h2 class="text-2xl font-bold text-indigo-600">Gestión de Dispositivos</h2>
+                <ul class="mt-3 space-y-2">
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-plus-circle text-green-600"></i>
+                        <span>Añadir dispositivos</span>
+                    </li>
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-eye text-blue-600"></i>
+                        <span>Ver estado de los dispositivos</span>
+                    </li>
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-cogs text-yellow-600"></i>
+                        <span>Gestionar dispositivos</span>
+                    </li>
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-brain text-purple-600"></i>
+                        <span>Ayuda con inteligencia artificial</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Análisis de Seguridad -->
+            <section class="bg-gray-200 rounded-xl p-6 shadow-md animate__animated animate__fadeInUp">
+                <h2 class="text-2xl font-bold text-indigo-600">Análisis de Seguridad</h2>
+                <p class="text-gray-700">Resultados de los análisis de seguridad.</p>
+                <p class="text-gray-700">Esta sección muestra todos los CVE (Common Vulnerabilities and Exposures) de los dispositivos que estén conectados en local en la aplicación. Puedes filtrar por dispositivo y por criticidad de la vulnerabilidad. Luego, puedes ver toda la información de cada CVE.</p>
+                <ul class="mt-3 space-y-2">
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-shield-alt text-red-600"></i>
+                        <span>Vulnerabilidades detectadas</span>
+                    </li>
+                    <li class="bg-gray-300 p-3 rounded-lg flex items-center space-x-3 hover:bg-gray-400 transition duration-300">
+                        <i class="fas fa-lock text-blue-600"></i>
+                        <span>Medidas de seguridad</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Etiqueta de Seguridad -->
+            <section class="bg-gray-200 rounded-xl p-6 shadow-md animate__animated animate__fadeInLeft">
+                <h2 class="text-2xl font-bold text-indigo-600">Etiqueta de Seguridad</h2>
+                <p class="text-gray-700">Información sobre la seguridad de los dispositivos.</p>
+                <p class="text-gray-700">Esta sección muestra un resumen por categorías del número de vulnerabilidades por criticidad en cada una de ellas y también muestra el estado de seguridad actual de la casa.</p>
+            </section>
+
+            <!-- Etiqueta de Consumo -->
+            <section class="bg-gray-200 rounded-xl p-6 shadow-md animate__animated animate__fadeInRight">
+                <h2 class="text-2xl font-bold text-indigo-600">Etiqueta de Consumo</h2>
+                <p class="text-gray-700">Información sobre el consumo energético de los dispositivos.</p>
+                <p class="text-gray-700">Esta sección muestra información de consumo diario, mensual y anual del simulador de consumos. Además del consumo, muestra la potencia y la intensidad y también muestra la letra de consumo de la casa.</p>
+            </section>
+
+            <!-- Simulador de Consumo -->
+            <section class="bg-gray-200 rounded-xl p-6 shadow-md animate__animated animate__fadeInUp">
+                <h2 class="text-2xl font-bold text-indigo-600">Simulador de Consumo</h2>
+                <p class="text-gray-700">Evaluación detallada del consumo energético de cada dispositivo.</p>
+                <p class="text-gray-700">En esta sección se añaden dispositivos en un tiempo determinado para simular el consumo que tendrían y poder darle una etiqueta de consumo a la casa. Se puede hacer una simulación con datos genéricos o con el estado concreto de cada dispositivo.</p>
+            </section>
+        </main>
     </div>
 </div>

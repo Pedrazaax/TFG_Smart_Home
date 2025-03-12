@@ -8,6 +8,7 @@ import { NvdapiService } from 'src/app/_services/nvdapi.service';
 import { Room } from 'src/app/_models/room';
 import { RoomService } from 'src/app/_services/room.service';
 import { DeviceFilterService } from 'src/app/_services/devicefilter.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -57,10 +58,9 @@ export class BulbComponent {
 
   commonClasses = 'px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:ring-opacity-50 transition-all duration-200';
 
-  
   constructor(private deviceService: DispositivoService, private toastr: ToastrService, 
     private nvdService: NvdapiService, private roomService: RoomService, 
-    private deviceFilter: DeviceFilterService) {
+    private deviceFilter: DeviceFilterService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -109,6 +109,7 @@ export class BulbComponent {
       this.updateStates();
     },
       (error: any) => {
+        this.router.navigate(['/intro'])
         this.toastr.error(error.error.detail, "Error")
       }
     )
