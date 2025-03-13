@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
           console.log(respuesta.access_token)
           sessionStorage.setItem('token', respuesta.access_token)
           sessionStorage.setItem('username', info.username)
-          this.router.navigate(['/api'])
+          this.router.navigate(['/intro'])
         },
         (error: any)=>{
           alert("Error " + error.error.detail)
