@@ -79,28 +79,20 @@
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="border border-gray-300 px-4 py-2 text-left">Dispositivo</th>
-                        <th class="border border-gray-300 px-4 py-2 text-left">Estado</th>
                         <th class="border border-gray-300 px-4 py-2 text-left">Duración (horas/día)</th>
-                        <th class="border border-gray-300 px-4 py-2 text-left">Script</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Script (Opcional)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let dispositivo of dispositivosSeleccionados">
                         <td class="border border-gray-300 px-4 py-2">{{ dispositivo.device }}</td>
                         <td class="border border-gray-300 px-4 py-2">
-                            <select [(ngModel)]="dispositivo.estado" class="border border-gray-300 p-2 rounded-md">
-                                <option *ngFor="let estado of dispositivo.estados">{{ estado }}</option>
-                            </select>
-                        </td>
-                        <td class="border border-gray-300 px-4 py-2">
                             <input type="number" [(ngModel)]="dispositivo.duracion"
                                 class="border border-gray-300 p-2 rounded-md w-full" min="0" />
                         </td>
                         <td class="border border-gray-300 px-4 py-2">
-                            <select id="script" name="script"
-                                class="border border-gray-300 p-2 rounded-md"
-                                formControlName="script">
-                                <option *ngFor="let script of scripts" value="{{script.entity_id}}">{{script.attributes.friendly_name}}</option>
+                            <select [(ngModel)]="dispositivo.estado" class="border border-gray-300 p-2 rounded-md">
+                                <option *ngFor="let script of scripts" [value]="script.entity_id">{{ script.attributes.friendly_name }}</option>
                             </select>
                         </td>
                     </tr>
@@ -112,7 +104,7 @@
             <button (click)="limpiarDispositivos()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
                 Limpiar dispositivos
             </button>
-            <button (click)="calcularConsumosSimulador()"
+            <button (click)="verificarTipoConsumo()"
                 class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
                 Calcular consumo
             </button>

@@ -1,74 +1,74 @@
-<nav class="flex items-center justify-between flex-wrap bg-gray-800 p-6">
-    <div class="flex items-center flex-shrink-0 text-white mr-6">
+<nav class="flex items-center justify-between flex-wrap bg-blue-800 p-6 shadow-lg transition-all duration-300 ease-in-out">
+    <div class="flex items-center flex-shrink-0 text-gray-200 mr-6">
         <a class="navbar-brand" href="/intro">
-            <img src="../../../assets/img/logo.png" alt="MyHomeIQ" width="40" height="40">
+            <img src="../../../assets/img/logo.png" alt="MyHomeIQ" width="40" height="40" class="transition-transform duration-300 hover:scale-110">
         </a>
     </div>
     <div class="block lg:hidden">
-      <button class="flex items-center px-3 py-2 border rounded text-white border-white">
-        <svg class="fill-current h-3 w-3 hover:text-blue-300 hover:border-blue-300" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" (click)="toggleMenu()"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      <button class="flex items-center px-3 py-2 border rounded text-gray-200 border-gray-200 transition-colors duration-300 hover:text-blue-500 hover:border-blue-500" (click)="toggleMenu()">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
       </button>
     </div>
-    <div *ngIf="!menu" class="w-full block flex-grow lg:flex lg:items-center lg:w-auto animate-fade-down animate-duration-200 animate-delay-0">
-      <div class="text-sm lg:flex-grow [&>a]:block [&>a]:mt-4 [&>a]:lg:inline-block [&>a]:lg:mt-0 [&>a]:text-white [&>a]:mr-4">
-        <a href="/intro" class="hover:text-blue-300">
+    <div [ngClass]="{'block': menu, 'hidden': !menu}" class="w-full block flex-grow lg:flex lg:items-center lg:w-auto transition-all duration-300 ease-in-out">
+      <div class="text-sm lg:flex-grow [&>a]:block [&>a]:mt-4 [&>a]:lg:inline-block [&>a]:lg:mt-0 [&>a]:text-gray-200 [&>a]:mr-4">
+        <a href="/intro" class="hover:text-blue-500 transition-colors duration-300">
             Inicio
         </a>
-        <a href="/panel" class="hover:text-blue-300">
+        <a href="/panel" class="hover:text-blue-500 transition-colors duration-300">
             Panel de control
         </a>
 
-        <div class="mt-4 lg:inline-block lg:mt-0 text-white mr-4">
-            <a (click)="toggleDropdown()" class="hover:text-blue-300 hover:cursor-pointer">
+        <div class="mt-4 lg:inline-block lg:mt-0 text-gray-200 mr-4">
+            <a (click)="toggleDropdown()" class="hover:text-blue-500 hover:cursor-pointer transition-colors duration-300">
                 <span class="flex items-center">
                     Dispositivos
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill ml-1" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill ml-1 transition-transform duration-300" [ngClass]="{'rotate-180': dropdown}" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                     </svg>
                 </span>
             </a>
 
-            <div *ngIf="dropdown" class="bg-gray-700 rounded-md w-36 lg:absolute lg:animate-fade-down lg:animate-duration-200 lg:animate-delay-0 mt-2 bg-opacity-95">
-                <ul class="text-white mt-1 mb-1 [&>li]:ml-2">
-                    <li><a href="/thermostat" class="hover:text-blue-300">Termostatos</a></li>
-                    <li><a href="/bulb" class="hover:text-blue-300">Bombillas</a></li>
-                    <li><a href="/socket" class="hover:text-blue-300">Enchufes</a></li>
-                    <li><a href="/video" class="hover:text-blue-300">Video cámaras</a></li>
-                    <li><a href="/alarm" class="hover:text-blue-300">Alarmas</a></li>
+            <div *ngIf="dropdown" class="bg-gray-700 rounded-md w-36 lg:absolute lg:mt-2 shadow-lg transition-all duration-300 ease-in-out">
+                <ul class="text-gray-200 mt-1 mb-1 [&>li]:ml-2">
+                    <li><a href="/thermostat" class="hover:text-blue-500 transition-colors duration-300">Termostatos</a></li>
+                    <li><a href="/bulb" class="hover:text-blue-500 transition-colors duration-300">Bombillas</a></li>
+                    <li><a href="/socket" class="hover:text-blue-500 transition-colors duration-300">Enchufes</a></li>
+                    <li><a href="/video" class="hover:text-blue-500 transition-colors duration-300">Video cámaras</a></li>
+                    <li><a href="/alarm" class="hover:text-blue-500 transition-colors duration-300">Alarmas</a></li>
                 </ul>
             </div>
         </div>
     
-        <a href="/control-admin" class="hover:text-blue-300">
+        <a href="/control-admin" class="hover:text-blue-500 transition-colors duration-300">
             Gestión de usuarios
         </a>
 
-        <div class="mt-4 lg:inline-block lg:mt-0 text-white mr-4">
-            <a (click)="toggleConsumoDropDown()" class="hover:text-blue-300 hover:cursor-pointer">
+        <div class="mt-4 lg:inline-block lg:mt-0 text-gray-200 mr-4">
+            <a (click)="toggleConsumoDropDown()" class="hover:text-blue-500 hover:cursor-pointer transition-colors duration-300">
                 <span class="flex items-center">
                     Pruebas de consumo
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill ml-1" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill ml-1 transition-transform duration-300" [ngClass]="{'rotate-180': consumodropdown}" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                     </svg>
                 </span>
             </a>
 
-            <div *ngIf="consumodropdown" class="bg-gray-700 rounded-md w-36 lg:absolute lg:animate-fade-down lg:animate-duration-200 lg:animate-delay-0 mt-2 bg-opacity-95">
-                <ul class="text-white mt-1 mb-1 [&>li]:ml-2">
-                    <li><a href="/consumo" class="hover:text-blue-300">Consumo nube</a></li>
-                    <li><a href="/consumo-local" class="hover:text-blue-300">Consumo local</a></li>
-                    <li><a href="/simulador-consumos" class="hover:text-blue-300">Simulador de consumos</a></li>
+            <div *ngIf="consumodropdown" class="bg-gray-700 rounded-md w-36 lg:absolute lg:mt-2 shadow-lg transition-all duration-300 ease-in-out">
+                <ul class="text-gray-200 mt-1 mb-1 [&>li]:ml-2">
+                    <li><a href="/consumo" class="hover:text-blue-500 transition-colors duration-300">Consumo nube</a></li>
+                    <li><a href="/consumo-local" class="hover:text-blue-500 transition-colors duration-300">Consumo local</a></li>
+                    <li><a href="/simulador-consumos" class="hover:text-blue-500 transition-colors duration-300">Simulador de consumos</a></li>
                 </ul>
             </div>
         </div>
 
-        <a href="/historial" class="hover:text-blue-300">
+        <a href="/historial" class="hover:text-blue-500 transition-colors duration-300">
             Historial
         </a>
 
       </div>
       <div>
-        <a href="#" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-white hover:bg-blue-400 mt-4 lg:mt-0">Perfil</a>
+        <a href="#" class="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-200 border-gray-200 hover:border-transparent hover:text-white hover:bg-blue-500 mt-4 lg:mt-0 transition-colors duration-300">Perfil</a>
       </div>
     </div>
 </nav>

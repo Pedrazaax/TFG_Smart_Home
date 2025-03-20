@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, retry, forkJoin, of } from 'rxjs';
 import { SimuladorDispositivo } from 'src/app/_models/prueba-consumo';
+import { SimuladorPersonalizado } from 'src/app/_models/simulador-consumo';
 import { ConsumoService } from 'src/app/_services/consumo.service';
 import { ControlLocalService } from 'src/app/_services/control-local.service';
 import { NvdapiService } from 'src/app/_services/nvdapi.service';
@@ -26,7 +27,7 @@ export class SimuladorConsumosComponent {
     etiquetaGlobal!: string
     etiquetaSeguridad!: string;
     dispositivoSeleccionado!: SimuladorDispositivo;
-    dispositivosSeleccionados: { device: string; estados: string[]; estado: string; duracion: number }[] = [];
+    dispositivosSeleccionados: SimuladorPersonalizado[] = [];
     simuladorConsumoDiario!: number;
     simuladorConsumoMensual!: number;
     simuladorConsumoAnual!: number;
@@ -50,7 +51,7 @@ export class SimuladorConsumosComponent {
     // Propiedades de paginación dispositivos
     currentPageDisp: number = 0;
     itemsPerPageDisp: number = 10;
-    paginatedDispositivos: { device: string; estados: string[]; estado: string; duracion: number }[] = [];
+    paginatedDispositivos: { device: string; estados: string; estado: string; duracion: number }[] = [];
 
     // Filtros de búsqueda
     filtroDispositivo: string = "";
@@ -289,15 +290,12 @@ export class SimuladorConsumosComponent {
 
     addDispositivo() {
         if (this.dispositivoSeleccionado) {
-            const estado = Array.isArray(this.dispositivoSeleccionado.estado)
-                ? this.dispositivoSeleccionado.estado
-                : [this.dispositivoSeleccionado.estado]; // Convertir a array si es string
     
             this.dispositivosSeleccionados.push({
                 device: this.dispositivoSeleccionado.device,
-                estados: estado, // Aseguramos que siempre sea un array
-                estado: estado[0], // Estado inicial seleccionado
-                duracion: 0 // El usuario lo llenará manualmente
+                estado: this.dispositivoSeleccionado.estado, // Aseguramos que siempre sea un array
+                tipoSimulacion: this.dispositivoSeleccionado.estado, // Estado inicial seleccionado
+                duracion: 0, // El usuario lo llenará manualmente
             });
     
             this.dispositivoSeleccionado = undefined!; // Limpiamos la selección actual
@@ -310,22 +308,59 @@ export class SimuladorConsumosComponent {
         this.dispositivosSeleccionados = [];
     }
 
+    calcular_consumos_personalizado(){
+        console.log("Calculando consumos personalizados...")
+
+        this.dispositivosSeleccionados.forEach((dispositivo) => {
+            dispositivo.tipoSimulacion = "Personalizado";
+        })
+
+        console.log("Dispositivos personalizados: ", this.dispositivosSeleccionados)
+
+        // Envio los dispositivos al backend
+        this.consumoService.updateSimuladorDispositivo(this.dispositivosSeleccionados).subscribe(
+            (response: any) => {
+                console.log("Consumos personalizados: ", response)
+                /*
+                this.simuladorConsumoDiario = response.consumoDiario
+                this.simuladorIntensidadDiaria = response.intensidadDiaria
+                this.simuladorPotenciaDiaria = response.potenciaDiaria
+                this.cip_mensual()
+                this.cip_anual()*/
+                this.toastr.success('Consumos personalizados calculados con éxito.');
+            }, (error: any) => {
+                this.toastr.error(error.error.detail, 'Error');
+                console.log(error);
+            })
+    }
+
+    cip_mensual(){
+        this.simuladorConsumoMensual = this.simuladorConsumoDiario * 31
+        this.simuladorIntensidadMensual = this.simuladorIntensidadDiaria * 31
+        this.simuladorPotenciaMensual = this.simuladorPotenciaDiaria * 31
+    }
+
+    cip_anual(){
+        this.simuladorConsumoAnual = this.simuladorConsumoMensual * 12
+        this.simuladorIntensidadAnual = this.simuladorIntensidadMensual * 12
+        this.simuladorPotenciaAnual = this.simuladorPotenciaMensual * 12
+    }
+
     calcularConsumosSimulador() {
         if (this.dispositivosSeleccionados.length === 0) {
             this.toastr.warning('No hay dispositivos añadidos para calcular.');
             return;
         }
-    
         // Variables para acumulación de consumos
         let consumoTotal = 0;
         let intensidadTotal = 0;
         let potenciaTotal = 0;
-    
+
         // Iterar sobre los dispositivos seleccionados
         this.dispositivosSeleccionados.forEach((dispositivo) => {
             const duracion = dispositivo.duracion || 0; // Horas al día
             const dispositivoData = this.consumoDispositivos.find(d => d.device === dispositivo.device);
-    
+
             if (dispositivoData) {
                 const consumoMedio = parseFloat(dispositivoData.consumoMedio || '0'); // Consumo medio por hora
                 const intensidadMedia = parseFloat(dispositivoData.intensidadMedia || '0'); // Intensidad media por hora
@@ -340,18 +375,31 @@ export class SimuladorConsumosComponent {
     
         // Calcular valores diarios, mensuales y anuales
         this.simuladorConsumoDiario = consumoTotal;
-        this.simuladorConsumoMensual = consumoTotal * 31;
-        this.simuladorConsumoAnual = this.simuladorConsumoMensual * 12;
-    
         this.simuladorIntensidadDiaria = intensidadTotal;
-        this.simuladorIntensidadMensual = intensidadTotal * 31;
-        this.simuladorIntensidadAnual = this.simuladorIntensidadMensual * 12;
-    
         this.simuladorPotenciaDiaria = potenciaTotal;
-        this.simuladorPotenciaMensual = potenciaTotal * 31;
-        this.simuladorPotenciaAnual = this.simuladorPotenciaMensual * 12;
-    
+
+        this.cip_mensual()
+        this.cip_anual()
+        
         this.toastr.success('Cálculo basado en simulador realizado con éxito.');
+    }
+
+    verificarTipoConsumo() {
+        if (this.dispositivosSeleccionados.length === 0) {
+            this.toastr.warning('No hay dispositivos añadidos para calcular.');
+            return;
+        }
+        let simulacion_personalizada : boolean = false
+        this.dispositivosSeleccionados.forEach((dispositivo) => {
+            if (dispositivo.estado !== 'Global') {
+                simulacion_personalizada = true
+            }
+        })
+        if (simulacion_personalizada) {
+            this.calcular_consumos_personalizado()
+        } else {
+            this.calcularConsumosSimulador()
+        }
     }
 
     getSecurity() {

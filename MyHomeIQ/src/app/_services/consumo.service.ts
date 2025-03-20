@@ -3,6 +3,7 @@ import { PruebaConsumo, TipoPrueba, SimuladorDispositivo } from '../_models/prue
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../app.config';
 import { ControlService } from './control.service';
+import { SimuladorPersonalizado } from '../_models/simulador-consumo';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,12 @@ export class ConsumoService {
     const url = `${this.config.apiUrl}/localMeasures/updateMeasurementsConsumption`;
 
     return this.httpClient.get<SimuladorDispositivo[]>(url, {headers: this.header.getHeaders()})
+  }
+
+  updateSimuladorDispositivo(simulador: SimuladorPersonalizado[]):any {
+    const url = `${this.config.apiUrl}/localMeasures/updateConsumptionCustom`;
+
+    return this.httpClient.post(url, simulador, {headers: this.header.getHeaders()});
   }
 
 }
