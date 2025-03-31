@@ -292,7 +292,7 @@ export class SimuladorConsumosComponent {
         if (this.dispositivoSeleccionado) {
     
             this.dispositivosSeleccionados.push({
-                device: this.dispositivoSeleccionado.device,
+                device: this.dispositivoSeleccionado.devices[0],
                 estado: this.dispositivoSeleccionado.estado, // Aseguramos que siempre sea un array
                 tipoSimulacion: this.dispositivoSeleccionado.estado, // Estado inicial seleccionado
                 duracion: 0, // El usuario lo llenará manualmente
@@ -321,12 +321,11 @@ export class SimuladorConsumosComponent {
         this.consumoService.updateSimuladorDispositivo(this.dispositivosSeleccionados).subscribe(
             (response: any) => {
                 console.log("Consumos personalizados: ", response)
-                /*
                 this.simuladorConsumoDiario = response.consumoDiario
                 this.simuladorIntensidadDiaria = response.intensidadDiaria
                 this.simuladorPotenciaDiaria = response.potenciaDiaria
                 this.cip_mensual()
-                this.cip_anual()*/
+                this.cip_anual()
                 this.toastr.success('Consumos personalizados calculados con éxito.');
             }, (error: any) => {
                 this.toastr.error(error.error.detail, 'Error');
@@ -359,7 +358,7 @@ export class SimuladorConsumosComponent {
         // Iterar sobre los dispositivos seleccionados
         this.dispositivosSeleccionados.forEach((dispositivo) => {
             const duracion = dispositivo.duracion || 0; // Horas al día
-            const dispositivoData = this.consumoDispositivos.find(d => d.device === dispositivo.device);
+            const dispositivoData = this.consumoDispositivos.find(d => d.devices[0] === dispositivo.device);
 
             if (dispositivoData) {
                 const consumoMedio = parseFloat(dispositivoData.consumoMedio || '0'); // Consumo medio por hora
@@ -414,12 +413,12 @@ export class SimuladorConsumosComponent {
         let criticidadTotal = 0;
 
         const solicitudes = this.consumoDispositivos.map((dispositivo) => {
-            if (!dispositivo?.device) {
+            if (!dispositivo?.devices[0]) {
                 console.warn('Dispositivo sin información válida:', dispositivo);
                 return of(null);
             }
 
-            const categoriaDispositivo = dispositivo.device.split('.')[0];
+            const categoriaDispositivo = dispositivo.devices[0].split('.')[0];
             if (!categoriaDispositivo) {
                 console.warn('No se pudo obtener categoría del dispositivo:', dispositivo);
                 return of(null);
@@ -442,7 +441,7 @@ export class SimuladorConsumosComponent {
                         const resumenVulnerabilidades: { categoria: string; totalVulnerabilidades: number; criticidadAlta: number; criticidadMedia: number; criticidadBaja: number }[] = [];
 
                         respuestas.forEach((respuesta, index) => {
-                            const categoriaDispositivo = this.consumoDispositivos[index].device.split('.')[0];
+                            const categoriaDispositivo = this.consumoDispositivos[index].devices[0].split('.')[0];
                             this.vulnerabilities = Array.isArray(respuesta.vulnerabilities) ? respuesta.vulnerabilities : [];
                             
                             // Agregar vulnerabilidades a la lista global

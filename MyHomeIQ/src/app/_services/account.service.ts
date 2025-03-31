@@ -44,6 +44,8 @@ export class AccountService {
     const url = `${this.config.apiUrl}/users/register`;
 
     user.id = '0';
+    user.homeAssistant = null;
+
     console.log(user);
 
     return this.httpClient.post(url, user);
