@@ -26,8 +26,8 @@ export class SimuladorConsumosComponent {
     potenciaAnual!: number
     etiquetaGlobal!: string
     etiquetaSeguridad!: string;
-    dispositivoSeleccionado!: SimuladorDispositivo;
-    dispositivosSeleccionados: SimuladorPersonalizado[] = [];
+    dispositivoSeleccionado!: any;
+    dispositivosSeleccionados: any[] = [];
     simuladorConsumoDiario!: number;
     simuladorConsumoMensual!: number;
     simuladorConsumoAnual!: number;
@@ -38,10 +38,12 @@ export class SimuladorConsumosComponent {
     simuladorPotenciaMensual!: number;
     simuladorPotenciaAnual!: number;
 
+    allDevices: any[] = [];
+
     responseNVD: any = null;
     vulnerabilities: any[] = [];
     resumenSeguridad: { categoria: string; totalVulnerabilidades: number; criticidadAlta: number; criticidadMedia: number; criticidadBaja: number }[] = [];
-    
+
     // Propiedades de paginación
     Math = Math;
     currentPage: number = 0;
@@ -84,7 +86,7 @@ export class SimuladorConsumosComponent {
         { dispositivo: "Bombilla", script: "EB18", estado: "Azul(0,0,255) - Brillo mínimo", nombreDispositivo: "-" },
         { dispositivo: "Bombilla", script: "EB19", estado: "Apagado", nombreDispositivo: "-" },
         { dispositivo: "Bombilla", script: "EB20", estado: "Temperatura mínimo - Brillo máximo", nombreDispositivo: "Bulb2" },
-        
+
         { dispositivo: "Termostato", script: "TS1", estado: "Encender -> Temperatura por debajo", nombreDispositivo: "Termostato Wifi" },
         { dispositivo: "Termostato", script: "TS2", estado: "Temperatura por encima", nombreDispositivo: "Termostato Wifi" },
         { dispositivo: "Termostato", script: "TS3", estado: "Apagar", nombreDispositivo: "Termostato Wifi" },
@@ -92,12 +94,12 @@ export class SimuladorConsumosComponent {
         { dispositivo: "Termostato", script: "TS5", estado: "Temperatura por encima", nombreDispositivo: "Termostato Zigbee" },
         { dispositivo: "Termostato", script: "TS6", estado: "Apagar", nombreDispositivo: "Termostato Zigbee" },
         { dispositivo: "Termostato", script: "TS7", estado: "Apagar", nombreDispositivo: "Ambos" },
-    
+
         { dispositivo: "AlexaEchoDot", script: "EAD1", estado: "Encender dispositivos", nombreDispositivo: "-" },
         { dispositivo: "AlexaEchoDot", script: "EAD2", estado: "Apagar dispositivos", nombreDispositivo: "-" },
         { dispositivo: "AlexaEchoDot", script: "EAD3", estado: "Iniciar música", nombreDispositivo: "-" },
         { dispositivo: "AlexaEchoDot", script: "EAD4", estado: "Encender dispositivos - VOZ", nombreDispositivo: "-" },
-    
+
         { dispositivo: "AlexaEchoShow", script: "EAS1", estado: "Panel home", nombreDispositivo: "-" },
         { dispositivo: "AlexaEchoShow", script: "EAS2", estado: "Panel scripts", nombreDispositivo: "-" },
         { dispositivo: "AlexaEchoShow", script: "EAS3", estado: "Encender dispositivos", nombreDispositivo: "-" },
@@ -112,7 +114,7 @@ export class SimuladorConsumosComponent {
         { dispositivo: "AlexaEchoShow", script: "EAS12", estado: "Iniciar música - VOZ", nombreDispositivo: "-" },
         { dispositivo: "AlexaEchoShow", script: "EAS13", estado: "Iniciar multimedia (video) - VOZ", nombreDispositivo: "-" },
         { dispositivo: "AlexaEchoShow", script: "EAS14", estado: "Ver cámara - VOZ", nombreDispositivo: "-" },
-    
+
         { dispositivo: "Cámara", script: "SC1", estado: "Encender cámaras", nombreDispositivo: "-" },
         { dispositivo: "Cámara", script: "SC2", estado: "Habilitar alarma de seguimiento", nombreDispositivo: "-" },
         { dispositivo: "Cámara", script: "SC3", estado: "Tomar varias instantáneas", nombreDispositivo: "-" },
@@ -129,7 +131,7 @@ export class SimuladorConsumosComponent {
         { dispositivo: "Cámara", script: "SC14", estado: "Habilitar visión nocturna activada", nombreDispositivo: "-" },
         { dispositivo: "Cámara", script: "SC15", estado: "Habilitar seguimiento de movimiento", nombreDispositivo: "-" },
         { dispositivo: "Cámara", script: "SC16", estado: "Apagar cámaras", nombreDispositivo: "-" },
-        
+
         { dispositivo: "GoogleHub", script: "EGH1", estado: "Panel home", nombreDispositivo: "-" },
         { dispositivo: "GoogleHub", script: "EGH2", estado: "Panel sensores", nombreDispositivo: "-" },
         { dispositivo: "GoogleHub", script: "EGH3", estado: "Encender dispositivos", nombreDispositivo: "-" },
@@ -144,7 +146,7 @@ export class SimuladorConsumosComponent {
         { dispositivo: "GoogleHub", script: "EGH12", estado: "Iniciar música - VOZ", nombreDispositivo: "-" },
         { dispositivo: "GoogleHub", script: "EGH13", estado: "Iniciar multimedia (video) - VOZ", nombreDispositivo: "-" },
         { dispositivo: "GoogleHub", script: "EGH14", estado: "Ver cámara - VOZ", nombreDispositivo: "-" },
-    
+
         { dispositivo: "GoogleNest", script: "EGN1", estado: "Encender dispositivos", nombreDispositivo: "-" },
         { dispositivo: "GoogleNest", script: "EGN2", estado: "Apagar dispositivos", nombreDispositivo: "-" },
         { dispositivo: "GoogleNest", script: "EGN3", estado: "Iniciar música", nombreDispositivo: "-" },
@@ -154,7 +156,7 @@ export class SimuladorConsumosComponent {
         { dispositivo: "GoogleNest", script: "EGN7", estado: "Iniciar música - VOZ", nombreDispositivo: "-" },
         { dispositivo: "GoogleNest", script: "EGN8", estado: "Iniciar multimedia (video) - VOZ", nombreDispositivo: "-" }
     ];
-      
+
     // Extrae los dispositivos únicos para el filtro
     dispositivosUnicos = [...new Set(this.dispositivos.map(d => d.dispositivo))];
 
@@ -204,35 +206,37 @@ export class SimuladorConsumosComponent {
     async getScripts() {
         // Obtenemos los scripts del backend
         this.controlLocalService.getAll().subscribe(
-          (response: any) => {
-            this.initialArrays(response);
-    
-          },
-          (error: any) => {
-            this.toastr.error(error.error.detail, 'Error');
-          }
+            (response: any) => {
+                this.initialArrays(response);
+            },
+            (error: any) => {
+                this.toastr.error(error.error.detail, 'Error');
+            }
         );
     }
 
     private initialArrays(response: any) {
-    this.allStatus = response;
-    this.categories = response.map((item: any) => item.entity_id.split('.')[0]);
-    // Eliminamos las categorías duplicadas
-    this.categories = this.categories.filter((item, index) => this.categories.indexOf(item) === index);
-    this.scripts = response.map((item: any) => {
-        if (item.entity_id.split('.')[0] === 'script') {
-        return item;
-        }
-    });
-    // Eliminamos los scripts undefined
-    this.scripts = this.scripts.filter((item) => item !== undefined);
-    this.sockets = response.map((item: any) => {
-        if (item.entity_id.split('.')[0] === 'switch') {
-        return item;
-        }
-    });
-    // Eliminamos los sockets undefined
-    this.sockets = this.sockets.filter((item) => item !== undefined);
+        this.allStatus = response;
+        console.log
+        this.allDevices = [...new Set(response.map((item: any) => item.entity_id))];
+        console.log("All devices: ", this.allDevices)
+        this.categories = response.map((item: any) => item.entity_id.split('.')[0]);
+        // Eliminamos las categorías duplicadas
+        this.categories = this.categories.filter((item, index) => this.categories.indexOf(item) === index);
+        this.scripts = response.map((item: any) => {
+            if (item.entity_id.split('.')[0] === 'script') {
+                return item;
+            }
+        });
+        // Eliminamos los scripts undefined
+        this.scripts = this.scripts.filter((item) => item !== undefined);
+        this.sockets = response.map((item: any) => {
+            if (item.entity_id.split('.')[0] === 'switch') {
+                return item;
+            }
+        });
+        // Eliminamos los sockets undefined
+        this.sockets = this.sockets.filter((item) => item !== undefined);
     }
 
     get_consumosGlobales() {
@@ -261,18 +265,18 @@ export class SimuladorConsumosComponent {
     get_etiquetaGlobal() {
         const etiquetaValores: { [key: string]: number } = { A: 1, B: 2, C: 3, D: 4, E: 5, F: 6, G: 7 };
         const etiquetas = this.consumoDispositivos.map(d => etiquetaValores[d.etiqueta]);
-    
+
         const mediaNumerica = etiquetas.reduce((a, b) => a + b, 0) / etiquetas.length;
         const valorRedondeado = Math.round(mediaNumerica);
-    
+
         // Invertimos el objeto para obtener la etiqueta correspondiente al valor redondeado
         const valorEtiquetas = Object.keys(etiquetaValores).find(key => etiquetaValores[key] === valorRedondeado);
         this.etiquetaGlobal = valorEtiquetas || 'Error'; // En caso de error, asignamos 'G' por defecto
-      }
+    }
 
-      getEtiquetaClase(etiqueta: string): string {
+    getEtiquetaClase(etiqueta: string): string {
         return `etiqueta-${etiqueta}`;
-      }
+    }
 
     update_consumos() {
         this.consumoService.updateSimuladorDispositivos().subscribe(
@@ -284,31 +288,44 @@ export class SimuladorConsumosComponent {
             (error: any) => {
                 this.toastr.error(error.error.detail, 'Error');
                 console.log(error);
-              }
+            }
         )
     }
 
     addDispositivo() {
         if (this.dispositivoSeleccionado) {
-    
+
             this.dispositivosSeleccionados.push({
                 device: this.dispositivoSeleccionado.devices[0],
                 estado: this.dispositivoSeleccionado.estado, // Aseguramos que siempre sea un array
                 tipoSimulacion: this.dispositivoSeleccionado.estado, // Estado inicial seleccionado
                 duracion: 0, // El usuario lo llenará manualmente
             });
-    
+
             this.dispositivoSeleccionado = undefined!; // Limpiamos la selección actual
         } else {
             this.toastr.warning('Por favor, selecciona un dispositivo antes de añadirlo.');
         }
-    }    
+    }
+
+    addDispositivoPersonalizado(dispositivo: string) {
+        if (dispositivo) {
+            this.dispositivosSeleccionados.push({
+                device: dispositivo,
+                estado: [], // Estado inicial seleccionado
+                tipoSimulacion: 'Personalizado', // Estado inicial seleccionado
+                duracion: 0, // El usuario lo llenará manualmente
+            });
+        } else {
+            this.toastr.warning('Por favor, selecciona un dispositivo antes de añadirlo.');
+        }
+    }   
 
     limpiarDispositivos() {
         this.dispositivosSeleccionados = [];
     }
 
-    calcular_consumos_personalizado(){
+    calcular_consumos_personalizado() {
         console.log("Calculando consumos personalizados...")
 
         this.dispositivosSeleccionados.forEach((dispositivo) => {
@@ -320,12 +337,14 @@ export class SimuladorConsumosComponent {
         // Envio los dispositivos al backend
         this.consumoService.updateSimuladorDispositivo(this.dispositivosSeleccionados).subscribe(
             (response: any) => {
-                console.log("Consumos personalizados: ", response)
-                this.simuladorConsumoDiario = response.consumoDiario
-                this.simuladorIntensidadDiaria = response.intensidadDiaria
-                this.simuladorPotenciaDiaria = response.potenciaDiaria
+                console.log("Respuesta del backend: ", response)
+                this.simuladorConsumoDiario = response.simulation_results.consumoMedio
+                this.simuladorIntensidadDiaria = response.simulation_results.intensidadMedia
+                this.simuladorPotenciaDiaria = response.simulation_results.potenciaMedia
                 this.cip_mensual()
                 this.cip_anual()
+                // Actualizar measures
+                
                 this.toastr.success('Consumos personalizados calculados con éxito.');
             }, (error: any) => {
                 this.toastr.error(error.error.detail, 'Error');
@@ -333,13 +352,13 @@ export class SimuladorConsumosComponent {
             })
     }
 
-    cip_mensual(){
+    cip_mensual() {
         this.simuladorConsumoMensual = this.simuladorConsumoDiario * 31
         this.simuladorIntensidadMensual = this.simuladorIntensidadDiaria * 31
         this.simuladorPotenciaMensual = this.simuladorPotenciaDiaria * 31
     }
 
-    cip_anual(){
+    cip_anual() {
         this.simuladorConsumoAnual = this.simuladorConsumoMensual * 12
         this.simuladorIntensidadAnual = this.simuladorIntensidadMensual * 12
         this.simuladorPotenciaAnual = this.simuladorPotenciaMensual * 12
@@ -364,14 +383,14 @@ export class SimuladorConsumosComponent {
                 const consumoMedio = parseFloat(dispositivoData.consumoMedio || '0'); // Consumo medio por hora
                 const intensidadMedia = parseFloat(dispositivoData.intensidadMedia || '0'); // Intensidad media por hora
                 const potenciaMedia = parseFloat(dispositivoData.potenciaMedia || '0'); // Potencia media por hora
-    
+
                 // Acumular los valores multiplicados por la duración (horas/día)
                 consumoTotal += consumoMedio * duracion;
                 intensidadTotal += intensidadMedia * duracion;
                 potenciaTotal += potenciaMedia * duracion;
             }
         });
-    
+
         // Calcular valores diarios, mensuales y anuales
         this.simuladorConsumoDiario = consumoTotal;
         this.simuladorIntensidadDiaria = intensidadTotal;
@@ -379,7 +398,7 @@ export class SimuladorConsumosComponent {
 
         this.cip_mensual()
         this.cip_anual()
-        
+
         this.toastr.success('Cálculo basado en simulador realizado con éxito.');
     }
 
@@ -388,7 +407,7 @@ export class SimuladorConsumosComponent {
             this.toastr.warning('No hay dispositivos añadidos para calcular.');
             return;
         }
-        let simulacion_personalizada : boolean = false
+        let simulacion_personalizada: boolean = false
         this.dispositivosSeleccionados.forEach((dispositivo) => {
             if (dispositivo.estado !== 'Global') {
                 simulacion_personalizada = true
@@ -435,23 +454,23 @@ export class SimuladorConsumosComponent {
             );
         });
 
-                forkJoin(solicitudes).subscribe(
-                    (respuestas: any[]) => {
-                        this.vulnerabilities = []; // Limpiar vulnerabilidades anteriores
-                        const resumenVulnerabilidades: { categoria: string; totalVulnerabilidades: number; criticidadAlta: number; criticidadMedia: number; criticidadBaja: number }[] = [];
+        forkJoin(solicitudes).subscribe(
+            (respuestas: any[]) => {
+                this.vulnerabilities = []; // Limpiar vulnerabilidades anteriores
+                const resumenVulnerabilidades: { categoria: string; totalVulnerabilidades: number; criticidadAlta: number; criticidadMedia: number; criticidadBaja: number }[] = [];
 
-                        respuestas.forEach((respuesta, index) => {
-                            const categoriaDispositivo = this.consumoDispositivos[index].devices[0].split('.')[0];
-                            this.vulnerabilities = Array.isArray(respuesta.vulnerabilities) ? respuesta.vulnerabilities : [];
-                            
-                            // Agregar vulnerabilidades a la lista global
-                            this.vulnerabilities = this.vulnerabilities.concat(this.vulnerabilities);
+                respuestas.forEach((respuesta, index) => {
+                    const categoriaDispositivo = this.consumoDispositivos[index].devices[0].split('.')[0];
+                    this.vulnerabilities = Array.isArray(respuesta.vulnerabilities) ? respuesta.vulnerabilities : [];
 
-                            console.log(`Vulnerabilidades encontradas para ${categoriaDispositivo}:`, this.vulnerabilities);
+                    // Agregar vulnerabilidades a la lista global
+                    this.vulnerabilities = this.vulnerabilities.concat(this.vulnerabilities);
 
-                        let criticidadAlta = 0;
-                        let criticidadMedia = 0;
-                        let criticidadBaja = 0;
+                    console.log(`Vulnerabilidades encontradas para ${categoriaDispositivo}:`, this.vulnerabilities);
+
+                    let criticidadAlta = 0;
+                    let criticidadMedia = 0;
+                    let criticidadBaja = 0;
 
                     if (respuesta.totalResults > 0) {
                         this.vulnerabilities.forEach((vuln: any) => {
@@ -462,7 +481,7 @@ export class SimuladorConsumosComponent {
                             console.log("Vulnerabilidad: ", vuln);
                             console.log("Criticidad: ", vuln.cve.metrics?.cvssMetricV2?.[0]?.baseSeverity || vuln.cve.metrics?.cvssMetricV31?.[0]?.cvssData?.baseSeverity);
 
-                        switch(criticidad) {
+                            switch (criticidad) {
                             case 'CRITICAL':
                                 criticidadAlta++;
                                 break;
@@ -475,7 +494,7 @@ export class SimuladorConsumosComponent {
                             case 'LOW':
                                 criticidadBaja++;
                                 break;
-                        }
+                            }
 
                             // Sumar la criticidad según el nivel
                             criticidadTotal += criticidadValores[criticidad] || 1;
@@ -483,13 +502,13 @@ export class SimuladorConsumosComponent {
                     }
 
                     // Añadir al resumen
-                        resumenVulnerabilidades.push({
-                            categoria: categoriaDispositivo,
-                            totalVulnerabilidades: this.vulnerabilities.length,
-                            criticidadAlta: criticidadAlta || 0,
-                            criticidadMedia: criticidadMedia || 0,
-                            criticidadBaja: criticidadBaja || 0
-                        });
+                    resumenVulnerabilidades.push({
+                        categoria: categoriaDispositivo,
+                        totalVulnerabilidades: this.vulnerabilities.length,
+                        criticidadAlta: criticidadAlta || 0,
+                        criticidadMedia: criticidadMedia || 0,
+                        criticidadBaja: criticidadBaja || 0
+                    });
                 });
 
                 // Calcular la etiqueta global
@@ -517,10 +536,10 @@ export class SimuladorConsumosComponent {
             }
         );
     }
-    
+
     // Almacenar el resumen de seguridad
     filtroCriticidad: string = '';
-    
+
     // Métodos de paginación
     nextPage() {
         if ((this.currentPage + 1) * this.itemsPerPage < this.vulnerabilitiesFiltered.length) {
@@ -532,8 +551,8 @@ export class SimuladorConsumosComponent {
     // Método para obtener los dispositivos filtrados
     get dispositivosFiltrados() {
         return this.filtroDispositivo
-        ? this.dispositivos.filter(d => d.dispositivo === this.filtroDispositivo)
-        : this.dispositivos;
+            ? this.dispositivos.filter(d => d.dispositivo === this.filtroDispositivo)
+            : this.dispositivos;
     }
 
     // Método para filtrar dispositivos y resetear la paginación
@@ -543,16 +562,16 @@ export class SimuladorConsumosComponent {
 
     previousPageDisp() {
         if (this.currentPageDisp > 0) {
-          this.currentPageDisp--;
+            this.currentPageDisp--;
         }
-      }
-      
+    }
+
     nextPageDisp() {
-    if ((this.currentPageDisp + 1) * this.itemsPerPageDisp < this.dispositivosFiltrados.length) {
-        this.currentPageDisp++;
+        if ((this.currentPageDisp + 1) * this.itemsPerPageDisp < this.dispositivosFiltrados.length) {
+            this.currentPageDisp++;
+        }
     }
-    }
-      
+
 
     previousPage() {
         if (this.currentPage > 0) {
@@ -574,10 +593,10 @@ export class SimuladorConsumosComponent {
 
         return this.vulnerabilities.filter(v => {
             if (!v) return false;
-            
-            const coincideCriticidad = !this.filtroCriticidad || 
+
+            const coincideCriticidad = !this.filtroCriticidad ||
                 (v.severity?.toLowerCase() === this.filtroCriticidad.toLowerCase() ||
-                 v.severity?.toLowerCase() === this.filtroCriticidad.toLowerCase());
+                    v.severity?.toLowerCase() === this.filtroCriticidad.toLowerCase());
 
             return coincideCriticidad;
         });
@@ -587,8 +606,8 @@ export class SimuladorConsumosComponent {
         const url = `https://nvd.nist.gov/vuln/detail/${cveId}`;
         window.open(url, '_blank');
     }
-    
-    
+
+
     // Método para calcular la etiqueta de seguridad
     obtenerEtiquetaSeguridad(criticidadMedia: number): string {
         if (criticidadMedia >= 4.5) return "Critical";
@@ -596,6 +615,6 @@ export class SimuladorConsumosComponent {
         if (criticidadMedia >= 2.5) return "Medium";
         if (criticidadMedia >= 1.5) return "Low";
         return "None";
-    }    
-    
+    }
+
 }
